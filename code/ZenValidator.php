@@ -7,7 +7,7 @@ class ZenValidator extends Validator{
 	 * field validators assigned to this validator
 	 * @var array
 	 **/
-	protected $validators = array();
+	protected $constraints = array();
 
 
 	/**
@@ -37,24 +37,15 @@ class ZenValidator extends Validator{
 		return $this;
 	}
 
-
 	/**
-	 * require - adds a ZenValidatorType to this validator
+	 * addConstraint - adds a ZenValidatorType to this validator
 	 * @param String $field - name of the field to be validated
-	 * @param String $validatorType - name of the type of validation
-	 * @param all other params passed to constructor of the ZenValidatorType 
+	 * @param ZenFieldValidator $constraint 
 	 * @return $this
 	 **/
-	function requirement($fieldName, $validatorType='required', $message=''){
-
-		if(!isset($this->validators[$fieldName])){
-			$this->validators[$fieldName] = array();
-		}
-
-		$args = array_slice(func_get_args(), 3);
-
-		$this->validators[$fieldName][$validatorType] = Object::create('ZenFieldValidator_' . $validatorType, $this->fields->dataFieldByName($fieldName), $message, $args);
-
+	public function addConstraint($fieldName, $constraint){
+		$constraint->setField($this->fields->fieldByName($fieldName));
+		$this->validators[$fieldName][$constraint->class] = $constraint;
 		return $this;
 	}	
 
