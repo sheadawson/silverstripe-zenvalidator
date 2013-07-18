@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * 
+ * @package ZenValidator
+ * @license BSD License http://www.silverstripe.org/bsd-license
+ * @author <shea@silverstripe.com.au>
+ *
+ **/
 class ZenValidator extends Validator{
 	
 	/**

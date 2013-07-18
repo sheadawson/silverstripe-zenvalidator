@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package ZenValidator
+ * @author <shea@silverstripe.com.au>
+ **/
 abstract class ZenValidatorConstraint extends Object{
 
 	/**
@@ -343,7 +347,7 @@ class Constraint_range extends ZenValidatorConstraint{
 		$this->max = (int)$max;
 		parent::__construct();
 	}
-	
+
 
 	public function applyParsley(){
 		parent::applyParsley();
