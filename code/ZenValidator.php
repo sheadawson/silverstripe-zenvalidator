@@ -2,19 +2,24 @@
 
 class ZenValidator extends Validator{
 	
-
-	/**
-	 * field validators assigned to this validator
-	 * @var array
-	 **/
-	protected $constraints = array();
-
-
 	/**
 	 * The FieldList being validated
 	 * @var FieldList
 	 **/
 	protected $fields;
+
+
+	/**
+	 * field validators assigned to this validator
+	 * @var array
+	 **/
+	protected $fieldConstraints = array();
+
+
+	/**
+	 * @var Boolean
+	 **/
+	protected $parsley = true;
 
 
 	/**
@@ -31,9 +36,9 @@ class ZenValidator extends Validator{
 	 */
 	public function setForm($form) {
 		$this->form = $form;
-		$this->form->setAttribute('data-validate', "parsley");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
+		
+		if($this->parsley) $this->applyParsley();
+
 		return $this;
 	}
 
@@ -44,8 +49,16 @@ class ZenValidator extends Validator{
 	 * @return $this
 	 **/
 	public function addConstraint($fieldName, $constraint){
-		$constraint->setField($this->fields->fieldByName($fieldName));
-		$this->validators[$fieldName][$constraint->class] = $constraint;
+		$constraint
+			->setField($this->fields->fieldByName($fieldName))
+			->setValidator($this);
+
+		if(!isset($this->fieldConstraints[$fieldName])){
+			$this->fieldConstraints[$fieldName] = array();
+		}
+
+		$this->fieldConstraints[$fieldName][$constraint->class] = $constraint;
+
 		return $this;
 	}	
 
@@ -56,30 +69,61 @@ class ZenValidator extends Validator{
 	 * @param String $validatorType - name of the type to remove
 	 * @return $this
 	 **/
-	function remove($fieldName, $validatorType){
-		unset($this->validators[$fieldName][$validatorType]);
+	function removeConstraint($fieldName, $constraint){
+		unset($this->fieldConstraints[$fieldName][$constraint]);
 		return $this;
 	}
 
 
 	/**
-	 * Performs the php validation on all validators attached to this validator
+	 * applyParsley
+	 * @return void
+	 **/
+	public function applyParsley(){
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
+
+		$this->form->setAttribute('data-validate', 'parsley');
+		$this->form->addExtraClass('parsley');
+		
+		foreach ($this->fieldConstraints as $constraints) {
+			foreach ($constraints as $constraint) {
+				$constraint->applyParsley();
+			}
+		}
+	}
+
+
+    /**
+	 * Enable or disable client side validation
+	 * @param Boolean $bool
+	 */
+	public function enableParsley($bool) {
+		$this->parsley = $bool;
+		return $this;
+	}
+
+
+	/**
+	 * Performs the php validation on all ZenValidatorConstraints attached to this validator
 	 * @return $this
 	 **/
 	public function php($data){
 		$fields = $this->form->fields->dataFields();
 
-		foreach ($this->validators as $fieldName => $validators) {
-			foreach ($validators as $validator) {
-
-				if(!$validator->validate($data[$fieldName])){
-					$this->validationError($fieldName, $validator->getMessage(), 'required');
+		foreach ($this->fieldConstraints as $fieldName => $constraints) {
+			foreach ($constraints as $constraint) {
+				if(!$constraint->validate($data[$fieldName])){
+					$this->validationError($fieldName, $constraint->getMessage(), 'required');
 				}
 			}
 		}
 	}
 
 
+	/**
+	 * @TODO 
+	 **/
 	public function removeValidation(){
 
 	}
