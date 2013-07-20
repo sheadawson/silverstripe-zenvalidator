@@ -13,21 +13,15 @@ abstract class ZenValidatorConstraint extends Object{
 
 	
 	/**
-	 * @var ZenValidator
-	 **/
-	protected $validator;
-
-	
-	/**
 	 * @var string
 	 **/
 	protected $customMessage;
 
-	
+
 	/**
-	 * @var string
+	 * @var boolean
 	 **/
-	protected $trigger;
+	protected $parsleyApplied;
 
 
 	/**
@@ -37,17 +31,6 @@ abstract class ZenValidatorConstraint extends Object{
 	 **/
 	public function setField(FormField $field){
 		$this->field = $field;
-		return $this;
-	}
-
-
-	/**
-	 * Set the validator this constraint belongs to
-	 * @param ZenValidator $validator
-	 * @return this
-	 **/
-	public function setValidator(ZenValidator $validator){
-		$this->validator = $validator;
 		return $this;
 	}
 
@@ -85,8 +68,22 @@ abstract class ZenValidatorConstraint extends Object{
 	 * @return void
 	 **/
 	public function applyParsley(){
+		$this->parsleyApplied = true;
 		if($this->customMessage){
 			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), $this->customMessage);	
+		}
+	}
+
+
+	/**
+	 * Removes the html attributes required for frontend validation
+	 * Subclasses should call parent::removeParsley
+	 * @return void
+	 **/
+	public function removeParsley(){
+		$this->parsleyApplied = false;
+		if($this->customMessage){
+			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), '');	
 		}
 	}
 
@@ -119,10 +116,16 @@ abstract class ZenValidatorConstraint extends Object{
  **/
 class Constraint_required extends ZenValidatorConstraint{
 
+
 	public function applyParsley(){
 		parent::applyParsley();
 		$this->field->setAttribute('data-required', 'true');
+	}
 
+
+	public function removeParsley(){
+		parent::removeParsley();
+		$this->field->setAttribute('data-required', '');
 	}
 
 
