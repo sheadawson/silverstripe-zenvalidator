@@ -447,7 +447,7 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-remote', $url);
+		$this->field->setAttribute('data-remote', $this->url);
 		if($this->method == 'POST') $this->field->setAttribute('data-remote-method', 'POST');
 		if($this->jsonp) $this->field->setAttribute('data-remote-datatype', 'jsonp');
 	}
@@ -455,7 +455,9 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-regexp', '');
+		$this->field->setAttribute('data-remote', '');
+		if($this->field->getAttribute('data-remote-method')) $this->field->setAttribute('data-remote-method', '');
+		if($this->field->getAttribute('data-remote-datatype')) $this->field->setAttribute('data-remote-datatype', '');
 	}
 
 
@@ -465,7 +467,7 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 
 	function getDefaultMessage(){
-		return _t('ZenValidator.REGEXP', 'This value seems to be invalid');
+		return null;//_t('ZenValidator.REMOTE', 'This value seems to be invalid');
 	}
 }
 
