@@ -370,21 +370,168 @@ class Constraint_range extends ZenValidatorConstraint{
 }
 
 
-class Constraint_email extends ZenValidatorConstraint{
+class Constraint_regex extends ZenValidatorConstraint{
+
+	/**
+	 * @var string
+	 **/
+	protected $regex;
+
+
+	/**
+	 * @param string $regex
+	 **/
+	function __construct($regex){
+		$this->regex = $regex;
+		parent::__construct();
+	}
+
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-type', 'email');
+		$this->field->setAttribute('data-regexp', trim($this->regex, '/'));
+	}
+
+
+	public function removeParsley(){
+		parent::removeParsley();
+		$this->field->setAttribute('data-regexp', '');
+	}
+
+
+	function validate($value){
+		if(!$value) return true;
+		return preg_match($this->regex, $value);
+	}
+
+
+	function getDefaultMessage(){
+		return _t('ZenValidator.REGEXP', 'This value seems to be invalid');
+	}
+}
+
+
+
+class Constraint_remote extends ZenValidatorConstraint{
+
+	/**
+	 * @var string
+	 **/
+	protected $url;
+
+	/**
+	 * @var string
+	 **/
+	protected $method;
+
+	/**
+	 * @var string
+	 **/
+	protected $jsonp;
+
+
+	/**
+	 * @param string $url - the url to call via ajax
+	 * @param string $method - method of ajax request (GET / POST)
+	 * @param boolean $jsonp  if you make cross domain ajax call and expect jsonp,
+	 * Parsley will accept the following valid returns with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
+     * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
+	 **/
+	function __construct($url, $method='GET', $jsonp=false){
+		$this->url = $url;
+		$this->method = $method;
+		$this->jsonp = $jsonp;
+		parent::__construct();
+	}
+
+
+	public function applyParsley(){
+		parent::applyParsley();
+		$this->field->setAttribute('data-remote', $url);
+		if($this->method == 'POST') $this->field->setAttribute('data-remote-method', 'POST');
+		if($this->jsonp) $this->field->setAttribute('data-remote-datatype', 'jsonp');
+	}
+
+
+	public function removeParsley(){
+		parent::removeParsley();
+		$this->field->setAttribute('data-regexp', '');
+	}
+
+
+	function validate($value){
+		return true; // TODO
+	}
+
+
+	function getDefaultMessage(){
+		return _t('ZenValidator.REGEXP', 'This value seems to be invalid');
+	}
+}
+
+
+class Constraint_type extends ZenValidatorConstraint{
+
+	/**
+	 * @var string
+	 **/
+	protected $type;
+
+
+	/**
+	 * @param int $type - allowed datatype
+	 **/
+	function __construct($type){
+		$this->type = (int)$type;
+		parent::__construct();
+	}
+
+
+	public function applyParsley(){
+		parent::applyParsley();
+		$type = ($this->type == 'url') ? 'urlstrict' : $this->type;
+		$this->field->setAttribute('data-type', $type);
+	}
+
+
+	public function removeParsley(){
+		parent::removeParsley();
+		$this->field->setAttribute('data-type', '');
 	}
 
 	
 	function validate($value){
 		if(!$value) return true;
-		return filter_var($value, FILTER_VALIDATE_EMAIL);
+
+		switch ($this->type) {
+			case 'url':
+				return filter_var($value, FILTER_VALIDATE_URL);
+			case 'email':
+				return filter_var($value, FILTER_VALIDATE_EMAIL);
+			case 'number':
+				return is_numeric($value);
+			case 'alphanum':
+				return ctype_alnum($value);
+		}
 	}
 
 
 	function getDefaultMessage(){
-		return _t('ZenValidator.EMAIL', 'This value should be a valid email');
+		switch ($this->type) {
+			case 'url':
+				return _t('ZenValidator.URL', 'This value should be a valid URL');
+			case 'urlstrict':
+				return _t('ZenValidator.URL', 'This value should be a valid URL');
+			case 'email':
+				return _t('ZenValidator.EMAIL', 'This value should be a valid email');
+			case 'number':
+				return _t('ZenValidator.NUMBER', 'This value should be a number');
+			case 'alphanum':
+				return _t('ZenValidator.URL', 'This value should be alphanumeric');
+		}
 	}
 }
+
+
+
+
