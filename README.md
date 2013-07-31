@@ -30,16 +30,42 @@ Parsley.js is used for the clientside validation.
 
 		$form = Form::create($this, 'Form', $fields, $actions);
 
-		$form->setValidator(ZenValidator::create());
+		// note that the validator must be set on the $form after it has been created. You can not pass a ZenValidator
+		// into the Form constructor
+		$form->setValidator($validator = ZenValidator::create());
+
+
+		// alternatively add field validation via the validator.  
+		$validator->setConstraint('MinLength', Constraint_minlength::create(3));
+
+		// addRequiredFields is a quick way to add bulk required fields
+		// if you don't need to set custom messages, just pass in an indexed array of fieldnames rather than associative
+		$validator->addRequiredFields(array(
+			'Required' => 'Custom Required message',
+			'MinLength' => 'Custom MinLength message'
+		));
 
 		return $form;
 	}
 
+## Validation constraints implemented (so far)
+
+* required
+* minlength
+* maxlength
+* rangelength
+* min
+* max
+* range
+* regex
+* remote (validate remotely via ajax)
+* type (email, url, number, alphanumeric)
+
 ##TODO
 
-* Will / how will this work in the cms?
-* How much of the js configuration do we allow in the php code
+* Enable for CMS
+* How much of the js configuration do we allow in the php code? triggers? containers?
 * Quick add required fields ->addRequired(array())
-* Implement all standard parsley validation constraints
+* Implement Parsley's "Extra validators" - http://parsleyjs.org/documentation.html
 * Implement conditional validation ie. only validate constraint if field x value is y
 * Usage examples / docs

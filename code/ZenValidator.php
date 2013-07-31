@@ -123,6 +123,28 @@ class ZenValidator extends Validator{
 
 
 	/**
+	 * A quick way of adding required constraints to a number of fields
+	 * @param array $fieldNames - can be either indexed array of fieldnames, or associative array of fieldname => message
+	 * @return this
+	 */
+	public function addRequiredFields($fields){
+		if(ArrayLib::is_associative($fields)){
+			foreach ($fields as $k => $v) {
+				$constraint = Constraint_required::create();
+				if($v) $constraint->setMessage($v);
+				$this->setConstraint($k, $constraint);
+			}	
+		}else{
+			foreach ($fields as $field) {
+				$this->setConstraint($field, Constraint_required::create());
+			}
+		}
+
+		return $this;
+	}
+
+
+	/**
 	 * Performs the php validation on all ZenValidatorConstraints attached to this validator
 	 * @return $this
 	 **/
