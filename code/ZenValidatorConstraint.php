@@ -479,13 +479,13 @@ class Constraint_remote extends ZenValidatorConstraint{
 		$ch=curl_init();
 		$url = $this->url;
 
-		if(count($this->params)){
-			$query = $this->http_build_query($this->params);
-			if($this->method == 'GET'){
-				$url = $url . '?' . $query;	
-			}else{
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-			}
+		$this->params[$this->field->getName()] = $value;
+
+		$query = http_build_query($this->params);
+		if($this->method == 'GET'){
+			$url = $url . '?' . $query;	
+		}else{
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
 		}
 
 		curl_setopt($ch, CURLOPT_URL,$url);
@@ -494,7 +494,7 @@ class Constraint_remote extends ZenValidatorConstraint{
 		curl_setopt($ch, CURLOPT_USERAGENT, 'ZENVALIDATOR');
 		$result = curl_exec($ch);
 		curl_close($ch);
-
+		
 		// validate result
 		if($result == '1' || $result == 'true'){
 			return true;
