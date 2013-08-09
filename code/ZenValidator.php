@@ -10,6 +10,13 @@ class ZenValidator extends Validator{
 
 	
 	/**
+	 * constraints assigned to this validator
+	 * @var array
+	 **/
+	protected $constraints = array();
+
+
+	/**
 	 * @var Boolean
 	 **/
 	protected $parsleyEnabled;
@@ -30,6 +37,14 @@ class ZenValidator extends Validator{
 	public function setForm($form) {
 		parent::setForm($form);
 		
+		// a bit of a hack, need a security token to be set on form so that we can iterate over $form->Fields()
+		if(!$form->getSecurityToken()) $form->disableSecurityToken();
+
+		// disable parsley in the cms
+		if(is_subclass_of($form->getController()->class, 'LeftAndMain')){
+			$this->parsleyEnabled = false;
+		}
+
 		if($this->parsleyEnabled) $this->applyParsley();
 
 		return $this;
@@ -45,14 +60,17 @@ class ZenValidator extends Validator{
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
 
-		$this->form->setAttribute('data-validate', 'parsley');
-		$this->form->addExtraClass('parsley');
+		if($this->form){
+			$this->form->setAttribute('data-validate', 'parsley');
+			$this->form->addExtraClass('parsley');
 
-		foreach ($this->form->Fields()->dataFields() as $field) {
-			foreach ($field->getConstraints() as $constraint) {
-				$constraint->applyParsley();
+			foreach ($this->constraints as $fieldName => $constraints) {
+				foreach ($constraints as $constraint) {
+					$constraint->setField($this->form->Fields()->dataFieldByName($fieldName))->applyParsley();
+				}
 			}
 		}
+
 		return $this;
 	}
 
@@ -63,62 +81,39 @@ class ZenValidator extends Validator{
 	 **/
 	public function disableParsley(){
 		$this->parsleyEnabled = false;
-		$this->form->setAttribute('data-validate', '');
-		$this->form->removeExtraClass('parsley');
-
-		foreach ($this->form->Fields()->dataFields() as $field) {
-			foreach ($field->getConstraints() as $constraint) {
-				$constraint->removeParsley();
-			}
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Set a ZenValidatorConstraint on a field
-	 * @param string $fieldName
-	 * @param ZenValidatorConstraint $constriant
-	 */
-	public function setConstraint($fieldName, ZenValidatorConstraint $constraint){
-		$this->form->Fields()->fieldByName($fieldName)->setConstraint($constraint);
-		if($this->parsleyEnabled){
-			$constraint->applyParsley();
+		if($this->form){
+			$this->form->setAttribute('data-validate', '');
+			$this->form->removeExtraClass('parsley');	
 		}
 		return $this;
 	}
 
 
 	/**
-	 * Remove a ZenValidatorConstraint from a field
-	 * @param string $fieldName
-	 * @param string $constriant (classname)
-	 */
-	public function removeConstraint($fieldName, $constraintName){
-		$this->form->Fields()->fieldByName($fieldName)->removeConstraint($constraintName);
+	 * setConstraint - sets a ZenValidatorContraint on this validator
+	 * @param String $field - name of the field to be validated
+	 * @param ZenFieldValidator $constraint 
+	 * @return $this
+	 **/
+	public function setConstraint($fieldName, $constraint){
+		$this->constraints[$fieldName][$constraint->class] = $constraint;
+		if($this->form && $this->parsleyEnabled){
+			$constraint->setField($this->form->Fields()->dataFieldByName($fieldName))->applyParsley();
+		}
 		return $this;
-	}
+	}	
 
 
 	/**
-	 * Gets a ZenValidatorConstraint on a particular field
-	 * @param string $fieldName
-	 * @param string $constriant (classname)
-	 * @return ZenValidatorConstraint
-	 */
-	public function getFieldConstraint($fieldName, $constraintName){
-		return $this->form->Fields()->fieldByName($fieldName)->getConstraint($constraintName);
-	}
-
-
-	/**
-	 * Gets an array of ZenValidatorConstraints on a particular field
-	 * @param string $fieldName
-	 * @return array
-	 */
-	public function getFieldConstraints($fieldName){
-		return $this->form->Fields()->fieldByName($fieldName)->getConstraints();
+	 * remove a validator type from a field
+	 * @param String $field - name of the field to have a validationType removed from
+	 * @param String $validatorType - name of the type to remove
+	 * @return $this
+	 **/
+	function removeConstraint($fieldName, $constraint){
+		if($this->form) $constraint->removeParsley();
+		unset($this->constraints[$fieldName][$constraint]);
+		return $this;
 	}
 
 
@@ -151,10 +146,11 @@ class ZenValidator extends Validator{
 	public function php($data){
 		$fields = $this->form->fields->dataFields();
 
-		foreach ($this->form->Fields()->dataFields() as $field) {
-			foreach ($field->getConstraints() as $constraint) {
-				if(!$constraint->validate($data[$field->getName()])){
-					$this->validationError($field->getName(), $constraint->getMessage(), 'required');
+		foreach ($this->constraints as $fieldName => $constraints) {
+			foreach ($constraints as $constraint) {
+
+				if(!$constraint->validate($data[$fieldName])){
+					$this->validationError($fieldName, $constraint->getMessage(), 'required');
 				}
 			}
 		}

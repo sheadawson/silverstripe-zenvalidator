@@ -35,6 +35,11 @@ abstract class ZenValidatorConstraint extends Object{
 	}
 
 
+	public function getField(){
+		return $this->field;
+	}
+
+
 	/**
 	 * Set a custom message for this constraint
 	 * @param String $message
@@ -82,7 +87,7 @@ abstract class ZenValidatorConstraint extends Object{
 	 **/
 	public function removeParsley(){
 		$this->parsleyApplied = false;
-		if($this->customMessage){
+		if($this->field && $this->customMessage){
 			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), '');	
 		}
 	}
