@@ -14,7 +14,7 @@
 	{
 		"composer/installers": "*",
 		"silverstripe/framework": ">=3.0"
-	}
+	},
 	"support": {
 		"issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
 	}
