@@ -262,115 +262,74 @@ class Constraint_rangelength extends ZenValidatorConstraint{
 }
 
 
-class Constraint_min extends ZenValidatorConstraint{
+class Constraint_value extends ZenValidatorConstraint{
+
+	
+	/**
+	 * @var string
+	 **/
+	protected $type;
+
 
 	/**
 	 * @var int
 	 **/
-	protected $min;
+	protected $val1, $val2;
 
 
 	/**
-	 * @param int $min - minimum allowed length
+	 * @param srting $type (min,max,range)
+	 * @param int $val1
+	 * @param int $val2
 	 **/
-	function __construct($min){
-		$this->min = (int)$min;
+	function __construct($type, $val1, $val2 = null){
+		$this->type = $type;
+		$this->val1 = (int)$val1;
+		$this->val2 = (int)$val2;
 		parent::__construct();
 	}
 
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-min', $this->min);
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-min', $this->val1);
+				break;
+			case 'max':
+				$this->field->setAttribute('data-max', $this->val1);
+				break;
+			case 'range':
+				$this->field->setAttribute('data-range', sprintf("[%s,%s]", $this->val1, $this->val2));
+				break;
+		}
+		
 	}
 
 
 	function validate($value){
 		if(!$value) return true;
-		return (int)$value >= $this->min;
+
+		switch ($this->type) {
+			case 'min':
+				return (int)$value >= $this->val1;
+			case 'max':
+				return (int)$value <= $this->val1;
+			case 'range':
+				return (int)$value >= $this->val1 && (int)$value <= $this->val2;
+		}
 	}
 
 
 	function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.MIN', 'This value should be greater than or equal to %s'), $this->min);
-	}
-}
-
-
-class Constraint_max extends ZenValidatorConstraint{
-
-	/**
-	 * @var int
-	 **/
-	protected $max;
-
-
-	/**
-	 * @param int $min - minimum allowed length
-	 **/
-	function __construct($max){
-		$this->max = (int)$max;
-		parent::__construct();
-	}
-
-
-	public function applyParsley(){
-		parent::applyParsley();
-		$this->field->setAttribute('data-max', $this->max);
-	}
-
-
-	function validate($value){
-		if(!$value) return true;
-		return (int)$value <= $this->max;
-	}
-
-
-	function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.MAX', 'This value should be less than or equal to %s'), $this->max);
-	}
-}
-
-
-class Constraint_range extends ZenValidatorConstraint{
-
-	/**
-	 * @var int
-	 **/
-	protected $min;
-
-
-	/**
-	 * @var int
-	 **/
-	protected $max;
-
-
-	/**
-	 * @param int $min - minimum allowed length
-	 * @param int $max - maximum allowed length
-	 **/
-	function __construct($min, $max){
-		$this->min = (int)$min;
-		$this->max = (int)$max;
-		parent::__construct();
-	}
-
-
-	public function applyParsley(){
-		parent::applyParsley();
-		$this->field->setAttribute('data-range', sprintf("[%s,%s]", $this->min, $this->max));
-	}
-
-
-	function validate($value){
-		if(!$value) return true;
-		return (int)$value >= $this->min && (int)$value <= $this->max;
-	}
-
-
-	function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.RANGE', 'This value should be between %s and %s'), $this->min, $this->max);
+		switch ($this->type) {
+			case 'min':
+				return sprintf(_t('ZenValidator.MIN', 'This value should be greater than or equal to %s'), $this->val1);
+			case 'max':
+				return sprintf(_t('ZenValidator.MAX', 'This value should be less than or equal to %s'), $this->val1);
+			case 'range':
+				return sprintf(_t('ZenValidator.RANGE', 'This value should be between %s and %s'), $this->val1, $this->val2);
+		}
 	}
 }
 
