@@ -425,6 +425,11 @@ class Constraint_remote extends ZenValidatorConstraint{
 	protected $url;
 
 	/**
+	 * @var array
+	 **/
+	protected $params;
+
+	/**
 	 * @var string
 	 **/
 	protected $method;
@@ -437,13 +442,15 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 	/**
 	 * @param string $url - the url to call via ajax
+	 * @param array $params - request vars
 	 * @param string $method - method of ajax request (GET / POST)
 	 * @param boolean $jsonp  if you make cross domain ajax call and expect jsonp,
-	 * Parsley will accept the following valid returns with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
+	 * The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
      * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
 	 **/
-	function __construct($url, $method='GET', $jsonp=false){
-		$this->url = $url;
+	function __construct($url, $params=array(), $method='GET', $jsonp=false){
+		$this->url = Director::absoluteURL($url);
+		$this->params = $params;
 		$this->method = $method;
 		$this->jsonp = $jsonp;
 		parent::__construct();
@@ -452,7 +459,8 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-remote', $this->url);
+		$url = count($this->params) ? $this->url . '?' . $this->http_build_query($this->params) : $this->url;
+		$this->field->setAttribute('data-remote', $url);
 		if($this->method == 'POST') $this->field->setAttribute('data-remote-method', 'POST');
 		if($this->jsonp) $this->field->setAttribute('data-remote-datatype', 'jsonp');
 	}
@@ -467,12 +475,52 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 
 	function validate($value){
-		return true; // TODO
+		// get result 
+		$ch=curl_init();
+		$url = $this->url;
+
+		$this->params[$this->field->getName()] = $value;
+
+		$query = http_build_query($this->params);
+		if($this->method == 'GET'){
+			$url = $url . '?' . $query;	
+		}else{
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+		}
+
+		curl_setopt($ch, CURLOPT_URL,$url);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'ZENVALIDATOR');
+		$result = curl_exec($ch);
+		curl_close($ch);
+		
+		// validate result
+		if($result == '1' || $result == 'true'){
+			return true;
+		}
+
+		$isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result))))) ? true : false;
+
+		if($isJson){
+			$result = Convert::json2obj($result);
+			if(isset($result->success)){
+				return true;
+			}else{
+				if(isset($result->message)){
+					$this->setMessage($result->message);
+				}elseif(isset($result->error)){
+					$this->setMessage($result->error);
+				}
+			}
+		}
+
+		return false;
 	}
 
 
 	function getDefaultMessage(){
-		return null;//_t('ZenValidator.REMOTE', 'This value seems to be invalid');
+		return _t('ZenValidator.REMOTE', 'This value seems to be invalid');
 	}
 }
 

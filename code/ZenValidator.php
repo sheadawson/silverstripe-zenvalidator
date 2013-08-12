@@ -48,6 +48,14 @@ class ZenValidator extends Validator{
 			$this->parsleyEnabled = false;
 		}
 
+		// set the field on all constraints
+		foreach ($this->constraints as $fieldName => $constraints) {
+			foreach ($constraints as $constraint) {
+				$constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
+			}
+		}
+
+		// apply parsley
 		if($this->parsleyEnabled) $this->applyParsley();
 
 		return $this;
@@ -69,7 +77,7 @@ class ZenValidator extends Validator{
 
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {
-					$constraint->setField($this->form->Fields()->dataFieldByName($fieldName))->applyParsley();
+					$constraint->applyParsley();
 				}
 			}
 		}
@@ -100,9 +108,13 @@ class ZenValidator extends Validator{
 	 **/
 	public function setConstraint($fieldName, $constraint){
 		$this->constraints[$fieldName][$constraint->class] = $constraint;
-		if($this->form && $this->parsleyEnabled){
-			$constraint->setField($this->form->Fields()->dataFieldByName($fieldName))->applyParsley();
+		if($this->form){
+			$field = $constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
+			if($this->parsleyEnabled){
+				$field->applyParsley();
+			}
 		}
+
 		return $this;
 	}
 
