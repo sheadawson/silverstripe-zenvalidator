@@ -107,7 +107,13 @@ class ZenValidator extends Validator{
 	 * @return $this
 	 **/
 	public function setConstraint($fieldName, $constraint){
+		// remove existing constraint if it already exists
+		if(isset($this->constraints[$fieldName][$constraint->class])){
+			$this->removeConstraint($fieldName, $this->constraints[$fieldName][$constraint->class]);
+		}
+
 		$this->constraints[$fieldName][$constraint->class] = $constraint;
+
 		if($this->form){
 			$field = $constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
 			if($this->parsleyEnabled){
@@ -141,12 +147,13 @@ class ZenValidator extends Validator{
 	/**
 	 * remove a validator type from a field
 	 * @param String $field - name of the field to have a validationType removed from
-	 * @param String $validatorType - name of the type to remove
+	 * @param ZenValidatorConstraint $constraint - name of the type to remove
 	 * @return $this
 	 **/
-	function removeConstraint($fieldName, $constraint){
+	function removeConstraint($fieldName, ZenValidatorConstraint $constraint){
 		if($this->form) $constraint->removeParsley();
-		unset($this->constraints[$fieldName][$constraint]);
+		unset($this->constraints[$fieldName][$constraint->class]);
+		unset($constraint);
 		return $this;
 	}
 

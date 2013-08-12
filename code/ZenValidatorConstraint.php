@@ -146,118 +146,90 @@ class Constraint_required extends ZenValidatorConstraint{
 
 
 /**
- * Constraint_minlength
+ * Constraint_length
  **/
-class Constraint_minlength extends ZenValidatorConstraint{
+class Constraint_length extends ZenValidatorConstraint{
 	
 	/**
-	 * @var int
+	 * @var string
 	 **/
-	protected $min;
+	protected $type;
 
-
-	/**
-	 * @param int $min - minimum allowed length
-	 **/
-	function __construct($min){
-		$this->min = (int)$min;
-		parent::__construct();
-	}
-
-	
-	public function applyParsley(){
-		parent::applyParsley();
-		$this->field->setAttribute('data-minlength', $this->min);
-	}
-
-	
-	public function validate($value){
-		if(!$value) return true;
-		return strlen(trim($value)) >= $this->min;
-	}
-
-
-	public function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.MINLENGTH', 'This value is too short. It should have %s characters or more'), $this->min);
-	}
-}
-
-
-class Constraint_maxlength extends ZenValidatorConstraint{
 
 	/**
 	 * @var int
 	 **/
-	protected $max;
+	protected $val1, $val2;
 
 
 	/**
-	 * @param int $min - minimum allowed length
+	 * @param srting $type (min,max,range)
+	 * @param int $val1
+	 * @param int $val2
 	 **/
-	function __construct($max){
-		$this->max = (int)$max;
+	function __construct($type, $val1, $val2 = null){
+		$this->type = $type;
+		$this->val1 = (int)$val1;
+		$this->val2 = (int)$val2;
 		parent::__construct();
 	}
 
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-maxlength', $this->max);
-	}
-
-	
-	public function validate($value){
-		if(!$value) return true;
-		return strlen(trim($value)) <= $this->max;
-	}
-
-
-	public function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.MAXLENGTH', 'This value is too long. It should have %s characters or less'), $this->max);
-	}
-}
-
-
-class Constraint_rangelength extends ZenValidatorConstraint{
-
-	/**
-	 * @var int
-	 **/
-	protected $min;
-
-
-	/**
-	 * @var int
-	 **/
-	protected $max;
-
-
-	/**
-	 * @param int $min - minimum allowed length
-	 * @param int $max - maximum allowed length
-	 **/
-	function __construct($min, $max){
-		$this->min = (int)$min;
-		$this->max = (int)$max;
-		parent::__construct();
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-minlength', $this->val1);
+				break;
+			case 'max':
+				$this->field->setAttribute('data-maxlength', $this->val1);
+				break;
+			case 'range':
+				$this->field->setAttribute('data-rangelength', sprintf("[%s,%s]", $this->val1, $this->val2));
+				break;
+		}
 	}
 
 
-	public function applyParsley(){
-		parent::applyParsley();
-		$this->field->setAttribute('data-rangelength', sprintf("[%s,%s]", $this->min, $this->max));
+	public function removeParsley(){
+		parent::removeParsley();
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-minlength', '');
+				break;
+			case 'max':
+				$this->field->setAttribute('data-maxlength', '');
+				break;
+			case 'range':
+				$this->field->setAttribute('data-rangelength', '');
+				break;
+		}
 	}
 
 
 	function validate($value){
 		if(!$value) return true;
-		$len = strlen(trim($value));
-		return $len >= $this->min && $len <= $this->max;
+
+		switch ($this->type) {
+			case 'min':
+				return strlen(trim($value)) >= $this->val1;
+			case 'max':
+				return strlen(trim($value)) <= $this->val1;
+			case 'range':
+				return strlen(trim($value)) >= $this->val1 && strlen(trim($value)) <= $this->val2;
+		}
 	}
 
 
 	function getDefaultMessage(){
-		return sprintf(_t('ZenValidator.RANGELENGTH', 'This value length is invalid. It should be between %s and %s characters long'), $this->min, $this->max);
+		switch ($this->type) {
+			case 'min':
+				return sprintf(_t('ZenValidator.MINLENGTH', 'This value is too short. It should have %s characters or more'), $this->val1);
+			case 'max':
+				return sprintf(_t('ZenValidator.MAXLENGTH', 'This value is too long. It should have %s characters or less'), $this->val1);
+			case 'range':
+				return sprintf(_t('ZenValidator.RANGELENGTH', 'This value length is invalid. It should be between %s and %s characters long'), $this->val1, $this->val2);
+		}
 	}
 }
 
@@ -303,7 +275,22 @@ class Constraint_value extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-range', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
-		
+	}
+
+
+	public function removeParsley(){
+		parent::removeParsley();
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-min', '');
+				break;
+			case 'max':
+				$this->field->setAttribute('data-max', '');
+				break;
+			case 'range':
+				$this->field->setAttribute('data-range', '');
+				break;
+		}
 	}
 
 
