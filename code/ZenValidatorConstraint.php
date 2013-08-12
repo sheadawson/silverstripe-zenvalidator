@@ -537,7 +537,7 @@ class Constraint_type extends ZenValidatorConstraint{
 	 * @param int $type - allowed datatype
 	 **/
 	function __construct($type){
-		$this->type = (int)$type;
+		$this->type = $type;
 		parent::__construct();
 	}
 
