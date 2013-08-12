@@ -66,7 +66,7 @@ The addRequiredFields() is available for quick and clean adding of required fiel
 
 All other constraints are added via the setConstraint() method. This method takes 2 parameters: $fieldName and $constraint. See examples below.
 
-###### Value Constraints
+##### Value Constraints
 
 Test for number of min, max or between range value
 	
@@ -80,7 +80,7 @@ Range
 	
 	$validator->setConstraint('Age', Constraint_value::create('range', 18, 25));
 	
-###### Length Constraints
+##### Length Constraints
 
 Test for a min, max or between range length of string
 
@@ -95,7 +95,7 @@ Range
 	$validator->setConstraint('Username', Constraint_length::create('range', 3, 5));
 	
 
-###### Type Constraints
+##### Type Constraints
 
 The Constraint_type constraint can be used to validate inputs of type email, url, number or alphanum. Pass one of said options as the first parameter into the constructor.
 
@@ -107,14 +107,14 @@ URL
 
 	$validator->setConstraint('Website', Constraint_type::create('url'));
 
-###### Regex validation
+##### Regex validation
 
 Check for a valid hex color, for example…
 
 	$validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"));
 
 	
-###### Remote validation
+##### Remote validation
 
 Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" } 
 
