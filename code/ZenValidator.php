@@ -19,15 +19,18 @@ class ZenValidator extends Validator{
 	/**
 	 * @var Boolean
 	 **/
-	protected $parsleyEnabled;
+	protected $parsleyEnabled = true;
 
 
 	/**
 	 * @param boolean $parsleyEnabled
 	 **/
-	public function __construct($parsleyEnabled = true){
+	public function __construct($constraints = array()){
 		parent::__construct();
-		$this->parsleyEnabled = $parsleyEnabled;
+		
+		if(count($constraints)){
+			$this->setConstraints($constraints);
+		}
 	}
 
 
@@ -101,6 +104,25 @@ class ZenValidator extends Validator{
 			$constraint->setField($this->form->Fields()->dataFieldByName($fieldName))->applyParsley();
 		}
 		return $this;
+	}
+
+
+	/**
+	 * setConstraints - sets multiple constraints on this validator
+	 * @param array $constraints - $fieldName => ZenValidatorConstraint
+	 * @return $this
+	 **/
+	public function setConstraints($constraints){
+		foreach ($constraints as $fieldName => $v) {
+			if (is_array($v)) {
+				foreach ($v as $constraintFromArray) {
+					$this->setConstraint($fieldName, $constraintFromArray);
+				}
+			}else{
+				$this->setConstraint($fieldName, $v);
+			}
+		}
+		return $this;
 	}	
 
 
@@ -141,9 +163,10 @@ class ZenValidator extends Validator{
 
 	/**
 	 * Performs the php validation on all ZenValidatorConstraints attached to this validator
-	 * @return $this
+	 * @return boolean
 	 **/
 	public function php($data){
+		$valid = true;
 		$fields = $this->form->fields->dataFields();
 
 		foreach ($this->constraints as $fieldName => $constraints) {
@@ -151,16 +174,28 @@ class ZenValidator extends Validator{
 
 				if(!$constraint->validate($data[$fieldName])){
 					$this->validationError($fieldName, $constraint->getMessage(), 'required');
+					$valid = false;
 				}
 			}
 		}
+		return $valid;
 	}
 
 
 	/**
-	 * @TODO ?
+	 * Removes all constraints from this validator. Note that this gets called on Form::transform and may not always 
+	 * be desireable for custom transformations that want to retain the validator. In that case, apply the validator after transformation
 	 **/
 	public function removeValidation(){
-
+		var_dump(Debug::caller()); die;
+		if($this->form){
+			foreach ($this->constraints as $fieldName => $constraints) {
+				foreach ($constraints as $constraint) {
+					$constraint->removeParsley();
+					unset($constraint);
+				}
+			}	
+		}
+		$this->constraints = array();
 	}
 }
