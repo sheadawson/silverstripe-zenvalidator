@@ -11,13 +11,9 @@ ZenValidator aims to make silverstripe form validation as painless as possible, 
 Out of the box constraints include:
 
 * required
+* value (min, max, range)
+* length (min, max, range)
 * type (email, url, number, alphanumeric)
-* minlength
-* maxlength
-* rangelength
-* min
-* max
-* range
 * regex
 * remote (validate remotely via ajax)
 
