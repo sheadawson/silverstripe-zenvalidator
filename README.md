@@ -4,7 +4,7 @@
 ## Description
 
 ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through a simple API. 
-Parsley.js is used for the clientside validation in the frontend.
+[Parsley.js](http://parsleyjs.org/documentation.html) is used for the clientside validation in the frontend.
 
 ## Validation Constraints
 
@@ -31,6 +31,7 @@ Out of the box constraints include:
 			TestField::create('Name'),
 			TextField::create('Username'),
 			TextField::create('Email'),
+			TextField::create('FavoriteColor'),
 			TextField::create('Age'),
 			TextField::create('Website')
 		));
@@ -106,6 +107,14 @@ Email
 URL
 
 	$validator->setConstraint('Website', Constraint_type::create('url'));
+	
+Number
+
+	$validator->setConstraint('Age', Constraint_type::create('number'));
+	
+Alphanum
+
+	$validator->setConstraint('Username', Constraint_type::create('alphanum'));
 
 ##### Regex validation
 
@@ -159,6 +168,12 @@ To use ZenValidator in the CMS, simply implement a getCMSValidator() method on y
 		return ZenValidator::create()->setConstraint('Content', Constraint_required::create()
 			->setMessage('Please enter some content'));
 	} 
+	
+## Extending
+
+You can create your own validation constraints by subclassing the abstract ZenValidatorConstraint class. For frontend implementation of your custom validator, see [Parsley.extend.js](https://github.com/guillaumepotier/Parsley.js/blob/master/parsley.extend.js). Unfortunately there is no real documentation other than the code itself at this stage so good luck!
+
+For everything else in the frontend (triggers, error classes, error placement, etc) See the [Parsley.js documentation](http://parsleyjs.org/documentation.html#javascript) 
 
 	
 
@@ -176,7 +191,7 @@ To use ZenValidator in the CMS, simply implement a getCMSValidator() method on y
 
 ##TODO
 
-* Parsley validation in CMS (currently only serverside)
+* Parsley validation in CMS (currently only serverside) (ajax)
 * Implement Parsley's "Extra validators" - http://parsleyjs.org/documentation.html
 * Implement conditional validation ie. only validate constraint if field x value is y
 * Add language files
