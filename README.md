@@ -156,6 +156,32 @@ Any of the above examples can be configured to display a custom error message. F
 		Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")->setMessage('Please enter a valid HEX color code, starting with a #')
 	);
 	
+	
+### Bulk setting of constraints
+
+	$validator->setConstraints(array(
+		'Name' => 'Age', Constraint_value::create('min', 18),
+		'Username' => array(
+			Constraint_required::create(),
+			Constraint_type::create('alphanum'),
+		)
+	));
+	
+The setConstraint() method is also chainable so you can:
+
+	$validator
+		->setConstraint('Website', Constraint_type::create('url'))
+		->setConstraint('Content', Constraint_required::create());
+
+### Removing constaints
+
+	$validator->removeConstraint(string $fieldName, string $constraintClassname);
+	
+OR
+
+	$validator->removeConstraints(string $fieldName);
+	
+	
 ### CMS Usage
 
 To use ZenValidator in the CMS, simply implement a getCMSValidator() method on your custom Page type or DataObject class 

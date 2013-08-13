@@ -108,8 +108,8 @@ class ZenValidator extends Validator{
 	 **/
 	public function setConstraint($fieldName, $constraint){
 		// remove existing constraint if it already exists
-		if(isset($this->constraints[$fieldName][$constraint->class])){
-			$this->removeConstraint($fieldName, $this->constraints[$fieldName][$constraint->class]);
+		if($this->getConstraint($fieldName, $constraint->class)){
+			$this->removeConstraint($fieldName, $constraint->class);
 		}
 
 		$this->constraints[$fieldName][$constraint->class] = $constraint;
@@ -145,15 +145,58 @@ class ZenValidator extends Validator{
 
 
 	/**
-	 * remove a validator type from a field
-	 * @param String $field - name of the field to have a validationType removed from
-	 * @param ZenValidatorConstraint $constraint - name of the type to remove
+	 * get a constraint by fieldName, constraintName
+	 * @param String $fieldName
+	 * @param String $constraintName
+	 * @return ZenValidatorConstraint
+	 **/
+	public function getConstraint($fieldName, $constraintName){
+		if(isset($this->constraints[$fieldName][$constraintName])){
+			return $this->constraints[$fieldName][$constraintName];
+		}
+	}
+
+
+	/**
+	 * get constraints by fieldName
+	 * @param String $fieldName
+	 * @return array
+	 **/
+	public function getConstraints($fieldName){
+		if(isset($this->constraints[$fieldName])){
+			return $this->constraints[$fieldName];
+		}
+	}
+
+
+	/**
+	 * remove a constraint from a field
+	 * @param String $field - name of the field to have a constraint removed from
+	 * @param String $constraintName - class name of constraint
 	 * @return $this
 	 **/
-	function removeConstraint($fieldName, ZenValidatorConstraint $constraint){
-		if($this->form) $constraint->removeParsley();
-		unset($this->constraints[$fieldName][$constraint->class]);
-		unset($constraint);
+	function removeConstraint($fieldName, $constraintName){
+		if($constraint = $this->getConstraint($fieldName, $constraintName)){
+			if($this->form) $constraint->removeParsley();
+			unset($this->constraints[$fieldName][$constraint->class]);
+			unset($constraint);
+			
+		}
+		return $this;
+	}
+
+
+	/**
+	 * remove all constraints from a field
+	 * @param String $field - name of the field to have constraints removed from
+	 * @return $this
+	 **/
+	function removeConstraints($fieldName){
+		if($constraints = $this->getConstraints($fieldName)){
+			foreach ($constraints as $k => $v) {
+				$this->removeConstraint($fieldName, $k);
+			}
+		}
 		return $this;
 	}
 
@@ -206,7 +249,6 @@ class ZenValidator extends Validator{
 	 * be desireable for custom transformations that want to retain the validator. In that case, apply the validator after transformation
 	 **/
 	public function removeValidation(){
-		var_dump(Debug::caller()); die;
 		if($this->form){
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {
