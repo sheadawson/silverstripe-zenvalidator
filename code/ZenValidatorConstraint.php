@@ -396,7 +396,7 @@ class Constraint_remote extends ZenValidatorConstraint{
      * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
 	 **/
 	function __construct($url, $params=array(), $method='GET', $jsonp=false){
-		$this->url = Director::absoluteURL($url);
+		$this->url = $url;
 		$this->params = $params;
 		$this->method = $method;
 		$this->jsonp = $jsonp;
@@ -422,25 +422,29 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 
 	function validate($value){
-		// get result 
-		$ch=curl_init();
-		$url = $this->url;
+		if(!$value) return true;
 
 		$this->params[$this->field->getName()] = $value;
-
 		$query = http_build_query($this->params);
-		if($this->method == 'GET'){
-			$url = $url . '?' . $query;	
+		$url = $this->method == 'GET' ? $this->url . '?' . $query : $this->url;
+			
+		// If the url is a relative one, use Director::test() to get the response 
+		if(Director::is_relative_url($url)){
+			$url = Director::makeRelative($url);
+			$postVars = $this->method == 'POST' ? $this->params : null;
+			$response = Director::test($url, $postVars = null, Controller::curr()->getSession(), $this->method);
+			$result = ($response->getStatusCode() == 200) ? $response->getBody() : 0;		
+		// Otherwise CURL to remote url
 		}else{
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+			$ch=curl_init();
+			if($this->method == 'POST') curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+			curl_setopt($ch, CURLOPT_URL,$url);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_USERAGENT, 'ZENVALIDATOR');
+			$result = curl_exec($ch);
+			curl_close($ch);
 		}
-
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'ZENVALIDATOR');
-		$result = curl_exec($ch);
-		curl_close($ch);
 		
 		// validate result
 		if($result == '1' || $result == 'true'){
