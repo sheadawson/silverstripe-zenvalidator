@@ -14,6 +14,7 @@ Out of the box constraints include:
 * value (min, max, range)
 * length (min, max, range)
 * type (email, url, number, alphanumeric)
+* equalto (equal to the value of another field)
 * regex
 * remote (validate remotely via ajax)
 
@@ -111,6 +112,14 @@ Number
 Alphanum
 
 	$validator->setConstraint('Username', Constraint_type::create('alphanum'));
+
+
+##### Equal To Constraint
+
+Check for a value equal to that of another field
+
+	$validator->setConstraint('Username', Constraint_equalto::create('Name'));
+
 
 ##### Regex validation
 

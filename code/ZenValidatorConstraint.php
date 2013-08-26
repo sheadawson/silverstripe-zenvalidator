@@ -539,5 +539,52 @@ class Constraint_type extends ZenValidatorConstraint{
 }
 
 
+class Constraint_equalto extends ZenValidatorConstraint {
+
+	/**
+	 * @var string
+	 **/
+	protected $targetField;
+
+
+	/**
+	 * @param string $field
+	 **/
+	function __construct($field){
+	    $this->targetField = $field;
+	    parent::__construct();
+	}
+
+	/**
+	 * @return FormField
+	 */
+	public function getTargetField() {
+	    return $this->field->getForm()->Fields()->dataFieldByName($this->targetField);
+	}
+
+	
+	public function applyParsley(){
+	    parent::applyParsley();
+	    $this->field->setAttribute('data-equalTo', $this->getTargetField()->getAttribute('id'));
+	}
+
+
+	public function removeParsley(){
+	    parent::removeParsley();
+	    $this->field->setAttribute('data-equalTo', '');
+	}
+
+
+	function validate($value){
+	    return $this->getTargetField()->Value() == $value;
+	}
+
+
+	function getDefaultMessage(){
+	    return _t('ZenValidator.EQUALTO', 'This value should be the same as the field "' . $this->getTargetField()->Title() . '"');
+	}
+}
+
+
 
 
