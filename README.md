@@ -155,6 +155,8 @@ All arguments/settings for the Constraint_remote constructor:
 * $params - An array of request vars to be sent with the request
 * $method - "POST" or "GET". Defaults to GET
 * $jsonp - Boolean, use this for cross domain ajax requests. Defaults to false
+
+For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
 	
 ### Setting Custom Messages
 
