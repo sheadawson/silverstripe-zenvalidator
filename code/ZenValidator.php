@@ -19,15 +19,17 @@ class ZenValidator extends Validator{
 	/**
 	 * @var Boolean
 	 **/
-	protected $parsleyEnabled = true;
+	protected $parsleyEnabled;
 
 
 	/**
 	 * @param boolean $parsleyEnabled
 	 **/
-	public function __construct($constraints = array()){
+	public function __construct($constraints = array(), $parsleyEnabled = true){
 		parent::__construct();
 		
+		$this->parsleyEnabled = $parsleyEnabled;
+
 		if(count($constraints)){
 			$this->setConstraints($constraints);
 		}
@@ -97,6 +99,15 @@ class ZenValidator extends Validator{
 			$this->form->removeExtraClass('parsley');	
 		}
 		return $this;
+	}
+
+
+	/**
+	 * parsleyIsEnabled
+	 * @return boolean
+	 **/
+	public function parsleyIsEnabled(){
+		return $this->parsleyEnabled;
 	}
 
 
