@@ -3,7 +3,6 @@ php:
   - 5.3
 
 env:
-  - DB=MYSQL CORE_RELEASE=3.0, php: 5.3
   - DB=MYSQL CORE_RELEASE=3.1, php: 5.3
 
 branches:
