@@ -1,19 +1,21 @@
-language: php
+# See https://github.com/silverstripe-labs/silverstripe-travis-support for setup details
+
+language: php 
 php: 
-  - 5.3
+ - 5.3
 
 env:
-  - DB=MYSQL CORE_RELEASE=3.1, php: 5.3
+ - DB=MYSQL CORE_RELEASE=3.1
 
-branches:
-  only:
-    - master
+matrix:
+  include:
+    - php: 5.4
+      env: DB=MYSQL CORE_RELEASE=master
 
 before_script:
- - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - phpunit silverstripe-zenvalidator/tests
+ - phpunit silverstripe-zenvalidator/tests/
