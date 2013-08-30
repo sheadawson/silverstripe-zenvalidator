@@ -8,7 +8,7 @@ env:
 
 branches:
   only:
-    - tests
+    - master
 
 before_script:
  - phpenv rehash
