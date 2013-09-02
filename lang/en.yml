@@ -1,0 +1,14 @@
+en:
+  ZenValidator:
+    EMAIL: 'This value should be a valid email'
+    MAX: 'This value should be less than or equal to %s'
+    MAXLENGTH: 'This value is too long. It should have %s characters or less'
+    MIN: 'This value should be greater than or equal to %s'
+    MINLENGTH: 'This value is too short. It should have %s characters or more'
+    NUMBER: 'This value should be a number'
+    RANGE: 'This value should be between %s and %s'
+    RANGELENGTH: 'This value length is invalid. It should be between %s and %s characters long'
+    REGEXP: 'This value seems to be invalid'
+    REMOTE: 'This value seems to be invalid'
+    REQUIRED: 'This field is required'
+    URL: 'This value should be alphanumeric'
