@@ -17,5 +17,8 @@
 	},
 	"support": {
 		"issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
+	},
+	"extra": {
+		"installer-name": "zenvalidator"
 	}
 }
