@@ -70,7 +70,7 @@ class ZenValidator extends Validator{
 	 **/
 	public function applyParsley(){
 		$this->parsleyEnabled = true;
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.min.js');
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
 
 		if($this->form){
