@@ -565,7 +565,7 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	
 	public function applyParsley(){
 	    parent::applyParsley();
-	    $this->field->setAttribute('data-equalTo', $this->getTargetField()->getAttribute('id'));
+	    $this->field->setAttribute('data-equalTo', '#' . $this->getTargetField()->getAttribute('id'));
 	}
 
 
