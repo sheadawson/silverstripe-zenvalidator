@@ -1,0 +1,7 @@
+ValidationLogicCriteria:
+  comparisons:
+    isEqualTo: "=="
+    isEmpty: ""
+    isGreaterThan: ">"
+    isLessThan: "<"
+    contains: ""

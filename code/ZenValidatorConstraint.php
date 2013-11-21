@@ -26,6 +26,12 @@ abstract class ZenValidatorConstraint extends Object{
 
 
 	/**
+	 * @var ValidationLogicCriteria
+	 **/
+	protected $validationLogicCriteria;
+
+
+	/**
 	 * Set the field this constraint is applied to
 	 * @param FormField $field
 	 * @return this
@@ -109,6 +115,35 @@ abstract class ZenValidatorConstraint extends Object{
 	 **/
 	public function getConstraintName(){
 		return str_replace('Constraint_', '', $this->class);
+	}
+
+
+	public function constrainIf($master){
+		//$this->field->addExtraClass("validation-logic validation-logic-exclude");
+		return $this->validationLogicCriteria = ValidationLogicCriteria::create($this, $master);
+	}
+
+
+	/**
+	 * Checks to see if any ValidationLogicCriteria has been set and if so,
+	 * should this constraint still be applied 
+	 * @return bool
+	 **/
+	public function shouldBeApplied($fields){
+		$return = true;
+		if($criteria = $this->validationLogicCriteria){
+			var_dump('return ' . $criteria->phpEvalString()); die;
+			
+			// TODO eval() also returns false if there is a parse error
+			// code may need to return something else to represent boolean
+			// OR run eval without the return bit first in the string!
+			if(eval($criteria->phpEvalString()) === false){
+				die('eval error');
+			}
+
+			$return = eval('return ' . $criteria->phpEvalString());
+		}
+		return $return;
 	}
 
 

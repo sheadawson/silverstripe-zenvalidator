@@ -240,14 +240,14 @@ class ZenValidator extends Validator{
 	 **/
 	public function php($data){
 		$valid = true;
-		$fields = $this->form->fields->dataFields();
 
 		foreach ($this->constraints as $fieldName => $constraints) {
 			foreach ($constraints as $constraint) {
-
-				if(!$constraint->validate($data[$fieldName])){
-					$this->validationError($fieldName, $constraint->getMessage(), 'required');
-					$valid = false;
+				if($constraint->shouldBeApplied($this->form->fields)){
+					if(!$constraint->validate($data[$fieldName])){
+						$this->validationError($fieldName, $constraint->getMessage(), 'required');
+						$valid = false;
+					}
 				}
 			}
 		}
