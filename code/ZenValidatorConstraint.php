@@ -25,11 +25,6 @@ abstract class ZenValidatorConstraint extends Object{
 	protected $parsleyApplied;
 
 
-	/**
-	 * @var ValidationLogicCriteria
-	 **/
-	protected $validationLogicCriteria;
-
 
 	/**
 	 * Set the field this constraint is applied to
@@ -118,46 +113,6 @@ abstract class ZenValidatorConstraint extends Object{
 	 **/
 	public function getConstraintName(){
 		return str_replace('Constraint_', '', $this->class);
-	}
-
-
-	public function constrainIf($master){
-		//$this->field->addExtraClass("validation-logic validation-logic-exclude");
-		return $this->validationLogicCriteria = ValidationLogicCriteria::create($this, $master);
-	}
-
-
-	/**
-	 * Checks to see if any ValidationLogicCriteria has been set and if so,
-	 * should this constraint still be applied 
-	 * @return bool
-	 **/
-	public function shouldBeApplied($fields){
-		$return = true;
-		if($criteria = $this->validationLogicCriteria){
-			if(eval($criteria->phpEvalString()) === false){
-				user_error("There is a syntax error in the constaint logic phpEvalString \"{$criteria->phpEvalString()}\"", E_USER_ERROR);
-			}
-			$return = eval('return ' . $criteria->phpEvalString());
-		}
-		return $return;
-	}
-
-
-	/**
-	 * A comma-separated list of the master form fields that control the display of this constraint's field
-	 *
-	 * @return  string
-	 */
-	public function ValidationLogicMasters() {
-		if($this->validationLogicCriteria) {
-			return array_unique($this->validationLogicCriteria->getMasterList());			
-		}
-	}
-
-
-	public function getLogicCriteria(){
-		return $this->validationLogicCriteria();
 	}
 	
 }

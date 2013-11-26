@@ -74,8 +74,8 @@ class ZenValidator extends Validator{
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
 
 		if($this->form){
-			$this->form->setAttribute('data-validate', 'parsley');
-			$this->form->addExtraClass('parsley');
+			//$this->form->setAttribute('data-validate', 'parsley');
+			$this->form->addExtraClass('zenvalidator');
 
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {
@@ -242,14 +242,14 @@ class ZenValidator extends Validator{
 		$valid = true;
 
 		foreach ($this->constraints as $fieldName => $constraints) {
-			foreach ($constraints as $constraint) {
-				if($constraint->shouldBeApplied($this->form->fields)){
-					if(!$constraint->validate($data[$fieldName])){
-						$this->validationError($fieldName, $constraint->getMessage(), 'required');
-						$valid = false;
+				if($this->form->Fields()->fieldByName($fieldName)->validationApplies()){
+					foreach ($constraints as $constraint) {
+						if(!$constraint->validate($data[$fieldName])){
+							$this->validationError($fieldName, $constraint->getMessage(), 'required');
+							$valid = false;
+						}
 					}
 				}
-			}
 		}
 		return $valid;
 	}
