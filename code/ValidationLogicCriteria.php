@@ -230,22 +230,21 @@ class ValidationLogicCriteria extends Object {
 	}
 
 
-
 	/**
 	 * Gets a list of all the master fields in this criteria set
 	 * @return string
 	 */
-	// public function getMasterList() {
-	// 	$list = array ();
-	// 	foreach($this->getCriteria() as $c) {
-	// 		if($c instanceof ValidationLogicCriteria) {
-	// 			$list += $c->getMasterList();
-	// 		}
-	// 		else {
-	// 			$list[] = $c->getMaster();
-	// 		}
-	// 	}
-	// 	return $list;
-	// }
+	public function getMasterList() {
+		$list = array();
+		foreach($this->getCriteria() as $c) {
+			if($c instanceof ValidationLogicCriteria) {
+				$list += $c->getMasterList();
+			}
+			else {
+				$list[] = $c->getMaster();
+			}
+		}
+		return $list;
+	}
 
 }

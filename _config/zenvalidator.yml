@@ -5,3 +5,8 @@ ValidationLogicCriteria:
     isGreaterThan: ">"
     isLessThan: "<"
     contains: ""
+    isChecked: ""
+
+FormField:
+  extensions:
+    - ZenValidatorFormFieldExtension

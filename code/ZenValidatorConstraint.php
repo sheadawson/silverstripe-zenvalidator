@@ -80,6 +80,9 @@ abstract class ZenValidatorConstraint extends Object{
 	 * @return void
 	 **/
 	public function applyParsley(){
+		if(!$this->field){
+			user_error("A constrained Field does not exist on the FieldSet, check you have the right field name for your ZenValidatorConstraint.", E_USER_ERROR);
+		}
 		$this->parsleyApplied = true;
 		if($this->customMessage){
 			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), $this->customMessage);	
@@ -132,21 +135,30 @@ abstract class ZenValidatorConstraint extends Object{
 	public function shouldBeApplied($fields){
 		$return = true;
 		if($criteria = $this->validationLogicCriteria){
-			var_dump('return ' . $criteria->phpEvalString()); die;
-			
-			// TODO eval() also returns false if there is a parse error
-			// code may need to return something else to represent boolean
-			// OR run eval without the return bit first in the string!
 			if(eval($criteria->phpEvalString()) === false){
-				die('eval error');
+				user_error("There is a syntax error in the constaint logic phpEvalString \"{$criteria->phpEvalString()}\"", E_USER_ERROR);
 			}
-
 			$return = eval('return ' . $criteria->phpEvalString());
 		}
 		return $return;
 	}
 
 
+	/**
+	 * A comma-separated list of the master form fields that control the display of this constraint's field
+	 *
+	 * @return  string
+	 */
+	public function ValidationLogicMasters() {
+		if($this->validationLogicCriteria) {
+			return array_unique($this->validationLogicCriteria->getMasterList());			
+		}
+	}
+
+
+	public function getLogicCriteria(){
+		return $this->validationLogicCriteria();
+	}
 	
 }
 

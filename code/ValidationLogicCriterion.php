@@ -87,17 +87,21 @@ class ValidationLogicCriterion extends Object {
 	public function toPHP(){
 		$value1 = '$fields->dataFieldByName(\'' . $this->master . '\')->Value()';
 		$value2 = $this->value;
-
+		
 		if($operator = $this->phpOperator()){
 			return $value1 . " {$operator} \"$value2\"";	
 		}
-		
+
 		switch ($this->operator) {
 			case 'contains':
-				return 'strpos("' . $value1 . '"' . ", \"$value2\") !== false";
+				return 'strpos(' . $value1 . '' . ", \"$value2\") !== false";
+
+			case 'Checked':
+				return "$value1 == \"1\"";
 			
 			default:
-				return false;
+				user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.",E_USER_ERROR);
+				return;
 		}
 	}
 
