@@ -8,7 +8,7 @@
  **/
 class ZenValidator extends Validator{
 
-	
+
 	/**
 	 * constraints assigned to this validator
 	 * @var array
@@ -23,12 +23,19 @@ class ZenValidator extends Validator{
 
 
 	/**
+	 * @var Boolean
+	 **/
+	protected $customParsleyConfig;
+
+
+	/**
 	 * @param boolean $parsleyEnabled
 	 **/
-	public function __construct($constraints = array(), $parsleyEnabled = true){
+	public function __construct($constraints = array(), $parsleyEnabled = true, $customParsleyConfig = false){
 		parent::__construct();
 		
 		$this->parsleyEnabled = $parsleyEnabled;
+		$this->customParsleyConfig = $customParsleyConfig;
 
 		if(count($constraints)){
 			$this->setConstraints($constraints);
@@ -71,11 +78,17 @@ class ZenValidator extends Validator{
 	public function applyParsley(){
 		$this->parsleyEnabled = true;
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
+		Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
 
 		if($this->form){
-			//$this->form->setAttribute('data-validate', 'parsley');
-			$this->form->addExtraClass('zenvalidator');
+			if ($this->customParsleyConfig) {
+				$this->form->addExtraClass('custom-parsley');
+			}else{
+				$this->form->addExtraClass('parsley');
+			}
+			
 
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {
@@ -95,8 +108,8 @@ class ZenValidator extends Validator{
 	public function disableParsley(){
 		$this->parsleyEnabled = false;
 		if($this->form){
-			$this->form->setAttribute('data-validate', '');
 			$this->form->removeExtraClass('parsley');	
+			$this->form->removeExtraClass('custom-parsley');	
 		}
 		return $this;
 	}

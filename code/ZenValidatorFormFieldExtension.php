@@ -40,9 +40,6 @@ class ZenValidatorFormFieldExtension extends Extension{
 		$masters = array_unique($this->validationLogicCriteria->getMasterList());			
 
 		if(count($masters)){
-			Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-			Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
-
 			$this->owner->setAttribute('data-validation-logic-masters', implode(',', $masters));
 			$this->owner->setAttribute('data-validation-logic-eval', $this->validationLogicCriteria->toScript());
 		}

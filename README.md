@@ -25,22 +25,24 @@ Out of the box constraints include:
 	
 ### Create a form, add ZenValidator.  
 
-	public function Form(){
-		$fields = FieldList::create(array(
-			TestField::create('Name'),
-			TextField::create('Username'),
-			TextField::create('Email'),
-			TextField::create('FavoriteColor'),
-			TextField::create('Age'),
-			TextField::create('Website')
-		));
+```php
+public function Form(){
+	$fields = FieldList::create(array(
+		TestField::create('Name'),
+		TextField::create('Username'),
+		TextField::create('Email'),
+		TextField::create('FavoriteColor'),
+		TextField::create('Age'),
+		TextField::create('Website')
+	));
 
-		$actions = FieldList::create(FormAction::create('submit', 'submit'));
+	$actions = FieldList::create(FormAction::create('submit', 'submit'));
 
-		$validator = ZenValidator::create();
-		
-		return Form::create($this, 'Form', $fields, $actions, $validator);
-	}
+	$validator = ZenValidator::create();
+	
+	return Form::create($this, 'Form', $fields, $actions, $validator);
+}
+```
 
 The following examples demonstrate various ways to add constraints to the above form example.
 
@@ -50,17 +52,21 @@ The addRequiredFields() is available for quick and clean adding of required fiel
 
 ##### Required Fields - Basic
 
-	$validator->addRequiredFields(array(
-		'Name',
-		'Email'
-	));
+```php
+$validator->addRequiredFields(array(
+	'Name',
+	'Email'
+));
+```
 	
 ##### Required Fields - Custom Messages
 
+```php
 	$validator->addRequiredFields(array(
 		'Name' 	=> 'Please enter your name',
 		'Email' => 'Please enter your email'
 	));
+```
 
 ### Other Constraints
 
@@ -71,28 +77,34 @@ All other constraints are added via the setConstraint() method. This method take
 Test for number of min, max or between range value
 	
 Min
-
-	$validator->setConstraint('Age', Constraint_value::create('min', 18));
+```php	
+$validator->setConstraint('Age', Constraint_value::create('min', 18));
+```
 Max
-	
-	$validator->setConstraint('Age', Constraint_value::create('max', 25));
+```php	
+$validator->setConstraint('Age', Constraint_value::create('max', 25));
+```
 Range
-	
-	$validator->setConstraint('Age', Constraint_value::create('range', 18, 25));
+```php
+$validator->setConstraint('Age', Constraint_value::create('range', 18, 25));
+```
 	
 ##### Length Constraints
 
 Test for a min, max or between range length of string
 
 Min
-
-	$validator->setConstraint('Username', Constraint_length::create('min', 3));
+```php
+$validator->setConstraint('Username', Constraint_length::create('min', 3));
+```
 Max
-	
-	$validator->setConstraint('Username', Constraint_length::create('max', 5));	
+```php
+$validator->setConstraint('Username', Constraint_length::create('max', 5));	
+```
 Range
-	
-	$validator->setConstraint('Username', Constraint_length::create('range', 3, 5));
+```php
+$validator->setConstraint('Username', Constraint_length::create('range', 3, 5));
+```
 	
 
 ##### Type Constraints
@@ -100,56 +112,66 @@ Range
 The Constraint_type constraint can be used to validate inputs of type email, url, number or alphanum. Pass one of said options as the first parameter into the constructor.
 
 Email
-	
-	$validator->setConstraint('Email', Constraint_type::create('email'));
+```php
+$validator->setConstraint('Email', Constraint_type::create('email'));
+```
 
 URL
-
-	$validator->setConstraint('Website', Constraint_type::create('url'));
+```php
+$validator->setConstraint('Website', Constraint_type::create('url'));
+```
 	
 Number
-
-	$validator->setConstraint('Age', Constraint_type::create('number'));
+```php
+$validator->setConstraint('Age', Constraint_type::create('number'));
+```
 	
 Alphanum
-
-	$validator->setConstraint('Username', Constraint_type::create('alphanum'));
+```php
+$validator->setConstraint('Username', Constraint_type::create('alphanum'));
+```
 
 
 ##### Equal To Constraint
 
 Check for a value equal to that of another field
 
-	$validator->setConstraint('Username', Constraint_equalto::create('Name'));
-
+```php
+$validator->setConstraint('Username', Constraint_equalto::create('Name'));
+```
 
 ##### Regex validation
 
 Check for a valid hex color, for example…
 
-	$validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"));
-
+```php
+$validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"));
+```
 	
 ##### Remote validation
 
 Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" } 
 
-	$validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
+```php
+$validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
+```
 
 The above example will send an ajax request to my checkusername method on the same controller as the Form. A request var with a key the same as the field name will contain the value to test. So my checkusername method might look something like this:
 
-	public function checkusername($requst){
-		$username = $request->requestVar('Username');
-		
-		// check for existing user with same username
-		if(Member::get()->filter('Username', $username)->count()){
-			return Convert::array2json(array(
-				'error' => 'Sorry, that username is already taken.'
-			));	
-		}else{
-			return true;
-		}	
-	}
+```php
+public function checkusername($requst){
+	$username = $request->requestVar('Username');
+	
+	// check for existing user with same username
+	if(Member::get()->filter('Username', $username)->count()){
+		return Convert::array2json(array(
+			'error' => 'Sorry, that username is already taken.'
+		));	
+	}else{
+		return true;
+	}	
+}
+```
 	
 All arguments/settings for the Constraint_remote constructor:
 
@@ -164,45 +186,90 @@ For serverside validation: if a relative url is given the response will be obtai
 
 Any of the above examples can be configured to display a custom error message. For example:
 
-	$validator->setConstraint(
-		'FavoriteColor', 
-		Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")->setMessage('Please enter a valid HEX color code, starting with a #')
-	);
-	
+```php
+$validator->setConstraint(
+	'FavoriteColor', 
+	Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")->setMessage('Please enter a valid HEX color code, starting with a #')
+);
+```
 	
 ### Bulk setting of constraints
 
-	$validator->setConstraints(array(
-		'Name' => 'Age', Constraint_value::create('min', 18),
-		'Username' => array(
-			Constraint_required::create(),
-			Constraint_type::create('alphanum'),
-		)
-	));
-	
+```php
+$validator->setConstraints(array(
+	'Name' => 'Age', Constraint_value::create('min', 18),
+	'Username' => array(
+		Constraint_required::create(),
+		Constraint_type::create('alphanum'),
+	)
+));
+```	
+
 The setConstraint() method is also chainable so you can:
 
-	$validator
-		->setConstraint('Website', Constraint_type::create('url'))
-		->setConstraint('Content', Constraint_required::create());
+```php
+$validator
+	->setConstraint('Website', Constraint_type::create('url'))
+	->setConstraint('Content', Constraint_required::create());
+```
 
 ### Removing constaints
 
-	$validator->removeConstraint(string $fieldName, string $constraintClassname);
-	
+```php
+$validator->removeConstraint(string $fieldName, string $constraintClassname);
+```	
 OR
+```php
+$validator->removeConstraints(string $fieldName);
+```
 
-	$validator->removeConstraints(string $fieldName);
+### Customising frontend validation behaviour (Parsley)
+
+It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, set the third parameter ($customParsleyConfig) of Zenvalidator's __construct to true.
+	
+```php
+$validator = ZenValidator::create(null, true, true);
+```
+
+This will tell ZenValidator not to initialise with the default settings, and also to add the class "custom-parsley" to the form. You'll then need to add some custom javascript to the page with your own settings, for example:
+
+```javascript
+$('form.custom-parsley').parsley({
+	errors: {
+		errorsWrapper: '<div></div>',
+    	errorElem: '<small class="error"></small>',
+    	container: function ( elem, isRadioOrCheckbox ) {
+    		return elem.parents('.field:first');
+    	}
+	},
+	listeners: {
+	    onFieldValidate: function ( elem ) {
+	        if ( $( elem ).hasClass('ignore-validation') || !$( elem ).is( ':visible' ) ) {
+	            return true;
+	        }
+	        return false;
+	    },
+	    onFieldError: function ( elem, constraints, ParsleyField ) {
+
+	    }
+	},
+	errorClass: 'error'
+});
+```
+
+See [Parsley.js](http://parsleyjs.org/documentation.html) for the full list of configuration settings
 	
 	
 ### CMS Usage
 
 To use ZenValidator in the CMS, simply implement a getCMSValidator() method on your custom Page type or DataObject class 
 
-	public function getCMSValidator(){
-		return ZenValidator::create()->setConstraint('Content', Constraint_required::create()
-			->setMessage('Please enter some content'));
-	} 
+```php
+public function getCMSValidator(){
+	return ZenValidator::create()->setConstraint('Content', Constraint_required::create()
+		->setMessage('Please enter some content'));
+} 
+```
 	
 ## Extending
 
@@ -228,5 +295,5 @@ For everything else in the frontend (triggers, error classes, error placement, e
 
 * Parsley validation in CMS (currently only serverside) (ajax)
 * Implement Parsley's "Extra validators" - http://parsleyjs.org/documentation.html
-* Implement conditional validation ie. only validate constraint if field x value is y
+* Finish conditional validation ie. only validate constraint if field x value is y, document
 * Add language files

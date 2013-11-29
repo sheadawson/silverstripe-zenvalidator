@@ -1,6 +1,6 @@
 (function($) {
 
-	$('form.zenvalidator').parsley({
+	$('form.parsley').parsley({
     	errors: {
     		errorsWrapper: '<div></div>',
         	errorElem: '<span></span>',
@@ -10,7 +10,7 @@
     	},
     	listeners: {
 		    onFieldValidate: function ( elem ) {
-		        if ( $( elem ).hasClass('ignore-validation') ) {
+		       	if ( $( elem ).hasClass('ignore-validation') || !$( elem ).is( ':visible' ) ) {
 		            return true;
 		        }
 		        return false;
