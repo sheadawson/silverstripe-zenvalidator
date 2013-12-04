@@ -9,6 +9,8 @@
 class ZenValidator extends Validator{
 
 
+	private static $default_js = true;
+
 	/**
 	 * constraints assigned to this validator
 	 * @var array
@@ -25,17 +27,17 @@ class ZenValidator extends Validator{
 	/**
 	 * @var Boolean
 	 **/
-	protected $customParsleyConfig;
+	protected $defaultJS;
 
 
 	/**
 	 * @param boolean $parsleyEnabled
 	 **/
-	public function __construct($constraints = array(), $parsleyEnabled = true, $customParsleyConfig = false){
+	public function __construct($constraints = array(), $parsleyEnabled = true, $defaultJS = null){
 		parent::__construct();
 		
 		$this->parsleyEnabled = $parsleyEnabled;
-		$this->customParsleyConfig = $customParsleyConfig;
+		$this->defaultJS = ($defaultJS !== null) ? $defaultJS : $this->config()->get('default_js');
 
 		if(count($constraints)){
 			$this->setConstraints($constraints);
@@ -83,10 +85,10 @@ class ZenValidator extends Validator{
 		Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
 
 		if($this->form){
-			if ($this->customParsleyConfig) {
-				$this->form->addExtraClass('custom-parsley');
-			}else{
+			if (!$this->defaultJS) {
 				$this->form->addExtraClass('parsley');
+			}else{
+				$this->form->addExtraClass('custom-parsley');
 			}
 			
 
@@ -269,10 +271,19 @@ class ZenValidator extends Validator{
 
 
 	/**
-	 * Removes all constraints from this validator. Note that this gets called on Form::transform and may not always 
-	 * be desireable for custom transformations that want to retain the validator. In that case, apply the validator after transformation
+	 * This method is not imeplemented because form->transform calls it, but not all FormTransformations
+	 * necessarily want to remove validation... right?
+	 * Use removeAllValidation() instead.
 	 **/
 	public function removeValidation(){
+
+	}
+
+
+	/**
+	 * Removes all constraints from this validator.
+	 **/
+	public function removeAllValidation(){
 		if($this->form){
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {

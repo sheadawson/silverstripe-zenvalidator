@@ -225,10 +225,17 @@ $validator->removeConstraints(string $fieldName);
 
 ### Customising frontend validation behaviour (Parsley)
 
-It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, set the third parameter ($customParsleyConfig) of Zenvalidator's __construct to true.
+It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, you can set the third parameter ($defaultJS) of Zenvalidator's __construct to false.
 	
 ```php
-$validator = ZenValidator::create(null, true, true);
+$validator = ZenValidator::create(null, true, false);
+```
+
+Or set globally via yml
+
+```
+ZenValidator:
+  default_js: false
 ```
 
 This will tell ZenValidator not to initialise with the default settings, and also to add the class "custom-parsley" to the form. You'll then need to add some custom javascript to the page with your own settings, for example:
