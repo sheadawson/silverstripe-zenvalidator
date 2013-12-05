@@ -128,12 +128,14 @@ class Constraint_required extends ZenValidatorConstraint{
 	public function applyParsley(){
 		parent::applyParsley();
 		$this->field->setAttribute('data-required', 'true');
+		$this->field->addExtraClass('required');
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
 		$this->field->setAttribute('data-required', '');
+		$this->field->addExtraClass('required');
 	}
 
 
