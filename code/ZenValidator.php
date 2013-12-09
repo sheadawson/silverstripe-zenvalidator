@@ -85,7 +85,7 @@ class ZenValidator extends Validator{
 		Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
 
 		if($this->form){
-			if (!$this->defaultJS) {
+			if ($this->defaultJS) {
 				$this->form->addExtraClass('parsley');
 			}else{
 				$this->form->addExtraClass('custom-parsley');
