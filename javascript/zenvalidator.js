@@ -1,25 +1,6 @@
 (function($) {
-
 	$('form.parsley').parsley({
-    	errors: {
-    		errorsWrapper: '<div></div>',
-        	errorElem: '<span></span>',
-        	container: function ( elem, isRadioOrCheckbox ) {
-        		return elem.parents('.field:first');
-        	}
-    	},
-    	listeners: {
-		    onFieldValidate: function ( elem ) {
-		       	if ( $( elem ).hasClass('ignore-validation') || !$( elem ).is( ':visible' ) ) {
-		            return true;
-		        }
-		        return false;
-		    },
-		    onFieldError: function ( elem, constraints, ParsleyField ) {
-
-		    }
-		},
-    	errorClass: 'message required'
+    	
 	});
 
 
