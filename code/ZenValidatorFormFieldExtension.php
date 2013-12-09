@@ -10,7 +10,7 @@ class ZenValidatorFormFieldExtension extends Extension{
 
 	public function validateIf($master){
 		$this->owner->addExtraClass("validation-logic validation-logic-exclude display-logic-validate");
-		return $this->validationLogicCriteria = ValidationLogicCriteria::create($this, $master);
+		return $this->validationLogicCriteria = ValidationLogicCriteria::create($this->owner, $master);
 	}
 
 
