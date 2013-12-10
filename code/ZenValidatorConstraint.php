@@ -489,7 +489,7 @@ class Constraint_type extends ZenValidatorConstraint{
 
 
 	/**
-	 * @param int $type - allowed datatype
+	 * @param string $type - allowed datatype
 	 **/
 	function __construct($type){
 		$this->type = $type;
@@ -501,6 +501,10 @@ class Constraint_type extends ZenValidatorConstraint{
 		parent::applyParsley();
 		$type = ($this->type == 'url') ? 'urlstrict' : $this->type;
 		$this->field->setAttribute('data-type', $type);
+		if($this->customMessage){
+			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), '');
+			$this->field->setAttribute(sprintf('data-type-%s-message', $type), $this->customMessage);	
+		}
 	}
 
 
