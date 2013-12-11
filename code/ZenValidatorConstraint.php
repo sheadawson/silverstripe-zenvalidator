@@ -80,7 +80,7 @@ abstract class ZenValidatorConstraint extends Object{
 		}
 		$this->parsleyApplied = true;
 		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), $this->customMessage);	
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), $this->customMessage);	
 		}
 	}
 
@@ -93,7 +93,7 @@ abstract class ZenValidatorConstraint extends Object{
 	public function removeParsley(){
 		$this->parsleyApplied = false;
 		if($this->field && $this->customMessage){
-			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), '');	
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');	
 		}
 	}
 
@@ -127,14 +127,14 @@ class Constraint_required extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-required', 'true');
+		$this->field->setAttribute('data-parsley-required', 'true');
 		$this->field->addExtraClass('required');
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-required', '');
+		$this->field->setAttribute('data-parsley-required', '');
 		$this->field->addExtraClass('required');
 	}
 
@@ -184,14 +184,19 @@ class Constraint_length extends ZenValidatorConstraint{
 		parent::applyParsley();
 		switch ($this->type) {
 			case 'min':
-				$this->field->setAttribute('data-minlength', $this->val1);
+				$this->field->setAttribute('data-parsley-minlength', $this->val1);
 				break;
 			case 'max':
-				$this->field->setAttribute('data-maxlength', $this->val1);
+				$this->field->setAttribute('data-parsley-maxlength', $this->val1);
 				break;
 			case 'range':
-				$this->field->setAttribute('data-rangelength', sprintf("[%s,%s]", $this->val1, $this->val2));
+				$this->field->setAttribute('data-parsley-rangelength', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
+		}
+
+		if($this->customMessage){
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
+			$this->field->setAttribute(sprintf('data-parsley-%slength-message', $this->type), $this->customMessage);	
 		}
 	}
 
@@ -200,13 +205,13 @@ class Constraint_length extends ZenValidatorConstraint{
 		parent::removeParsley();
 		switch ($this->type) {
 			case 'min':
-				$this->field->setAttribute('data-minlength', '');
+				$this->field->setAttribute('data-parsley-minlength', '');
 				break;
 			case 'max':
-				$this->field->setAttribute('data-maxlength', '');
+				$this->field->setAttribute('data-parsley-maxlength', '');
 				break;
 			case 'range':
-				$this->field->setAttribute('data-rangelength', '');
+				$this->field->setAttribute('data-parsley-rangelength', '');
 				break;
 		}
 	}
@@ -271,13 +276,13 @@ class Constraint_value extends ZenValidatorConstraint{
 		parent::applyParsley();
 		switch ($this->type) {
 			case 'min':
-				$this->field->setAttribute('data-min', $this->val1);
+				$this->field->setAttribute('data-parsley-min', $this->val1);
 				break;
 			case 'max':
-				$this->field->setAttribute('data-max', $this->val1);
+				$this->field->setAttribute('data-parsley-max', $this->val1);
 				break;
 			case 'range':
-				$this->field->setAttribute('data-range', sprintf("[%s,%s]", $this->val1, $this->val2));
+				$this->field->setAttribute('data-parsley-range', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
 	}
@@ -287,13 +292,13 @@ class Constraint_value extends ZenValidatorConstraint{
 		parent::removeParsley();
 		switch ($this->type) {
 			case 'min':
-				$this->field->setAttribute('data-min', '');
+				$this->field->setAttribute('data-parsley-min', '');
 				break;
 			case 'max':
-				$this->field->setAttribute('data-max', '');
+				$this->field->setAttribute('data-parsley-max', '');
 				break;
 			case 'range':
-				$this->field->setAttribute('data-range', '');
+				$this->field->setAttribute('data-parsley-range', '');
 				break;
 		}
 	}
@@ -345,13 +350,13 @@ class Constraint_regex extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-regexp', trim($this->regex, '/'));
+		$this->field->setAttribute('data-parsley-regexp', trim($this->regex, '/'));
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-regexp', '');
+		$this->field->setAttribute('data-parsley-regexp', '');
 	}
 
 
@@ -411,17 +416,17 @@ class Constraint_remote extends ZenValidatorConstraint{
 	public function applyParsley(){
 		parent::applyParsley();
 		$url = count($this->params) ? $this->url . '?' . $this->http_build_query($this->params) : $this->url;
-		$this->field->setAttribute('data-remote', $url);
-		if($this->method == 'POST') $this->field->setAttribute('data-remote-method', 'POST');
-		if($this->jsonp) $this->field->setAttribute('data-remote-datatype', 'jsonp');
+		$this->field->setAttribute('data-parsley-remote', $url);
+		if($this->method == 'POST') $this->field->setAttribute('data-parsley-remote-method', 'POST');
+		if($this->jsonp) $this->field->setAttribute('data-parsley-remote-datatype', 'jsonp');
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-remote', '');
-		if($this->field->getAttribute('data-remote-method')) $this->field->setAttribute('data-remote-method', '');
-		if($this->field->getAttribute('data-remote-datatype')) $this->field->setAttribute('data-remote-datatype', '');
+		$this->field->setAttribute('data-parsley-remote', '');
+		if($this->field->getAttribute('data-parsley-remote-method')) $this->field->setAttribute('data-parsley-remote-method', '');
+		if($this->field->getAttribute('data-parsley-remote-datatype')) $this->field->setAttribute('data-parsley-remote-datatype', '');
 	}
 
 
@@ -500,17 +505,17 @@ class Constraint_type extends ZenValidatorConstraint{
 	public function applyParsley(){
 		parent::applyParsley();
 		$type = ($this->type == 'url') ? 'urlstrict' : $this->type;
-		$this->field->setAttribute('data-type', $type);
+		$this->field->setAttribute('data-parsley-type', $type);
 		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-type-%s-message', $type), $this->customMessage);	
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
+			$this->field->setAttribute(sprintf('data-parsley-type-%s-message', $type), $this->customMessage);	
 		}
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-type', '');
+		$this->field->setAttribute('data-parsley-type', '');
 	}
 
 	
@@ -573,13 +578,13 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	
 	public function applyParsley(){
 	    parent::applyParsley();
-	    $this->field->setAttribute('data-equalTo', '#' . $this->getTargetField()->getAttribute('id'));
+	    $this->field->setAttribute('data-parsley-equalTo', '#' . $this->getTargetField()->getAttribute('id'));
 	}
 
 
 	public function removeParsley(){
 	    parent::removeParsley();
-	    $this->field->setAttribute('data-equalTo', '');
+	    $this->field->setAttribute('data-parsley-equalTo', '');
 	}
 
 

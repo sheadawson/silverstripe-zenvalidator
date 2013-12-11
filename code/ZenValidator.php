@@ -90,7 +90,7 @@ class ZenValidator extends Validator{
 			}else{
 				$this->form->addExtraClass('custom-parsley');
 			}
-			$this->form->setAttribute('data-parsley-namespace', 'data-');
+			$this->form->setAttribute('data-parsley-namespace', 'data-parsley-');
 
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {
