@@ -152,6 +152,11 @@ class Constraint_required extends ZenValidatorConstraint{
 
 /**
  * Constraint_length
+ * Constrain a field value to be a of a min length, max length or between a range  
+ *
+ * @example Constraint_length::create('min', 5); // minimum length of 5 characters
+ * @example Constraint_length::create('max', 5); // maximum length of 5 characters
+ * @example Constraint_length::create('range', 5, 10); // length between 5 and 10 characters
  **/
 class Constraint_length extends ZenValidatorConstraint{
 	
@@ -244,6 +249,14 @@ class Constraint_length extends ZenValidatorConstraint{
 }
 
 
+/**
+ * Constraint_value
+ * Constrain a field value to be a of a min value, max value or between a range  
+ *
+ * @example Constraint_value::create('min', 5); // minimum length of 5 characters
+ * @example Constraint_value::create('max', 5); // maximum length of 5 characters
+ * @example Constraint_value::create('range', 5, 10); // length between 5 and 10 characters
+ **/
 class Constraint_value extends ZenValidatorConstraint{
 
 	
@@ -331,6 +344,12 @@ class Constraint_value extends ZenValidatorConstraint{
 }
 
 
+/**
+ * Constraint_regex
+ * Constrain a field to match a regular expression  
+ *
+ * @example Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"); // value must be a valid hex color
+ **/
 class Constraint_regex extends ZenValidatorConstraint{
 
 	/**
@@ -372,7 +391,12 @@ class Constraint_regex extends ZenValidatorConstraint{
 }
 
 
-
+/**
+ * Constraint_remote
+ * Validate a field remotely via ajax
+ *
+ * See readme for example
+ **/
 class Constraint_remote extends ZenValidatorConstraint{
 
 	/**
@@ -485,6 +509,14 @@ class Constraint_remote extends ZenValidatorConstraint{
 }
 
 
+/**
+ * Constraint_type
+ * Constrain a field value to be a of a min value, max value or between a range  
+ *
+ * @example Constraint_type::create('email'); // require valid email
+ * @example Constraint_type::create('url'); // require valid url
+ * @example Constraint_type::create('number'); // require valid number
+ **/
 class Constraint_type extends ZenValidatorConstraint{
 
 	/**
@@ -552,6 +584,12 @@ class Constraint_type extends ZenValidatorConstraint{
 }
 
 
+/**
+ * Constraint_equalto
+ * Constrain a field value to be the same as another field 
+ *
+ * @example Constraint_equalto::create('OtherField');
+ **/
 class Constraint_equalto extends ZenValidatorConstraint {
 
 	/**
@@ -561,7 +599,7 @@ class Constraint_equalto extends ZenValidatorConstraint {
 
 
 	/**
-	 * @param string $field
+	 * @param string $field the Name of the field to match
 	 **/
 	function __construct($field){
 	    $this->targetField = $field;

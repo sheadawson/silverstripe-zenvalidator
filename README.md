@@ -5,7 +5,7 @@
 
 ## Description
 
-ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through a simple API. 
+ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through a comprehensive yet simple API. 
 [Parsley.js](http://parsleyjs.org/documentation.html) is used for the clientside validation in the frontend.
 
 ## Validation Constraints
@@ -276,6 +276,19 @@ public function getCMSValidator(){
 	return ZenValidator::create()->setConstraint('Content', Constraint_required::create()
 		->setMessage('Please enter some content'));
 } 
+```
+
+
+## Validation Logic - Conditional Constraints
+
+This feature allows you to specify under what conditions a field should or should not have it's validation constraints applied, based on the value(s) of other fields on the form. The concept borrows heavily from and compliments Uncle Cheese's [Display Logic module](https://github.com/unclecheese/silverstripe-display-logic).
+
+Caution: The Conditional Constraint feature relies on a line of code in the SilverStripe Framework that has not yet been released. If you'd like to use this feature before the next release of Framework, you can [patch FormField.php yourself](https://github.com/silverstripe/silverstripe-framework/commit/eaa390b1de9f7c4f895dfe56eaeb4db9364f6c31)
+
+### TODO - Validation Logic Examples
+
+```php
+$country->validateIf('EmailAddress')->isEqualTo('s');
 ```
 	
 ## Extending

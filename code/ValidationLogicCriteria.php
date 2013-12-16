@@ -1,11 +1,9 @@
 <?php
-
 /**
- *  Defines a set of criteria that control the display of a given
- *  {@link FormField} object
- *
- * @package  display_logic
- * @author  Uncle Cheese <unclecheese@leftandmain.com>
+ * @package ZenValidator
+ * @license BSD License http://www.silverstripe.org/bsd-license
+ * @author <shea@silverstripe.com.au>
+ * Credit to Uncle Cheese for the recipe
  */
 class ValidationLogicCriteria extends Object {
 
@@ -27,18 +25,18 @@ class ValidationLogicCriteria extends Object {
 
 
 	/**
-	 * A parent {@link DisplayLogicCriteria}, for grouping
-	 * @var DisplayLogicCriteria
+	 * A parent {@link ValidationLogicCriteria}, for grouping
+	 * @var ValidationLogicCriteria
 	 */
 	protected $parent = null;
 
 
 
 	/**
-	 * A list of {@link DisplayLogicCriterion} objects
+	 * A list of {@link ValidationLogicCriterion} objects
 	 * @var array
 	 */
-	protected $criteria = array ();
+	protected $criteria = array();
 
 
 
@@ -62,7 +60,7 @@ class ValidationLogicCriteria extends Object {
 	 * Constructor
 	 * @param FormField $slave  The form field that responds to changes of another form field
 	 * @param [type]    $master The name of the form field to respond to
-	 * @param [type]    $parent The parent {@link DisplayLogicCriteria}
+	 * @param [type]    $parent The parent {@link ValidationLogicCriteria}
 	 */
 	public function __construct(ZenValidatorConstraint $slave, $master, $parent = null) {
 		parent::__construct();
@@ -79,7 +77,7 @@ class ValidationLogicCriteria extends Object {
 	 * Wildcard method for applying all the possible conditions
 	 * @param  sting $method The method name
 	 * @param  array $args The arguments
-	 * @return  DisplayLogicCriteria
+	 * @return  ValidationLogicCriteria
 	 */
 	public function __call($method, $args) {		
 		if(in_array($method, array_keys($this->config()->comparisons))) {		
@@ -102,13 +100,13 @@ class ValidationLogicCriteria extends Object {
 
 
 	/**
-	 * Adds a {@link DisplayLogicCriterion} for a range of values
+	 * Adds a {@link ValidationLogicCriterion} for a range of values
 	 * @param  int  $min The minimum value
 	 * @param  int  $max The maxiumum value
-	 * @return DisplayLogicCriteria
+	 * @return ValidationLogicCriteria
 	 */
 	// public function isBetween($min, $max) {		
-	// 	$this->addCriterion(DisplayLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
+	// 	$this->addCriterion(ValidationLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
 	// 	return $this;
 	// }
 
@@ -117,11 +115,11 @@ class ValidationLogicCriteria extends Object {
 	/**
 	 * Adds a new criterion, and makes this set use conjuctive logic
 	 * @param  string $master The master form field
-	 * @return DisplayLogicCriteria
+	 * @return ValidationLogicCriteria
 	 */
 	public function andIf($master = null) {
 		if($this->logicalOperator == "or") {
-			user_error("DisplayLogicCriteria: Cannot declare a logical operator more than once. (Specified andIf() after calling orIf()). Use a nested DisplayLogicCriteriaSet to combine conjunctive and disjuctive logic.",E_USER_ERROR);
+			user_error("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified andIf() after calling orIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.",E_USER_ERROR);
 		}
 		if($master) $this->master = $master;
 		$this->logicalOperator = "and";
@@ -134,11 +132,11 @@ class ValidationLogicCriteria extends Object {
 	/**
 	 * Adds a new criterion, and makes this set use disjunctive logic
 	 * @param  string $master The master form field
-	 * @return DisplayLogicCriteria
+	 * @return ValidationLogicCriteria
 	 */
 	public function orIf($master = null) {
 		if($this->logicalOperator == "and") {
-			user_error("DisplayLogicCriteria: Cannot declare a logical operator more than once. (Specified orIf() after calling andIf()). Use a nested DisplayLogicCriteriaSet to combine conjunctive and disjuctive logic.",E_USER_ERROR);
+			user_error("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified orIf() after calling andIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.",E_USER_ERROR);
 		}
 		if($master) $this->master = $master;
 		$this->logicalOperator = "or";
@@ -179,8 +177,8 @@ class ValidationLogicCriteria extends Object {
 
 
 	/**
-	 * Creates a nested {@link DisplayLogicCriteria}
-	 * @return DisplayLogicCriteria
+	 * Creates a nested {@link ValidationLogicCriteria}
+	 * @return ValidationLogicCriteria
 	 */
 	public function group() {
 		return ValidationLogicCriteria::create($this->slave, $this->master, $this);
@@ -190,8 +188,8 @@ class ValidationLogicCriteria extends Object {
 
 
 	/**
-	 * Ends the chaining and returns the parent object, either {@link DisplayLogicCriteria} or {@link FormField}
-	 * @return FormField/DisplayLogicCriteria
+	 * Ends the chaining and returns the parent object, either {@link ValidationLogicCriteria} or {@link FormField}
+	 * @return FormField/ValidationLogicCriteria
 	 */
 	public function end() {
 		if($this->parent) {

@@ -1,17 +1,16 @@
 <?php
 
 /**
- *  Defines a criterion that controls the display of a given
- *  {@link FormField} object
- *
- * @package  display_logic
- * @author  Uncle Cheese <unclecheese@leftandmain.com>
+ * @package ZenValidator
+ * @license BSD License http://www.silverstripe.org/bsd-license
+ * @author <shea@silverstripe.com.au>
+ * Credit to Uncle Cheese for the recipe
  */
 class ValidationLogicCriterion extends Object {
 
 
 	/**
-	 * The name of the form field that is controlling the display
+	 * The name of the form field that is controlling the Validation
 	 * @var string
 	 */
 	protected $master = null;
@@ -37,7 +36,7 @@ class ValidationLogicCriterion extends Object {
 
 	/**
 	 * The parent {@link ValidationLogicCriteria}
-	 * @var DisplayLogicCriteria
+	 * @var ValidationLogicCriteria
 	 */
 	protected $set = null;
 
@@ -48,7 +47,7 @@ class ValidationLogicCriterion extends Object {
 	 * @param string               $master   The name of the master field
 	 * @param string               $operator The name of the comparison function
 	 * @param string               $value    The value to compare to
-	 * @param DisplayLogicCriteria $set      The parent criteria set
+	 * @param ValidationLogicCriteria $set      The parent criteria set
 	 */
 	public function __construct($master, $operator, $value, ValidationLogicCriteria $set) {
 		parent::__construct();
