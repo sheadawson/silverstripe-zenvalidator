@@ -83,13 +83,11 @@ class ZenValidatorTest extends SapphireTest{
 
 		// test parsley is applied by default on set up
 		$this->assertTrue($zv->parsleyIsEnabled());
-		$this->assertTrue($form->getAttribute('data-validate') == 'parsley');
 		$this->assertContains('parsley', explode(' ', $form->extraClass()));
 
 		// test parsley is disbaled/removed
 		$zv->disableParsley();
 		$this->assertFalse($zv->parsleyIsEnabled());
-		$this->assertFalse($form->getAttribute('data-validate') == 'parsley');
 		$this->assertNotContains('parsley', explode(' ', $form->extraClass()));
 	}
 }
