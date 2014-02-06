@@ -17,7 +17,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_required')->getField();
-		$this->assertTrue($field->getAttribute('data-required') == 'true');
+		$this->assertTrue($field->getAttribute('data-parsley-required') == 'true');
 
 		// test valid
 		$data['Title'] = 'Some Text';
@@ -38,7 +38,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_length')->getField();
-		$this->assertTrue($field->getAttribute('data-minlength') == '5');
+		$this->assertTrue($field->getAttribute('data-parsley-minlength') == '5');
 
 		// test valid
 		$data['Title'] = 'Some Text';
@@ -59,7 +59,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_length')->getField();
-		$this->assertTrue($field->getAttribute('data-maxlength') == '5');
+		$this->assertTrue($field->getAttribute('data-parsley-maxlength') == '5');
 
 		// test valid
 		$data['Title'] = 'Some';
@@ -80,7 +80,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_length')->getField();
-		$this->assertTrue($field->getAttribute('data-rangelength') == '[5,10]');
+		$this->assertTrue($field->getAttribute('data-parsley-rangelength') == '[5,10]');
 
 		// test valid
 		$data['Title'] = 'Some Text';
@@ -101,7 +101,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_value')->getField();
-		$this->assertTrue($field->getAttribute('data-min') == '5');
+		$this->assertTrue($field->getAttribute('data-parsley-min') == '5');
 
 		// test valid
 		$data['Title'] = '6';
@@ -122,7 +122,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_value')->getField();
-		$this->assertTrue($field->getAttribute('data-max') == '5');
+		$this->assertTrue($field->getAttribute('data-parsley-max') == '5');
 
 		// test valid
 		$data['Title'] = '3';
@@ -143,7 +143,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_value')->getField();
-		$this->assertTrue($field->getAttribute('data-range') == '[5,10]');
+		$this->assertTrue($field->getAttribute('data-parsley-range') == '[5,10]');
 
 		// test valid
 		$data['Title'] = '6';
@@ -164,7 +164,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_regex')->getField();
-		$this->assertTrue($field->getAttribute('data-regexp') == "^#(?:[0-9a-fA-F]{3}){1,2}$");
+		$this->assertTrue($field->getAttribute('data-parsley-regexp') == "^#(?:[0-9a-fA-F]{3}){1,2}$");
 
 		// test valid
 		$data['Title'] = '#ff0000';
@@ -185,7 +185,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_type')->getField();
-		$this->assertTrue($field->getAttribute('data-type') == 'urlstrict');
+		$this->assertTrue($field->getAttribute('data-parsley-type') == 'urlstrict');
 
 		// test valid
 		$data['Title'] = 'http://www.things.com';
@@ -206,7 +206,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_type')->getField();
-		$this->assertTrue($field->getAttribute('data-type') == 'email');
+		$this->assertTrue($field->getAttribute('data-parsley-type') == 'email');
 
 		// test valid
 		$data['Title'] = 'person@things.com';
@@ -227,7 +227,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_type')->getField();
-		$this->assertTrue($field->getAttribute('data-type') == 'number');
+		$this->assertTrue($field->getAttribute('data-parsley-type') == 'number');
 
 		// test valid
 		$data['Title'] = '500';
@@ -248,7 +248,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_type')->getField();
-		$this->assertTrue($field->getAttribute('data-type') == 'alphanum');
+		$this->assertTrue($field->getAttribute('data-parsley-type') == 'alphanum');
 
 		// test valid
 		$data['Title'] = '500tests';
@@ -270,7 +270,7 @@ class ZenValidatorConstraintTest extends SapphireTest{
 
 		// test attributes
 		$field = $zv->getConstraint('Title', 'Constraint_equalto')->getField();
-		$this->assertTrue($field->getAttribute('data-equalTo') == 'Form_Form_Subtitle');
+		$this->assertTrue($field->getAttribute('data-parsley-equalTo') == '#Form_Form_Subtitle');
 
 		// test valid
 		$data['Title'] = '500tests';
