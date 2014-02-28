@@ -298,6 +298,11 @@ class Constraint_value extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-range', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
+
+		if($this->customMessage){
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
+			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->type), $this->customMessage);	
+		}
 	}
 
 
