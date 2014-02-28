@@ -253,9 +253,9 @@ class Constraint_length extends ZenValidatorConstraint{
  * Constraint_value
  * Constrain a field value to be a of a min value, max value or between a range  
  *
- * @example Constraint_value::create('min', 5); // minimum length of 5 characters
- * @example Constraint_value::create('max', 5); // maximum length of 5 characters
- * @example Constraint_value::create('range', 5, 10); // length between 5 and 10 characters
+ * @example Constraint_value::create('min', 5); // minimum value of 5
+ * @example Constraint_value::create('max', 5); // maximum value of 5 
+ * @example Constraint_value::create('range', 5, 10); // value between 5 and 10 characters
  **/
 class Constraint_value extends ZenValidatorConstraint{
 
