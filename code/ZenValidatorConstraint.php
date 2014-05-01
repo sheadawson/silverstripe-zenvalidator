@@ -444,7 +444,7 @@ class Constraint_remote extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$url = count($this->params) ? $this->url . '?' . $this->http_build_query($this->params) : $this->url;
+		$url = count($this->params) ? $this->url . '?' . http_build_query($this->params) : $this->url;
 		$this->field->setAttribute('data-parsley-remote', $url);
 		if($this->method == 'POST') $this->field->setAttribute('data-parsley-remote-method', 'POST');
 		if($this->jsonp) $this->field->setAttribute('data-parsley-remote-datatype', 'jsonp');
