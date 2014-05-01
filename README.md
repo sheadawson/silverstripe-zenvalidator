@@ -159,7 +159,7 @@ $validator->setConstraint('Username', Constraint_remote::create($this->Link('che
 The above example will send an ajax request to my checkusername method on the same controller as the Form. A request var with a key the same as the field name will contain the value to test. So my checkusername method might look something like this:
 
 ```php
-public function checkusername($requst){
+public function checkusername($request){
 	$username = $request->requestVar('Username');
 	
 	// check for existing user with same username
