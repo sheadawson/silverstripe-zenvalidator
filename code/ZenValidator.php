@@ -222,6 +222,7 @@ class ZenValidator extends Validator{
 			foreach ($constraints as $k => $v) {
 				$this->removeConstraint($fieldName, $k);
 			}
+			unset($this->constraints[$fieldName]);
 		}
 		return $this;
 	}
