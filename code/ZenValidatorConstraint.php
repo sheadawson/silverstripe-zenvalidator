@@ -438,6 +438,9 @@ class Constraint_remote extends ZenValidatorConstraint{
 		$this->params = $params;
 		$this->method = $method;
 		$this->jsonp = $jsonp;
+		
+		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
+		
 		parent::__construct();
 	}
 
