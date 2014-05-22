@@ -421,31 +421,38 @@ class Constraint_remote extends ZenValidatorConstraint{
 	protected $params;
 
 	/**
-	 * @var string
+	 * @var array
 	 **/
-	protected $method;
+	protected $options;
 
 	/**
 	 * @var string
 	 **/
-	protected $jsonp;
+	protected $validator;
+	
+	/**
+	 * @var string
+	 **/
+	protected $method = 'GET';
 
 
 	/**
 	 * @param string $url - the url to call via ajax
 	 * @param array $params - request vars
-	 * @param string $method - method of ajax request (GET / POST)
-	 * @param boolean $jsonp  if you make cross domain ajax call and expect jsonp,
+	 * @param string $options - array of options like { "type": "POST", "dataType": "jsonp", "data": { "token": "value" } }
+	 * @param boolean|string $validator  - custom validator or "reverse"
 	 * The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
      * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
 	 **/
-	function __construct($url, $params=array(), $method='GET', $jsonp=false){
+	function __construct($url, $params=array(), $options = true, $validator = null){
 		$this->url = $url;
 		$this->params = $params;
-		$this->method = $method;
-		$this->jsonp = $jsonp;
+		$this->options = $options;
+		$this->validator = $validator;
 		
-		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
+		if(is_array($options) && isset($this->options['type'])) {
+			$this->method = $this->options['type'];
+		}
 		
 		parent::__construct();
 	}
@@ -455,16 +462,16 @@ class Constraint_remote extends ZenValidatorConstraint{
 		parent::applyParsley();
 		$url = count($this->params) ? $this->url . '?' . http_build_query($this->params) : $this->url;
 		$this->field->setAttribute('data-parsley-remote', $url);
-		if($this->method == 'POST') $this->field->setAttribute('data-parsley-remote-method', 'POST');
-		if($this->jsonp) $this->field->setAttribute('data-parsley-remote-datatype', 'jsonp');
+		if(!empty($this->options)) $this->field->setAttribute('data-parsley-remote-options', json_encode($this->options));
+		if($this->validator) $this->field->setAttribute('data-parsley-remote-validator', $this->validator);
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
 		$this->field->setAttribute('data-parsley-remote', '');
-		if($this->field->getAttribute('data-parsley-remote-method')) $this->field->setAttribute('data-parsley-remote-method', '');
-		if($this->field->getAttribute('data-parsley-remote-datatype')) $this->field->setAttribute('data-parsley-remote-datatype', '');
+		if($this->field->getAttribute('data-parsley-remote-options')) $this->field->setAttribute('data-parsley-remote-options', '');
+		if($this->field->getAttribute('data-parsley-remote-validator')) $this->field->setAttribute('data-parsley-remote-validator', '');
 	}
 
 
@@ -495,7 +502,12 @@ class Constraint_remote extends ZenValidatorConstraint{
 		
 		// validate result
 		if($result == '1' || $result == 'true'){
-			return true;
+			if($this->validator == 'reverse') {
+				return false;
+			}
+			else {
+				return true;
+			}
 		}
 
 		$isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result))))) ? true : false;
