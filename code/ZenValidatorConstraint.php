@@ -160,6 +160,10 @@ class Constraint_required extends ZenValidatorConstraint{
  **/
 class Constraint_length extends ZenValidatorConstraint{
 	
+	const MIN = 'min';
+	const MAX = 'max';
+	const RANGE = 'range';
+	
 	/**
 	 * @var string
 	 **/
@@ -195,7 +199,7 @@ class Constraint_length extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-maxlength', $this->val1);
 				break;
 			case 'range':
-				$this->field->setAttribute('data-parsley-rangelength', sprintf("[%s,%s]", $this->val1, $this->val2));
+				$this->field->setAttribute('data-parsley-length', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
 
@@ -216,7 +220,7 @@ class Constraint_length extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-maxlength', '');
 				break;
 			case 'range':
-				$this->field->setAttribute('data-parsley-rangelength', '');
+				$this->field->setAttribute('data-parsley-length', '');
 				break;
 		}
 	}
@@ -259,6 +263,9 @@ class Constraint_length extends ZenValidatorConstraint{
  **/
 class Constraint_value extends ZenValidatorConstraint{
 
+	const MIN = 'min';
+	const MAX = 'max';
+	const RANGE = 'range';
 	
 	/**
 	 * @var string
@@ -374,13 +381,13 @@ class Constraint_regex extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-parsley-regexp', trim($this->regex, '/'));
+		$this->field->setAttribute('data-parsley-pattern', trim($this->regex, '/'));
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-parsley-regexp', '');
+		$this->field->setAttribute('data-parsley-pattern', '');
 	}
 
 
@@ -530,6 +537,14 @@ class Constraint_remote extends ZenValidatorConstraint{
  **/
 class Constraint_type extends ZenValidatorConstraint{
 
+	const EMAIL = 'email';
+	const URL = 'url';
+	const NUMBER = 'number';
+	const INTEGER = 'integer';
+	const DIGITS = 'digits';
+	const ALPHANUM = 'alphanum';
+
+
 	/**
 	 * @var string
 	 **/
@@ -632,13 +647,13 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	
 	public function applyParsley(){
 	    parent::applyParsley();
-	    $this->field->setAttribute('data-parsley-equalTo', '#' . $this->getTargetField()->getAttribute('id'));
+	    $this->field->setAttribute('data-parsley-equalto', '#' . $this->getTargetField()->getAttribute('id'));
 	}
 
 
 	public function removeParsley(){
 	    parent::removeParsley();
-	    $this->field->setAttribute('data-parsley-equalTo', '');
+	    $this->field->setAttribute('data-parsley-equalto', '');
 	}
 
 
