@@ -202,13 +202,11 @@ class Constraint_length extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-length', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
-
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-%slength-message', $this->type), $this->customMessage);	
-		}
 	}
-
+	
+	public function getConstraintName(){
+		return $this->type;
+	}
 
 	public function removeParsley(){
 		parent::removeParsley();
@@ -305,11 +303,10 @@ class Constraint_value extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-range', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
-
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->type), $this->customMessage);	
-		}
+	}
+	
+	public function getConstraintName(){
+		return $this->type;
 	}
 
 
@@ -355,7 +352,6 @@ class Constraint_value extends ZenValidatorConstraint{
 	}
 }
 
-
 /**
  * Constraint_regex
  * Constrain a field to match a regular expression  
@@ -377,7 +373,10 @@ class Constraint_regex extends ZenValidatorConstraint{
 		$this->regex = $regex;
 		parent::__construct();
 	}
-
+	
+	public function getConstraintName(){
+		return 'pattern';
+	}
 
 	public function applyParsley(){
 		parent::applyParsley();
@@ -562,11 +561,7 @@ class Constraint_type extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-parsley-type', $type);
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-type-%s-message', $type), $this->customMessage);	
-		}
+		$this->field->setAttribute('data-parsley-type', $this->type);
 	}
 
 
