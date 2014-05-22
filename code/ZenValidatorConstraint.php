@@ -134,8 +134,8 @@ class Constraint_required extends ZenValidatorConstraint{
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-parsley-required', '');
-		$this->field->addExtraClass('required');
+		$this->field->setAttribute('data-parsley-required', 'false');
+		$this->field->removeExtraClass('required');
 	}
 
 
@@ -524,6 +524,9 @@ class Constraint_remote extends ZenValidatorConstraint{
  * @example Constraint_type::create('email'); // require valid email
  * @example Constraint_type::create('url'); // require valid url
  * @example Constraint_type::create('number'); // require valid number
+ * @example Constraint_type::create('integer'); // require valid integer
+ * @example Constraint_type::create('digits'); // require only digits
+ * @example Constraint_type::create('alphanum'); // require valid alphanumeric string
  **/
 class Constraint_type extends ZenValidatorConstraint{
 
@@ -544,7 +547,6 @@ class Constraint_type extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$type = ($this->type == 'url') ? 'urlstrict' : $this->type;
 		$this->field->setAttribute('data-parsley-type', $type);
 		if($this->customMessage){
 			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
@@ -569,6 +571,10 @@ class Constraint_type extends ZenValidatorConstraint{
 				return filter_var($value, FILTER_VALIDATE_EMAIL);
 			case 'number':
 				return is_numeric($value);
+			case 'integer':
+				return is_int($value);
+			case 'digits':
+				return preg_match('/^[0-9]*$/',$value);
 			case 'alphanum':
 				return ctype_alnum($value);
 		}
@@ -579,12 +585,14 @@ class Constraint_type extends ZenValidatorConstraint{
 		switch ($this->type) {
 			case 'url':
 				return _t('ZenValidator.URL', 'This value should be a valid URL');
-			case 'urlstrict':
-				return _t('ZenValidator.URL', 'This value should be a valid URL');
 			case 'email':
 				return _t('ZenValidator.EMAIL', 'This value should be a valid email');
 			case 'number':
 				return _t('ZenValidator.NUMBER', 'This value should be a number');
+			case 'integer':
+				return _t('ZenValidator.INTEGER', 'This value should be a number');
+			case 'digits':
+				return _t('ZenValidator.DIGITS', 'This value should be a number');
 			case 'alphanum':
 				return _t('ZenValidator.URL', 'This value should be alphanumeric');
 		}
