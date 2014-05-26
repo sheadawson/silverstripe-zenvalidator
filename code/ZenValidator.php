@@ -81,16 +81,20 @@ class ZenValidator extends Validator{
 		$this->parsleyEnabled = true;
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.min.js');
+		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
 		Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
-
+		
+		$lang = i18n::get_lang_from_locale(i18n::get_locale());
+		if($lang != 'en') {
+			Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
+		}
+		
 		if($this->form){
 			if ($this->defaultJS) {
 				$this->form->addExtraClass('parsley');
 			}else{
 				$this->form->addExtraClass('custom-parsley');
 			}
-			$this->form->setAttribute('data-parsley-namespace', 'data-parsley-');
 
 			foreach ($this->constraints as $fieldName => $constraints) {
 				foreach ($constraints as $constraint) {

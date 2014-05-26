@@ -134,8 +134,8 @@ class Constraint_required extends ZenValidatorConstraint{
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-parsley-required', '');
-		$this->field->addExtraClass('required');
+		$this->field->setAttribute('data-parsley-required', 'false');
+		$this->field->removeExtraClass('required');
 	}
 
 
@@ -159,6 +159,10 @@ class Constraint_required extends ZenValidatorConstraint{
  * @example Constraint_length::create('range', 5, 10); // length between 5 and 10 characters
  **/
 class Constraint_length extends ZenValidatorConstraint{
+	
+	const MIN = 'min';
+	const MAX = 'max';
+	const RANGE = 'range';
 	
 	/**
 	 * @var string
@@ -195,16 +199,14 @@ class Constraint_length extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-maxlength', $this->val1);
 				break;
 			case 'range':
-				$this->field->setAttribute('data-parsley-rangelength', sprintf("[%s,%s]", $this->val1, $this->val2));
+				$this->field->setAttribute('data-parsley-length', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
-
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-%slength-message', $this->type), $this->customMessage);	
-		}
 	}
-
+	
+	public function getConstraintName(){
+		return $this->type;
+	}
 
 	public function removeParsley(){
 		parent::removeParsley();
@@ -216,7 +218,7 @@ class Constraint_length extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-maxlength', '');
 				break;
 			case 'range':
-				$this->field->setAttribute('data-parsley-rangelength', '');
+				$this->field->setAttribute('data-parsley-length', '');
 				break;
 		}
 	}
@@ -259,6 +261,9 @@ class Constraint_length extends ZenValidatorConstraint{
  **/
 class Constraint_value extends ZenValidatorConstraint{
 
+	const MIN = 'min';
+	const MAX = 'max';
+	const RANGE = 'range';
 	
 	/**
 	 * @var string
@@ -298,11 +303,10 @@ class Constraint_value extends ZenValidatorConstraint{
 				$this->field->setAttribute('data-parsley-range', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
-
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->type), $this->customMessage);	
-		}
+	}
+	
+	public function getConstraintName(){
+		return $this->type;
 	}
 
 
@@ -348,7 +352,6 @@ class Constraint_value extends ZenValidatorConstraint{
 	}
 }
 
-
 /**
  * Constraint_regex
  * Constrain a field to match a regular expression  
@@ -370,17 +373,20 @@ class Constraint_regex extends ZenValidatorConstraint{
 		$this->regex = $regex;
 		parent::__construct();
 	}
-
+	
+	public function getConstraintName(){
+		return 'pattern';
+	}
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$this->field->setAttribute('data-parsley-regexp', trim($this->regex, '/'));
+		$this->field->setAttribute('data-parsley-pattern', trim($this->regex, '/'));
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
-		$this->field->setAttribute('data-parsley-regexp', '');
+		$this->field->setAttribute('data-parsley-pattern', '');
 	}
 
 
@@ -415,29 +421,39 @@ class Constraint_remote extends ZenValidatorConstraint{
 	protected $params;
 
 	/**
-	 * @var string
+	 * @var array
 	 **/
-	protected $method;
+	protected $options;
 
 	/**
 	 * @var string
 	 **/
-	protected $jsonp;
+	protected $validator;
+	
+	/**
+	 * @var string
+	 **/
+	protected $method = 'GET';
 
 
 	/**
 	 * @param string $url - the url to call via ajax
 	 * @param array $params - request vars
-	 * @param string $method - method of ajax request (GET / POST)
-	 * @param boolean $jsonp  if you make cross domain ajax call and expect jsonp,
+	 * @param string $options - array of options like { "type": "POST", "dataType": "jsonp", "data": { "token": "value" } }
+	 * @param boolean|string $validator  - custom validator or "reverse"
 	 * The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
      * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
 	 **/
-	function __construct($url, $params=array(), $method='GET', $jsonp=false){
+	function __construct($url, $params=array(), $options = true, $validator = null){
 		$this->url = $url;
 		$this->params = $params;
-		$this->method = $method;
-		$this->jsonp = $jsonp;
+		$this->options = $options;
+		$this->validator = $validator;
+		
+		if(is_array($options) && isset($this->options['type'])) {
+			$this->method = $this->options['type'];
+		}
+		
 		parent::__construct();
 	}
 
@@ -446,16 +462,16 @@ class Constraint_remote extends ZenValidatorConstraint{
 		parent::applyParsley();
 		$url = count($this->params) ? $this->url . '?' . http_build_query($this->params) : $this->url;
 		$this->field->setAttribute('data-parsley-remote', $url);
-		if($this->method == 'POST') $this->field->setAttribute('data-parsley-remote-method', 'POST');
-		if($this->jsonp) $this->field->setAttribute('data-parsley-remote-datatype', 'jsonp');
+		if(!empty($this->options)) $this->field->setAttribute('data-parsley-remote-options', json_encode($this->options));
+		if($this->validator) $this->field->setAttribute('data-parsley-remote-validator', $this->validator);
 	}
 
 
 	public function removeParsley(){
 		parent::removeParsley();
 		$this->field->setAttribute('data-parsley-remote', '');
-		if($this->field->getAttribute('data-parsley-remote-method')) $this->field->setAttribute('data-parsley-remote-method', '');
-		if($this->field->getAttribute('data-parsley-remote-datatype')) $this->field->setAttribute('data-parsley-remote-datatype', '');
+		if($this->field->getAttribute('data-parsley-remote-options')) $this->field->setAttribute('data-parsley-remote-options', '');
+		if($this->field->getAttribute('data-parsley-remote-validator')) $this->field->setAttribute('data-parsley-remote-validator', '');
 	}
 
 
@@ -486,7 +502,12 @@ class Constraint_remote extends ZenValidatorConstraint{
 		
 		// validate result
 		if($result == '1' || $result == 'true'){
-			return true;
+			if($this->validator == 'reverse') {
+				return false;
+			}
+			else {
+				return true;
+			}
 		}
 
 		$isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result))))) ? true : false;
@@ -521,8 +542,19 @@ class Constraint_remote extends ZenValidatorConstraint{
  * @example Constraint_type::create('email'); // require valid email
  * @example Constraint_type::create('url'); // require valid url
  * @example Constraint_type::create('number'); // require valid number
+ * @example Constraint_type::create('integer'); // require valid integer
+ * @example Constraint_type::create('digits'); // require only digits
+ * @example Constraint_type::create('alphanum'); // require valid alphanumeric string
  **/
 class Constraint_type extends ZenValidatorConstraint{
+
+	const EMAIL = 'email';
+	const URL = 'url';
+	const NUMBER = 'number';
+	const INTEGER = 'integer';
+	const DIGITS = 'digits';
+	const ALPHANUM = 'alphanum';
+
 
 	/**
 	 * @var string
@@ -541,12 +573,7 @@ class Constraint_type extends ZenValidatorConstraint{
 
 	public function applyParsley(){
 		parent::applyParsley();
-		$type = ($this->type == 'url') ? 'urlstrict' : $this->type;
-		$this->field->setAttribute('data-parsley-type', $type);
-		if($this->customMessage){
-			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
-			$this->field->setAttribute(sprintf('data-parsley-type-%s-message', $type), $this->customMessage);	
-		}
+		$this->field->setAttribute('data-parsley-type', $this->type);
 	}
 
 
@@ -566,6 +593,10 @@ class Constraint_type extends ZenValidatorConstraint{
 				return filter_var($value, FILTER_VALIDATE_EMAIL);
 			case 'number':
 				return is_numeric($value);
+			case 'integer':
+				return is_int($value);
+			case 'digits':
+				return preg_match('/^[0-9]*$/',$value);
 			case 'alphanum':
 				return ctype_alnum($value);
 		}
@@ -576,12 +607,14 @@ class Constraint_type extends ZenValidatorConstraint{
 		switch ($this->type) {
 			case 'url':
 				return _t('ZenValidator.URL', 'This value should be a valid URL');
-			case 'urlstrict':
-				return _t('ZenValidator.URL', 'This value should be a valid URL');
 			case 'email':
 				return _t('ZenValidator.EMAIL', 'This value should be a valid email');
 			case 'number':
 				return _t('ZenValidator.NUMBER', 'This value should be a number');
+			case 'integer':
+				return _t('ZenValidator.INTEGER', 'This value should be a number');
+			case 'digits':
+				return _t('ZenValidator.DIGITS', 'This value should be a number');
 			case 'alphanum':
 				return _t('ZenValidator.URL', 'This value should be alphanumeric');
 		}
@@ -621,13 +654,13 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	
 	public function applyParsley(){
 	    parent::applyParsley();
-	    $this->field->setAttribute('data-parsley-equalTo', '#' . $this->getTargetField()->getAttribute('id'));
+	    $this->field->setAttribute('data-parsley-equalto', '#' . $this->getTargetField()->getAttribute('id'));
 	}
 
 
 	public function removeParsley(){
 	    parent::removeParsley();
-	    $this->field->setAttribute('data-parsley-equalTo', '');
+	    $this->field->setAttribute('data-parsley-equalto', '');
 	}
 
 

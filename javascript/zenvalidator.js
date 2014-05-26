@@ -1,14 +1,12 @@
 (function($) {
 	$.entwine('ss.zenvalidator', function($) {
-		$('form.parsley').parsley({
-	    	listeners: {
-			    onFieldValidate: function ( elem ) {
-			       	if ( $( elem ).hasClass('ignore-validation') || !$( elem ).is( ':visible' ) ) {
-			            return true;
-			        }
-			        return false;
-			    }
+		$('form.parsley').parsley();
+		$.listen('parsley:field:validate', function(field) {
+			var $el = field.$element;
+			if ( $el.hasClass('ignore-validation') || !$el.is( ':visible' ) ) {
+				return true;
 			}
+			return false;
 		});
 
 		$('.field').entwine({
@@ -20,7 +18,6 @@
 			getFieldName: function() {
 				return this.attr('id');
 			},
-
 
 			getFieldValue: function() {
 				return this.getFormField().val();
@@ -44,11 +41,6 @@
 				return parseFloat(this.getFieldValue()) > num;
 			},
 
-			evaluateLessThan: function(val) {
-				num = parseFloat(val);
-				return parseFloat(this.getFieldValue()) < num;
-			},
-
 			evaluateContains: function(val) {
 				return this.getFieldValue().match(val) !== null;
 			},
@@ -67,7 +59,6 @@
 
 
 		});
-
 
 
 		$('.field.validation-logic').entwine({
@@ -122,14 +113,11 @@
 			}
 		});
 
-
 		$('.field input[type=checkbox]').entwine({
 			getLabel: function() {
 				return this.closest('form').find('label[for='+this.attr('id')+']');
 			}
-		})
-
-
+		});
 
 		$('.field.validation-logic.validation-logic-validate').entwine({
 			testLogic: function() {
@@ -144,10 +132,6 @@
 			}
 		});
 
-
-
-
-
 		$('.field.validation-logic-master :text, .field.validation-logic-master select').entwine({
 			onmatch: function() {
 				this.closest(".field").notify();
@@ -157,7 +141,6 @@
 				this.closest(".field").notify();
 			}
 		});
-		
 
 		$('.field.validation-logic-master :checkbox, .field.validation-logic-master :radio').entwine({
 			onmatch: function() {			
@@ -168,8 +151,6 @@
 				this.closest(".field").notify();
 			}
 		});
-
-
 
 		$('.field.validation-logic-master').entwine({
 			Listeners: null,
