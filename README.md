@@ -267,6 +267,14 @@ $('form.custom-parsley').parsley({
 });
 ```
 
+Warning: $(elem).parsley() can return an array (in which can, attaching subscribe will fail) in case you match multiple forms. Use the following syntax instead if you need to match multiple elements:
+
+```javascript
+$.each($('form.parsley').parsley(),function(i,parsleyForm) {
+	parsleyForm.subscribe('parsley:field:validate', function(field) { ... });
+});
+```
+
 See [Parsley.js](http://parsleyjs.org/doc/index.html) for the full list of configuration settings
 	
 	
