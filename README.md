@@ -15,7 +15,7 @@ Out of the box constraints include:
 * required
 * value (min, max, range)
 * length (min, max, range)
-* type (email, url, number, alphanumeric)
+* type (email, url, number, integer, digits, alphanumeric)
 * equalto (equal to the value of another field)
 * regex
 * remote (validate remotely via ajax)
@@ -109,7 +109,7 @@ $validator->setConstraint('Username', Constraint_length::create('range', 3, 5));
 
 ##### Type Constraints
 
-The Constraint_type constraint can be used to validate inputs of type email, url, number or alphanum. Pass one of said options as the first parameter into the constructor.
+The Constraint_type constraint can be used to validate inputs of type email, url, number, integer, digits or alphanum. Pass one of said options as the first parameter into the constructor.
 
 Email
 ```php
@@ -124,6 +124,16 @@ $validator->setConstraint('Website', Constraint_type::create('url'));
 Number
 ```php
 $validator->setConstraint('Age', Constraint_type::create('number'));
+```
+
+Integer
+```php
+$validator->setConstraint('Age', Constraint_type::create('integer'));
+```
+
+Digits
+```php
+$validator->setConstraint('Age', Constraint_type::create('digits'));
 ```
 	
 Alphanum
@@ -177,8 +187,8 @@ All arguments/settings for the Constraint_remote constructor:
 
 * $url - The URL to send the validation request to (do not include a query string, use $params)
 * $params - An array of request vars to be sent with the request
-* $method - "POST" or "GET". Defaults to GET
-* $jsonp - Boolean, use this for cross domain ajax requests. Defaults to false
+* $options - An array of key => value options for the validator (eg: ['type' : 'POST', 'dataType' : 'jsonp'])
+* $validator - Use a specific remote validator. Default validators are 'default' and 'reverse'
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
 	
@@ -242,29 +252,30 @@ This will tell ZenValidator not to initialise with the default settings, and als
 
 ```javascript
 $('form.custom-parsley').parsley({
-	errors: {
-		errorsWrapper: '<div></div>',
-    	errorElem: '<small class="error"></small>',
-    	container: function ( elem, isRadioOrCheckbox ) {
-    		return elem.parents('.field:first');
-    	}
-	},
-	listeners: {
-	    onFieldValidate: function ( elem ) {
-	        if ( $( elem ).hasClass('ignore-validation') || !$( elem ).is( ':visible' ) ) {
-	            return true;
-	        }
-	        return false;
-	    },
-	    onFieldError: function ( elem, constraints, ParsleyField ) {
-
-	    }
-	},
-	errorClass: 'error'
+	errorsWrapper: '<div></div>',
+	errorTemplate: '<small class="error"></small>',
+	errorClass: 'error',
+	errorsContainer: function ( elem, isRadioOrCheckbox ) {
+    	return elem.parents('.field:first');
+    },	
+}).subscribe('parsley:field:validate', function(field) {
+	var $el = field.$element;
+	if ( el.hasClass('ignore-validation') || !el.is( ':visible' ) ) {
+	    return true;
+	}
+	return false;
 });
 ```
 
-See [Parsley.js](http://parsleyjs.org/documentation.html) for the full list of configuration settings
+Warning: $(elem).parsley() can return an array (in which can, attaching subscribe will fail) in case you match multiple forms. Use the following syntax instead if you need to match multiple elements:
+
+```javascript
+$.each($('form.parsley').parsley(),function(i,parsleyForm) {
+	parsleyForm.subscribe('parsley:field:validate', function(field) { ... });
+});
+```
+
+See [Parsley.js](http://parsleyjs.org/doc/index.html) for the full list of configuration settings
 	
 	
 ### CMS Usage
@@ -316,4 +327,4 @@ For everything else in the frontend (triggers, error classes, error placement, e
 * Parsley validation in CMS (currently only serverside) (ajax)
 * Implement Parsley's "Extra validators" - http://parsleyjs.org/documentation.html
 * Finish conditional validation ie. only validate constraint if field x value is y, document
-* Add language files
+* Add language files for extra validators
