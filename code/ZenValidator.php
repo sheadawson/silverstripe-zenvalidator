@@ -260,7 +260,7 @@ class ZenValidator extends Validator{
 	 **/
 	public function php($data){
 		$valid = true;
-
+		
 		foreach ($this->constraints as $fieldName => $constraints) {
 				if($this->form->Fields()->dataFieldByName($fieldName)->validationApplies()){
 					foreach ($constraints as $constraint) {

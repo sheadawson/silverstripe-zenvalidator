@@ -1,12 +1,7 @@
 (function($) {
 	$.entwine('ss.zenvalidator', function($) {
-		$('form.parsley').parsley();
-		$.listen('parsley:field:validate', function(field) {
-			var $el = field.$element;
-			if ( $el.hasClass('ignore-validation') || !$el.is( ':visible' ) ) {
-				return true;
-			}
-			return false;
+		$('form.parsley').parsley({
+			 excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
 		});
 
 		$('.field').entwine({

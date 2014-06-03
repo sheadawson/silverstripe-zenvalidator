@@ -98,6 +98,9 @@ class ValidationLogicCriterion extends Object {
 			case 'Checked':
 				return "$value1 == \"1\"";
 			
+			case 'Empty':
+				return 'empty(' . $value1 . ')';
+				
 			default:
 				user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.",E_USER_ERROR);
 				return;
