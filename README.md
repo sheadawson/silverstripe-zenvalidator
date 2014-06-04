@@ -257,13 +257,8 @@ $('form.custom-parsley').parsley({
 	errorClass: 'error',
 	errorsContainer: function ( elem, isRadioOrCheckbox ) {
     	return elem.parents('.field:first');
-    },	
-}).subscribe('parsley:field:validate', function(field) {
-	var $el = field.$element;
-	if ( el.hasClass('ignore-validation') || !el.is( ':visible' ) ) {
-	    return true;
-	}
-	return false;
+    },
+	excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
 });
 ```
 
@@ -294,13 +289,25 @@ public function getCMSValidator(){
 
 This feature allows you to specify under what conditions a field should or should not have it's validation constraints applied, based on the value(s) of other fields on the form. The concept borrows heavily from and compliments Uncle Cheese's [Display Logic module](https://github.com/unclecheese/silverstripe-display-logic).
 
-Caution: The Conditional Constraint feature relies on a line of code in the SilverStripe Framework that has not yet been released. If you'd like to use this feature before the next release of Framework, you can [patch FormField.php yourself](https://github.com/silverstripe/silverstripe-framework/commit/eaa390b1de9f7c4f895dfe56eaeb4db9364f6c31)
+### Validation Logic Examples
 
-### TODO - Validation Logic Examples
+You can use the following conditional:
+
+- isEqualTo
+- isEmpty
+- isGreaterThan
+- isLessThan
+- contains
+- isChecked
 
 ```php
-$country->validateIf('EmailAddress')->isEqualTo('s');
+$country->validateIf('EmailAddress')->isEqualTo('s')->orIf('EmailAddress')->isEqualTo('v');
 ```
+
+```php
+$field->validateIf('IsChecked')->isEmpty();
+```
+	
 	
 ## Extending
 
