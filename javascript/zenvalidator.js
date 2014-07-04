@@ -123,6 +123,11 @@
 
 		$('.field.validation-logic.validation-logic-exclude').entwine({
 			testLogic: function() {
+				if(!this.parseLogic()){
+					this.find('ul.parsley-errors-list').hide();
+				}else{
+					this.find('ul.parsley-errors-list').show();
+				}
 				this.getFormField().toggleClass('ignore-validation', !this.parseLogic());
 			}
 		});
