@@ -7,7 +7,7 @@
 		$('.field').entwine({
 
 			getFormField: function() {
-				var rtn = this.find('[name='+this.getFieldName()+'], [name="'+this.getFieldName()+'[]"]');
+				return this.find('[name='+this.getFieldName()+'], [name="'+this.getFieldName()+'[]"]');
 			},
 
 			getFieldName: function() {
