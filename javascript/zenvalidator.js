@@ -1,7 +1,11 @@
 (function($) {
 	$.entwine('ss.zenvalidator', function($) {
-		$('form.parsley').parsley({
-			 excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
+		$('form.parsley').entwine({
+			onmatch: function() {
+        			$(this).parsley({
+            				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
+        			});
+			}
 		});
 
 		$('.field').entwine({
