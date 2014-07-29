@@ -99,7 +99,7 @@ class ValidationLogicCriterion extends Object {
 				return "$value1 == \"1\"";
 			
 			case 'Empty':
-				return 'empty(' . $value1 . ')';
+				return $value1 . '==""';
 				
 			default:
 				user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.",E_USER_ERROR);
