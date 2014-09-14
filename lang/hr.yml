@@ -1,0 +1,14 @@
+hr:
+  ZenValidator:
+    EMAIL: 'Email nije u ispravnom formatu'
+    MAX: 'Ova vrijednost treba biti manja ili jednaka %s'
+    MAXLENGTH: 'Ova vrijednost je preduga. Potrebno %s znakova ili manje'
+    MIN: 'Ova vrijednost treba biti veća ili jednaka %s'
+    MINLENGTH: 'Ova vrijednost je prekratka. Potrebno %s znakova ili više'
+    NUMBER: 'Ova vrijednost treba biti broj'
+    RANGE: 'Ova vrijednost mora biti između %s i %s'
+    RANGELENGTH: 'Ova dužina vrijednost nije valjana. Potrebno između %s i %s znakova'
+    REGEXP: 'Ova vrijednost nije ispravna'
+    REMOTE: 'Ova vrijednost nije ispravna'
+    REQUIRED: 'Obavezno polje'
+    URL: 'Ova vrijednost treba biti alfanumerička'
