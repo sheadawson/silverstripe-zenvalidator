@@ -256,7 +256,7 @@ $('form.custom-parsley').parsley({
 	errorTemplate: '<small class="error"></small>',
 	errorClass: 'error',
 	errorsContainer: function ( elem, isRadioOrCheckbox ) {
-    	return elem.parents('.field:first');
+    	return $(elem).parents('.field:first');
     },
 	excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
 });
