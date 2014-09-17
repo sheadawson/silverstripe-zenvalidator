@@ -32,6 +32,9 @@ abstract class ZenValidatorConstraint extends Object {
 		return $this;
 	}
 
+	/**
+	 * @return FormField
+	 */
 	public function getField() {
 		return $this->field;
 	}
@@ -57,7 +60,7 @@ abstract class ZenValidatorConstraint extends Object {
 	/**
 	 * Load extra validator
 	 * @param string $name
-	 */
+	 * */
 	function loadExtra($name) {
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/extra/validator/' . $name . '.js');
 
@@ -645,7 +648,7 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	}
 
 	function getDefaultMessage() {
-		return _t('ZenValidator.EQUALTO', 'This value should be the same as the field "' . $this->getTargetField()->Title() . '"');
+		return sprintf(_t('ZenValidator.EQUALTO', 'This value should be the same as the field %s'), $this->getTargetField()->Title());
 	}
 
 }
@@ -673,7 +676,7 @@ class Constraint_comparison extends ZenValidatorConstraint {
 
 	/**
 	 * @var type 
-	 */
+	 * */
 	protected $type;
 
 	/**
@@ -688,7 +691,7 @@ class Constraint_comparison extends ZenValidatorConstraint {
 
 	/**
 	 * @return FormField
-	 */
+	 * */
 	public function getTargetField() {
 		return $this->field->getForm()->Fields()->dataFieldByName($this->targetField);
 	}
@@ -713,10 +716,10 @@ class Constraint_comparison extends ZenValidatorConstraint {
 				return $value >= $this->getTargetField()->Value();
 			//Validates that the value is less than another field's one
 			case self::LESS:
-				return $value < $this->getTargetField()->Value() ;
+				return $value < $this->getTargetField()->Value();
 			//Validates that the value is less than or equal to another field's one
 			case self::LESS_OR_EQUAL:
-				return $value <= $this->getTargetField()->Value() ;
+				return $value <= $this->getTargetField()->Value();
 			default:
 				throw new Exception('Invalid type : ' . $this->type);
 		}
@@ -725,13 +728,13 @@ class Constraint_comparison extends ZenValidatorConstraint {
 	function getDefaultMessage() {
 		switch ($this->type) {
 			case self::GREATER:
-				return _t('ZenValidator.GREATER', 'This value should be greater than the field "' . $this->getTargetField()->Title() . '"');
+				return sprintf(_t('ZenValidator.GREATER', 'This value should be greater than the field %s'), $this->getTargetField()->Title());
 			case self::GREATER_OR_EQUAL:
-				return _t('ZenValidator.GREATEROREQUAL', 'This value should be greater than or equal to the field "' . $this->getTargetField()->Title() . '"');
+				return sprintf(_t('ZenValidator.GREATEROREQUAL', 'This value should be greater or equal than the field %s'), $this->getTargetField()->Title());
 			case self::LESS:
-				return _t('ZenValidator.LESS', 'This value should be less than the field "' . $this->getTargetField()->Title() . '"');
+				return sprintf(_t('ZenValidator.LESS', 'This value should be less than the field %s'), $this->getTargetField()->Title());
 			case self::LESS_OR_EQUAL:
-				return _t('ZenValidator.LESSOREQUAL', 'This value should be less than or equal to the field "' . $this->getTargetField()->Title() . '"');
+				return sprintf(_t('ZenValidator.LESSOREQUAL', 'This value should be less than or equal to the field %s'), $this->getTargetField()->Title());
 		}
 	}
 
