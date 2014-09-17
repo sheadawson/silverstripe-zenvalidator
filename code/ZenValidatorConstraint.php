@@ -680,6 +680,7 @@ class Constraint_comparison extends ZenValidatorConstraint {
 	protected $type;
 
 	/**
+	 * @param string $type Type of validation
 	 * @param string $field the Name of the field to match
 	 * */
 	function __construct($type, $field) {
@@ -735,6 +736,95 @@ class Constraint_comparison extends ZenValidatorConstraint {
 				return sprintf(_t('ZenValidator.LESS', 'This value should be less than the field %s'), $this->getTargetField()->Title());
 			case self::LESS_OR_EQUAL:
 				return sprintf(_t('ZenValidator.LESSOREQUAL', 'This value should be less than or equal to the field %s'), $this->getTargetField()->Title());
+		}
+	}
+
+}
+
+
+/**
+ * Constraint_words
+ * Validates the number of words in the field
+ *
+ * @example Constraint_comparison::create('minwords','200');
+ * @example Constraint_comparison::create('maxwords','200');
+ * @example Constraint_comparison::create('words','200',600);
+ * */
+class Constraint_words extends ZenValidatorConstraint {
+
+	const MINWORDS = 'minwords';
+	const MAXWORDS = 'maxwords';
+	const WORDS = 'words';
+
+	/**
+	 * @var int
+	 * */
+	protected $val1;
+	/**
+	 * @var int
+	 * */
+	protected $val2;
+
+	/**
+	 * @var type 
+	 * */
+	protected $type;
+
+	/**
+	 * @param string $type type of validation
+	 * @param int $val1 number of words
+	 * @param int $val2 maximum number of words
+	 * */
+	function __construct($type, $val1,$val2 = null) {
+		$this->loadExtra('words');
+		$this->type = $type;
+		$this->val1 = $val1;
+		$this->val2 = $val2;
+		if($type == self::WORDS && $val2 === null) {
+			throw new Exception('You must specify a range of words');
+		}
+		parent::__construct();
+	}
+
+	public function applyParsley() {
+		parent::applyParsley();
+		$value = $this->val1;
+		if($this->val2) {
+			$value = '[' . $value . ',' . $this->val2 . ']';
+		}
+		$this->field->setAttribute('data-parsley-' . $this->type, $value);
+	}
+
+	public function removeParsley() {
+		parent::removeParsley();
+		$this->field->setAttribute('data-parsley-' . $this->type, '');
+	}
+
+	function validate($value) {
+		$count = str_word_count($value);
+		switch ($this->type) {
+			//Validates that the value have at least a certain amount of words
+			case self::MINWORDS:
+				return $count >= $this->val1;
+			//Validates that the value have a maximum of a certain amount of words
+			case self::MAXWORDS:
+				return $count <= $this->val1;
+			//Validates that the value is within a certain range of words
+			case self::WORDS:
+				return $count >= $this->val1 && $count <= $this->val2;
+			default:
+				throw new Exception('Invalid type : ' . $this->type);
+		}
+	}
+
+	function getDefaultMessage() {
+		switch ($this->type) {
+			case self::MINWORDS:
+				return sprintf(_t('ZenValidator.MINWORDS', 'This value should have at least %s words'), $this->val1);
+			case self::MAXWORDS:
+				return sprintf(_t('ZenValidator.MAXWORDS', 'This value should have a maximum of %s words'), $this->val1);
+			case self::WORDS:
+				return sprintf(_t('ZenValidator.WORDS', 'This value should be between %s and %s words'), $this->val1, $this->val2);
 		}
 	}
 
