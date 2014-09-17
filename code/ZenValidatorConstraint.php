@@ -746,9 +746,9 @@ class Constraint_comparison extends ZenValidatorConstraint {
  * Constraint_words
  * Validates the number of words in the field
  *
- * @example Constraint_comparison::create('minwords','200');
- * @example Constraint_comparison::create('maxwords','200');
- * @example Constraint_comparison::create('words','200',600);
+ * @example Constraint_words::create('minwords','200');
+ * @example Constraint_words::create('maxwords','200');
+ * @example Constraint_words::create('words','200',600);
  * */
 class Constraint_words extends ZenValidatorConstraint {
 
@@ -826,6 +826,41 @@ class Constraint_words extends ZenValidatorConstraint {
 			case self::WORDS:
 				return sprintf(_t('ZenValidator.WORDS', 'This value should be between %s and %s words'), $this->val1, $this->val2);
 		}
+	}
+
+}
+
+/**
+ * Constraint_date
+ * Validates the the field is a date
+ *
+ * @example Constraint_date::create();
+ * */
+class Constraint_date extends ZenValidatorConstraint {
+
+	/**
+	 * */
+	function __construct() {
+		$this->loadExtra('dateiso');
+		parent::__construct();
+	}
+
+	public function applyParsley() {
+		parent::applyParsley();
+		$this->field->setAttribute('data-parsley-dateiso', 'true');
+	}
+
+	public function removeParsley() {
+		parent::removeParsley();
+		$this->field->setAttribute('data-parsley-dateiso', '');
+	}
+
+	function validate($value) {
+		return preg_match('/^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/', $value);
+	}
+
+	function getDefaultMessage() {
+		return _t('ZenValidator.DATEISO', 'This value should be a date');
 	}
 
 }
