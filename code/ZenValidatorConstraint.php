@@ -62,12 +62,10 @@ abstract class ZenValidatorConstraint extends Object {
 	 * @param string $name
 	 * */
 	function loadExtra($name) {
-		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/extra/validator/' . $name . '.js');
+		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/extra/validator/' . $name . '.js');
 
 		$lang = i18n::get_lang_from_locale(i18n::get_locale());
-		if ($lang != 'en') {
-			Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.extra.js');
-		}
+		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.extra.js');
 	}
 
 	/**
