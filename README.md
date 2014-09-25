@@ -307,6 +307,16 @@ $country->validateIf('EmailAddress')->isEqualTo('s')->orIf('EmailAddress')->isEq
 ```php
 $field->validateIf('IsChecked')->isEmpty();
 ```
+
+## Extra validators
+
+You can also use extra validators crafted by the community. The module is shipped with the default validators:
+- Comparison
+- Words
+- Date Iso
+
+Javascript and language files are loaded only if you use these validators.
+
 	
 	
 ## Extending
@@ -332,6 +342,4 @@ For everything else in the frontend (triggers, error classes, error placement, e
 ##TODO
 
 * Parsley validation in CMS (currently only serverside) (ajax)
-* Implement Parsley's "Extra validators" - http://parsleyjs.org/documentation.html
 * Finish conditional validation ie. only validate constraint if field x value is y, document
-* Add language files for extra validators
