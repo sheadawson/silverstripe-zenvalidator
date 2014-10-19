@@ -1,5 +1,6 @@
 (function($) {
 	$.entwine('ss.zenvalidator', function($) {
+
 		$('form.parsley').entwine({
 			onmatch: function() {
         			$(this).parsley({
@@ -11,7 +12,7 @@
 		$('.field').entwine({
 
 			getFormField: function() {
-				var rtn = this.find('[name='+this.getFieldName()+'], [name="'+this.getFieldName()+'[]"]');
+				return this.find('[name='+this.getFieldName()+'], [name="'+this.getFieldName()+'[]"]');
 			},
 
 			getFieldName: function() {
@@ -62,7 +63,7 @@
 
 		$('.field.validation-logic').entwine({
 			onmatch: function () {
-				masters = this.getMasters();			
+				masters = this.getMasters();
 				for(m in masters) {
 					this.closest('form').find('#'+masters[m]).addClass("validation-logic-master");				
 				}
