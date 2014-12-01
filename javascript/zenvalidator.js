@@ -6,6 +6,9 @@
         			$(this).parsley({
             				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
         			});
+					
+					// Fix required fields optionsetfields since Silverstripe doesn't add attribute tags on options
+					$('.optionset.required').find('input').attr('required',true);
 			}
 		});
 
