@@ -172,7 +172,7 @@ class Constraint_length extends ZenValidatorConstraint {
 	protected $val1, $val2;
 
 	/**
-	 * @param srting $type (min,max,range)
+	 * @param string $type (min,max,range)
 	 * @param int $val1
 	 * @param int $val2
 	 * */
@@ -239,6 +239,105 @@ class Constraint_length extends ZenValidatorConstraint {
 				return sprintf(_t('ZenValidator.MAXLENGTH', 'This value is too long. It should have %s characters or less'), $this->val1);
 			case 'range':
 				return sprintf(_t('ZenValidator.RANGELENGTH', 'This value length is invalid. It should be between %s and %s characters long'), $this->val1, $this->val2);
+		}
+	}
+
+}
+
+/**
+ * Constraint_check
+ * Constrain checkbox set field to have a minimum or maximum number of elements checked
+ *
+ * @example Constraint_length::create('min', 5); // minimum of 5 elements checked
+ * @example Constraint_length::create('max', 5); // maximum of 5 elements checked
+ * @example Constraint_length::create('range', 5, 10); // between 5 and 10 elements checked
+ * */
+class Constraint_check extends ZenValidatorConstraint {
+
+	const MIN = 'min';
+	const MAX = 'max';
+	const RANGE = 'range';
+
+	/**
+	 * @var string
+	 * */
+	protected $type;
+
+	/**
+	 * @var int
+	 * */
+	protected $val1, $val2;
+
+	/**
+	 * @param string $type (min,max,check)
+	 * @param int $val1
+	 * @param int $val2
+	 * */
+	function __construct($type, $val1, $val2 = null) {
+		$this->type = $type;
+		$this->val1 = (int) $val1;
+		$this->val2 = (int) $val2;
+		parent::__construct();
+	}
+
+	public function applyParsley() {
+		parent::applyParsley();
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-parsley-mincheck', $this->val1);
+				break;
+			case 'max':
+				$this->field->setAttribute('data-parsley-maxcheck', $this->val1);
+				break;
+			case 'range':
+				$this->field->setAttribute('data-parsley-check', sprintf("[%s,%s]", $this->val1, $this->val2));
+				break;
+		}
+	}
+
+	public function getConstraintName() {
+		return $this->type;
+	}
+
+	public function removeParsley() {
+		parent::removeParsley();
+		switch ($this->type) {
+			case 'min':
+				$this->field->setAttribute('data-parsley-mincheck', '');
+				break;
+			case 'max':
+				$this->field->setAttribute('data-parsley-maxcheck', '');
+				break;
+			case 'range':
+				$this->field->setAttribute('data-parsley-check', '');
+				break;
+		}
+	}
+
+	function validate($value) {
+        $array = array_filter(explode(',', $value));
+        if(empty($array)) {
+            return; //you should use required instead
+        }
+
+		switch ($this->type) {
+			case 'min':
+				return count($array) >= $this->val1;
+			case 'max':
+				return count($array) <= $this->val1;
+			case 'range':
+				return count($array) >= $this->val1 && count($array) <= $this->val2;
+		}
+	}
+
+	function getDefaultMessage() {
+		switch ($this->type) {
+			case 'min':
+				return sprintf(_t('ZenValidator.MINCHECK', 'You must select at least %s choices'), $this->val1);
+			case 'max':
+				return sprintf(_t('ZenValidator.MAXCHECK', 'You must select %s choices or fewer'), $this->val1);
+			case 'range':
+				return sprintf(_t('ZenValidator.RANGECHECK', 'You must select between %s and %s choices'), $this->val1, $this->val2);
 		}
 	}
 

@@ -15,6 +15,7 @@ Out of the box constraints include:
 * required
 * value (min, max, range)
 * length (min, max, range)
+* check (min, max, range)
 * type (email, url, number, integer, digits, alphanumeric)
 * equalto (equal to the value of another field)
 * regex
@@ -105,8 +106,24 @@ Range
 ```php
 $validator->setConstraint('Username', Constraint_length::create('range', 3, 5));
 ```
-	
 
+##### Check Constraints
+
+Test for a min, max or range of elements checked
+
+Min
+```php
+$validator->setConstraint('Options', Constraint_check::create('min', 3));
+```
+Max
+```php
+$validator->setConstraint('Options', Constraint_check::create('max', 5));	
+```
+Range
+```php
+$validator->setConstraint('Options', Constraint_check::create('range', 3, 5));
+```
+	
 ##### Type Constraints
 
 The Constraint_type constraint can be used to validate inputs of type email, url, number, integer, digits or alphanum. Pass one of said options as the first parameter into the constructor.
@@ -141,7 +158,6 @@ Alphanum
 $validator->setConstraint('Username', Constraint_type::create('alphanum'));
 ```
 
-
 ##### Equal To Constraint
 
 Check for a value equal to that of another field
@@ -174,11 +190,10 @@ public function checkusername($request){
 	
 	// check for existing user with same username
 	if(Member::get()->filter('Username', $username)->count()){
-		return Convert::array2json(array(
-			'error' => 'Sorry, that username is already taken.'
+		return $this->httpError(400, 'Sorry, that username is already taken.');
 		));	
 	}else{
-		return true;
+		return $this->getResponse()->setBody('OK');
 	}	
 }
 ```

@@ -3,10 +3,36 @@
 
 		$('form.parsley').entwine({
 			onmatch: function() {
+					// Fix validation for optionset based class (attributes not set on child options)
+					$(this).find('.optionset').each(function() {
+						var attrs = $.makeArray(this.attributes);
+						var parsley = {};
+						for(var i=0; i < attrs.length; i++) {
+							var att = attrs[i];
+							if(att.name.indexOf('parsley-') !== -1) {
+								parsley[att.name] = att.value;
+							}
+						}
+						$(this).find('input').attr(parsley);
+					});
+					
         			$(this).parsley({
-            				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
+            				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation',
+							errorsContainer: function (el) {
+								return el.$element.closest(".field");
+							}
         			});
 			}
+		});
+		
+		$.listen('parsley:field:error', function(fieldInstance) {
+			if(!fieldInstance._xhr) {
+				return;
+			}
+			if(fieldInstance._xhr.status < 400 || fieldInstance._xhr.status > 499) {
+				return;
+			}
+			fieldInstance.options['remoteMessage'] = fieldInstance._xhr.responseText;
 		});
 
 		$('.field').entwine({
