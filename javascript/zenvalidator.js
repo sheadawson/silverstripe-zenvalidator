@@ -24,6 +24,16 @@
         			});
 			}
 		});
+		
+		$.listen('parsley:field:error', function(fieldInstance) {
+			if(!fieldInstance._xhr) {
+				return;
+			}
+			if(fieldInstance._xhr.status < 400 || fieldInstance._xhr.status > 499) {
+				return;
+			}
+			fieldInstance.options['remoteMessage'] = fieldInstance._xhr.responseText;
+		});
 
 		$('.field').entwine({
 
