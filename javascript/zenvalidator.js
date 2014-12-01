@@ -3,12 +3,22 @@
 
 		$('form.parsley').entwine({
 			onmatch: function() {
+					// Fix validation for optionset based class (attributes not set on child options)
+					$(this).find('.optionset').each(function() {
+						var attrs = $.makeArray(this.attributes);
+						var parsley = {};
+						for(var i=0; i < attrs.length; i++) {
+							var att = attrs[i];
+							if(att.name.indexOf('parsley-') !== -1) {
+								parsley[att.name] = att.value;
+							}
+						}
+						$(this).find('input').attr(parsley);
+					});
+					
         			$(this).parsley({
             				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation'
         			});
-					
-					// Fix required fields optionsetfields since Silverstripe doesn't add attribute tags on options
-					$('.optionset.required').find('input').attr('required',true);
 			}
 		});
 
