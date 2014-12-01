@@ -250,13 +250,13 @@ class Constraint_length extends ZenValidatorConstraint {
  *
  * @example Constraint_length::create('min', 5); // minimum of 5 elements checked
  * @example Constraint_length::create('max', 5); // maximum of 5 elements checked
- * @example Constraint_length::create('check', 5, 10); // between 5 and 10 elements checked
+ * @example Constraint_length::create('range', 5, 10); // between 5 and 10 elements checked
  * */
 class Constraint_check extends ZenValidatorConstraint {
 
 	const MIN = 'min';
 	const MAX = 'max';
-	const CHECK = 'check';
+	const RANGE = 'range';
 
 	/**
 	 * @var string
@@ -289,7 +289,7 @@ class Constraint_check extends ZenValidatorConstraint {
 			case 'max':
 				$this->field->setAttribute('data-parsley-maxcheck', $this->val1);
 				break;
-			case 'check':
+			case 'range':
 				$this->field->setAttribute('data-parsley-check', sprintf("[%s,%s]", $this->val1, $this->val2));
 				break;
 		}
@@ -325,7 +325,7 @@ class Constraint_check extends ZenValidatorConstraint {
 				return count($array) >= $this->val1;
 			case 'max':
 				return count($array) <= $this->val1;
-			case 'check':
+			case 'range':
 				return count($array) >= $this->val1 && count($array) <= $this->val2;
 		}
 	}
@@ -336,7 +336,7 @@ class Constraint_check extends ZenValidatorConstraint {
 				return sprintf(_t('ZenValidator.MINCHECK', 'You must select at least %s choices'), $this->val1);
 			case 'max':
 				return sprintf(_t('ZenValidator.MAXCHECK', 'You must select %s choices or fewer'), $this->val1);
-			case 'check':
+			case 'range':
 				return sprintf(_t('ZenValidator.RANGECHECK', 'You must select between %s and %s choices'), $this->val1, $this->val2);
 		}
 	}
