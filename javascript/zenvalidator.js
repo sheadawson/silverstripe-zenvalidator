@@ -106,7 +106,11 @@
 			},
 
 			getMasters: function() {
-				return this.getFormField().data('validation-logic-masters').split(",");
+				var field = this.getFormField();
+				if(!field.length) {
+					return new Array();
+				}
+				return field.data('validation-logic-masters').split(",");
 			}
 
 		});
