@@ -260,7 +260,12 @@ class ZenValidator extends Validator{
 	 **/
 	public function php($data){
 		$valid = true;
-		
+
+        // If we want to ignore validation
+        if(get_class($this->form->buttonClicked()) === 'FormActionNoValidation') {
+            return $valid;
+        }
+
 		foreach ($this->constraints as $fieldName => $constraints) {
 				if($this->form->Fields()->dataFieldByName($fieldName)->validationApplies()){
 					foreach ($constraints as $constraint) {
