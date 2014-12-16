@@ -24,7 +24,8 @@
         			});
 			}
 		});
-		
+
+		// Listen for error message when doing remote validation
 		$.listen('parsley:field:error', function(fieldInstance) {
 			if(!fieldInstance._xhr) {
 				return;
@@ -106,7 +107,11 @@
 			},
 
 			getMasters: function() {
-				return this.getFormField().data('validation-logic-masters').split(",");
+				var field = this.getFormField();
+				if(!field.length) {
+					return new Array();
+				}
+				return field.data('validation-logic-masters').split(",");
 			}
 
 		});
