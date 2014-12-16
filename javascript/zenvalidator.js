@@ -24,7 +24,8 @@
         			});
 			}
 		});
-		
+
+		// Listen for error message when doing remote validation
 		$.listen('parsley:field:error', function(fieldInstance) {
 			if(!fieldInstance._xhr) {
 				return;

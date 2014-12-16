@@ -87,6 +87,10 @@ abstract class ZenValidatorConstraint extends Object {
 		if ($this->customMessage) {
 			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), $this->customMessage);
 		}
+        // CheckboxSetField might not have a unique name, so set parsley-multiple attribute
+        if(get_class($this->field) === 'CheckboxSetField') {
+            $this->field->setAttribute('data-parsley-multiple',$this->field->getName());
+        }
 	}
 
 	/**
@@ -99,6 +103,9 @@ abstract class ZenValidatorConstraint extends Object {
 		if ($this->field && $this->customMessage) {
 			$this->field->setAttribute(sprintf('data-parsley-%s-message', $this->getConstraintName()), '');
 		}
+        if(get_class($this->field) === 'CheckboxSetField') {
+            $this->field->setAttribute('data-parsley-multiple','');
+        }
 	}
 
 	/**
