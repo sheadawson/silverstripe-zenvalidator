@@ -332,7 +332,14 @@ You can also use extra validators crafted by the community. The module is shippe
 
 Javascript and language files are loaded only if you use these validators.
 
-	
+
+## No validation
+
+In some scenarios, you don't want to trigger validation when submitting the form (i.e.: "previous" button in a multi step form).
+Although this is easy to achieve by yourself, the module provides a standard implementation for doing this.
+
+Instead of using the standard FormAction class, you can use its subclass "FormActionNoValidation". It will prevent the client and server side validation from happening.
+
 	
 ## Extending
 
