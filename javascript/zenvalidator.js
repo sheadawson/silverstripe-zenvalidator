@@ -17,7 +17,7 @@
 					});
 					
         			$(this).parsley({
-            				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], :hidden, .ignore-validation',
+            				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], .ignore-validation',
 							errorsContainer: function (el) {
 								return el.$element.closest(".field");
 							}
@@ -34,6 +34,17 @@
 				return;
 			}
 			fieldInstance.options['remoteMessage'] = fieldInstance._xhr.responseText;
+		});
+
+		// bypass validation on :hidden fields
+		$.listen('parsley:field:validated', function(fieldInstance){
+		    if (fieldInstance.$element.is(":hidden")) {
+		        // hide the message wrapper
+		        fieldInstance._ui.$errorsWrapper.css('display', 'none');
+		        // set validation result to true
+		        fieldInstance.validationResult = true;
+		        return true;
+		    }
 		});
 
 		$('.field').entwine({
