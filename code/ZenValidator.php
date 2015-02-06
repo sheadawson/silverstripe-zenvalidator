@@ -266,6 +266,13 @@ class ZenValidator extends Validator{
             return $valid;
         }
 
+        // validate against form field validators
+    	$fields = $this->form->Fields();
+	    foreach($fields as $field) {
+	        $valid = ($field->validate($this) && $valid);
+	    }
+
+	    // validate against ZenValidator constraints
 		foreach ($this->constraints as $fieldName => $constraints) {
 				if($this->form->Fields()->dataFieldByName($fieldName)->validationApplies()){
 					foreach ($constraints as $constraint) {
