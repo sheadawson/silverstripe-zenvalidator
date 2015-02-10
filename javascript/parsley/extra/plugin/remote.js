@@ -9,7 +9,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   asyncSupport: true,
 
   asyncValidators: $.extend({
-    default: {
+    'default': {
       fn: function (xhr) {
         return 'resolved' === xhr.state();
       },
@@ -67,7 +67,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     return this._asyncValidateForm(undefined, event)
       .done(function () {
         // If user do not have prevented the event, re-submit form
-        if (!that.submitEvent.isDefaultPrevented())
+        if (that._trigger('submit') && !that.submitEvent.isDefaultPrevented())
           that.$element.trigger($.extend($.Event('submit'), { parsley: true }));
       });
   },
@@ -92,7 +92,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
 
     this._refreshFields();
 
-    $.emit('parsley:form:validate', this);
+    this._trigger('validate');
 
     for (var i = 0; i < this.fields.length; i++) {
 
@@ -104,8 +104,14 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
     }
 
     return $.when.apply($, promises)
+      .done(function () {
+        that._trigger('success');
+      })
+      .fail(function () {
+        that._trigger('error');
+      })
       .always(function () {
-        $.emit('parsley:form:validated', that);
+        that._trigger('validated');
       });
   },
 
@@ -128,17 +134,17 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
   _asyncValidateField: function (force) {
     var that = this;
 
-    $.emit('parsley:field:validate', this);
+    this._trigger('validate');
 
     return this._asyncIsValidField(force)
       .done(function () {
-        $.emit('parsley:field:success', that);
+        that._trigger('success');
       })
       .fail(function () {
-        $.emit('parsley:field:error', that);
+        that._trigger('error');
       })
       .always(function () {
-        $.emit('parsley:field:validated', that);
+        that._trigger('validated');
       });
   },
 
@@ -170,7 +176,7 @@ window.ParsleyExtend = $.extend(window.ParsleyExtend, {
       data = {},
       ajaxOptions,
       csr,
-      validator = this.options.remoteValidator || (true === this.options.remoteReverse ? 'reverse' : 'default');
+      validator = this.options.remoteValidator || (true === this.options.remoteReverse ? 'reverse' : 'default');
 
     validator = validator.toLowerCase();
 
@@ -255,3 +261,8 @@ window.ParsleyConfig.validators.remote = {
   },
   priority: -1
 };
+
+$(document).on('form:submit.parsley', function(evt, parsleyForm) {
+  if (!evt.isDefaultPrevented())
+    parsleyForm._remoteCache = {};
+})
