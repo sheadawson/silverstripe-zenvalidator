@@ -5,7 +5,7 @@
 
 ## Description
 
-ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through a comprehensive yet simple API. 
+ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through one simple API. 
 [Parsley.js](http://parsleyjs.org/documentation.html) is used for the clientside validation in the frontend.
 
 ## Validation Constraints
