@@ -1,0 +1,14 @@
+nl:
+  ZenValidator:
+    EMAIL: 'Vul een geldig emailadres in'
+    MAX: 'Deze waarde dient minder dan of gelijk te zijn aan %s'
+    MAXLENGTH: 'Deze waarde is te lang. Maximaal aantal karakters is %s'
+    MIN: 'Deze waarde dient groter dan of gelijk te zijn aan %s'
+    MINLENGTH: 'Deze waarde is te kort. Minimaal %s of meer karakters'
+    NUMBER: 'Deze waarde dient een nummer te zijn'
+    RANGE: 'Deze waarde moet tussen de %s en %s zijn'
+    RANGELENGTH: 'De lengte van deze waarde is ongeldig. De waarde moet tussen de %s en %s karakters zijn'
+    REGEXP: 'Deze waarde is ongeldig'
+    REMOTE: 'Deze waarde is ongeldig'
+    REQUIRED: 'Dit veld is verplicht'
+    URL: 'Deze waarde moet alfanumeriek zijn'
