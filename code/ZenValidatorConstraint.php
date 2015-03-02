@@ -748,7 +748,7 @@ class Constraint_equalto extends ZenValidatorConstraint {
 	}
 
 	function validate($value) {
-		return $this->getTargetField()->Value() == $value;
+		return $this->getTargetField()->dataValue() == $value;
 	}
 
 	function getDefaultMessage() {
@@ -815,16 +815,16 @@ class Constraint_comparison extends ZenValidatorConstraint {
 		switch ($this->type) {
 			//Validates that the value is greater than another field's one
 			case self::GREATER:
-				return $value > $this->getTargetField()->Value();
+				return $value > $this->getTargetField()->dataValue();
 			//Validates that the value is greater than or equal to another field's one
 			case self::GREATER_OR_EQUAL:
-				return $value >= $this->getTargetField()->Value();
+				return $value >= $this->getTargetField()->dataValue();
 			//Validates that the value is less than another field's one
 			case self::LESS:
-				return $value < $this->getTargetField()->Value();
+				return $value < $this->getTargetField()->dataValue();
 			//Validates that the value is less than or equal to another field's one
 			case self::LESS_OR_EQUAL:
-				return $value <= $this->getTargetField()->Value();
+				return $value <= $this->getTargetField()->dataValue();
 			default:
 				throw new Exception('Invalid type : ' . $this->type);
 		}

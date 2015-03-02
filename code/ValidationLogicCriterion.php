@@ -84,7 +84,7 @@ class ValidationLogicCriterion extends Object {
 	 * @return string
 	 **/
 	public function toPHP(){
-		$value1 = '$fields->dataFieldByName(\'' . $this->master . '\')->Value()';
+		$value1 = '$fields->dataFieldByName(\'' . $this->master . '\')->dataValue()';
 		$value2 = $this->value;
 		
 		if($operator = $this->phpOperator()){
