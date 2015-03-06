@@ -703,7 +703,7 @@ class Constraint_type extends ZenValidatorConstraint {
 			case 'digits':
 				return _t('ZenValidator.DIGITS', 'This value should be a number');
 			case 'alphanum':
-				return _t('ZenValidator.URL', 'This value should be alphanumeric');
+				return _t('ZenValidator.ALPHANUMERIC', 'This value should be alphanumeric');
 		}
 	}
 
