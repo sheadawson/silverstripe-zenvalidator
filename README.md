@@ -296,6 +296,9 @@ To use ZenValidator in the CMS, simply implement a getCMSValidator() method on y
 public function getCMSValidator(){
 	return ZenValidator::create()->setConstraint('Content', Constraint_required::create()
 		->setMessage('Please enter some content'));
+
+	// currently parsley validation doesn't work so well in the cms, so disable.
+	$validator->disableParsley();
 } 
 ```
 
