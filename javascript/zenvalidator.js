@@ -26,6 +26,7 @@
 		});
 
 		// Listen for error message when doing remote validation
+		// See issue https://github.com/guillaumepotier/Parsley.js/issues/560
 		$.listen('parsley:field:error', function(fieldInstance) {
 			if(!fieldInstance._xhr) {
 				return;
@@ -34,6 +35,18 @@
 				return;
 			}
 			fieldInstance.options['remoteMessage'] = fieldInstance._xhr.responseText;
+		});
+		
+		// Add action to submitted form for parsley.remote
+		// See issue https://github.com/guillaumepotier/Parsley.js/issues/826
+		var submitActor = null;
+		$('form.parsley [type=submit]').click(function() {
+			submitActor = $(this);
+		});
+		$.listen('parsley:form:success', function(formInstance) {
+			if(submitActor) {
+				formInstance.$element.append('<input type="hidden" name="'+submitActor.attr('name')+'" value="'+submitActor.attr('value')+'" />');
+			}
 		});
 
 		// bypass validation on :hidden fields

@@ -1,7 +1,7 @@
 /*!
 * Parsleyjs
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 2.0.6 - built Sat Jan 24 2015 14:44:37
+* Version 2.0.7 - built Sat Jan 24 2015 14:50:11
 * MIT Licensed
 *
 */
@@ -197,7 +197,7 @@
 /*!
 * validator.js
 * Guillaume Potier - <guillaume@wisembly.com>
-* Version 1.0.1 - built Mon Aug 25 2014 16:10:10
+* Version 1.0.0 - built Sun Aug 03 2014 17:42:31
 * MIT Licensed
 *
 */
@@ -208,7 +208,7 @@ var Validator = ( function ( ) {
   */
   var Validator = function ( options ) {
     this.__class__ = 'Validator';
-    this.__version__ = '1.0.1';
+    this.__version__ = '1.0.0';
     this.options = options || {};
     this.bindingKey = this.options.bindingKey || '_validatorjsConstraint';
   };
@@ -553,7 +553,7 @@ var Validator = ( function ( ) {
       this.validate = function ( collection, group ) {
         var result, validator = new Validator(), count = 0, failures = {}, groups = this.groups.length ? this.groups : group;
         if ( !_isArray( collection ) )
-          throw new Violation( this, collection, { value: Validator.errorCode.must_be_an_array } );
+          throw new Violation( this, array, { value: Validator.errorCode.must_be_an_array } );
         for ( var i = 0; i < collection.length; i++ ) {
           result = this.constraint ?
             validator.validate( collection[ i ], this.constraint, groups ) :
@@ -1884,7 +1884,7 @@ window.ParsleyConfig.i18n.en = $.extend(window.ParsleyConfig.i18n.en || {}, {
 if ('undefined' !== typeof window.ParsleyValidator)
   window.ParsleyValidator.addCatalog('en', window.ParsleyConfig.i18n.en, true);
 
-//     Parsley.js 2.0.6
+//     Parsley.js 2.0.7
 //     http://parsleyjs.org
 //     (c) 20012-2014 Guillaume Potier, Wisembly
 //     Parsley may be freely distributed under the MIT license.
@@ -1892,7 +1892,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   // ### Parsley factory
   var Parsley = function (element, options, parsleyFormInstance) {
     this.__class__ = 'Parsley';
-    this.__version__ = '2.0.6';
+    this.__version__ = '2.0.7';
     this.__id__ = ParsleyUtils.hash(4);
     // Parsley must be instantiated with a DOM element or jQuery $element
     if ('undefined' === typeof element)
