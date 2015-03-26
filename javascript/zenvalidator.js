@@ -45,16 +45,16 @@
 		});
 		$.listen('parsley:form:success', function(formInstance) {
 			if(submitActor) {
-				formInstance.$element.append('<input type="hidden" name="'+submitActor.attr('name')+'" value="'+submitActor.attr('value')+'" />');
+				formInstance.$element.find('input.parsley-submit-actor').remove();
+				formInstance.$element.append('<input class="parsley-submit-actor" type="hidden" name="'+submitActor.attr('name')+'" value="'+submitActor.attr('value')+'" />');
 			}
+			// If no action is specified, default action (the first) is used by Silverstripe (eg: if form is submitted with enter)
 		});
 
-		// bypass validation on :hidden fields
+		// Bypass validation on :hidden fields
 		$.listen('parsley:field:validated', function(fieldInstance){
 		    if (fieldInstance.$element.is(":hidden")) {
-		        // hide the message wrapper
 		        fieldInstance._ui.$errorsWrapper.css('display', 'none');
-		        // set validation result to true
 		        fieldInstance.validationResult = true;
 		        return true;
 		    }
