@@ -274,14 +274,20 @@ class ZenValidator extends Validator{
 
 	    // validate against ZenValidator constraints
 		foreach ($this->constraints as $fieldName => $constraints) {
-				if($this->form->Fields()->dataFieldByName($fieldName)->validationApplies()){
-					foreach ($constraints as $constraint) {
-						if(!$constraint->validate($data[$fieldName])){
-							$this->validationError($fieldName, $constraint->getMessage(), 'required');
-							$valid = false;
-						}
-					}
-				}
+            $field = $this->form->Fields()->dataFieldByName($fieldName);
+
+            if(!$field) {
+                throw new Exception("There is a constraint for $fieldName but this field does not exist. Maybe you should remove the constraint?");
+            }
+
+            if($field->validationApplies()){
+                foreach ($constraints as $constraint) {
+                    if(!$constraint->validate($data[$fieldName])){
+                        $this->validationError($fieldName, $constraint->getMessage(), 'required');
+                        $valid = false;
+                    }
+                }
+            }
 		}
 		return $valid;
 	}
