@@ -86,8 +86,8 @@ class ValidationLogicCriteria extends Object {
 				$operator = substr($method, 2);
 			}
 			else {
-				//$operator = ucwords($method);
 				$operator = $method;
+//				$operator = ucwords($method);
 			}
 
 			$this->addCriterion(ValidationLogicCriterion::create($this->master, $operator, $val, $this));

@@ -6,7 +6,9 @@ ValidationLogicCriteria:
     isLessThan: "<"
     contains: ""
     isChecked: ""
-
+    hasCheckedOption: ""
+    hasCheckedAtLeast: ""
+    hasCheckedLessThan: ""
 FormField:
   extensions:
     - ZenValidatorFormFieldExtension

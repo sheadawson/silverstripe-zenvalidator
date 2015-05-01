@@ -100,6 +100,15 @@ class ValidationLogicCriterion extends Object {
 			
 			case 'Empty':
 				return $value1 . '==""';
+
+            case 'hasCheckedOption':
+                return 'in_array("'.$value2.'", '.$value1.')';
+
+            case 'hasCheckedAtLeast':
+                return 'count('.$value1.') >= ' . $value2;
+
+            case 'hasCheckedLessThan':
+                return 'count('.$value1.') <= ' . $value2;
 				
 			default:
 				user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.",E_USER_ERROR);
@@ -114,7 +123,8 @@ class ValidationLogicCriterion extends Object {
 	 * Creates a JavaScript-readable representation of this criterion
 	 * @return string
 	 */
-	public function toScript() {		
-		return "\$(\"#{$this->master}\").evaluate{$this->operator}(\"".addslashes($this->value)."\")";
+	public function toScript() {
+        $operator = ucfirst($this->operator);
+		return "\$(\"#{$this->master}\").evaluate{$operator}(\"".addslashes($this->value)."\")";
 	}
 }

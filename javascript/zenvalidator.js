@@ -111,7 +111,6 @@
 
 		});
 
-
 		$('.field.validation-logic').entwine({
 			onmatch: function () {
 				masters = this.getMasters();
@@ -150,13 +149,12 @@
 
 		});
 
-
 		$('.field.optionset.checkboxset').entwine({
 
 			evaluateHasCheckedOption: function(val) {
 				this.find(':checkbox').filter(':checked').each(function() {
 					return $(this).val() === val || $(this).getLabel() === val;
-				})
+				});
 			},
 
 			evaluateHasCheckedAtLeast: function(num) {
@@ -207,7 +205,7 @@
 				this.closest(".field").notify();
 			},
 
-			onclick: function() {			
+			onclick: function() {	
 				this.closest(".field").notify();
 			}
 		});
