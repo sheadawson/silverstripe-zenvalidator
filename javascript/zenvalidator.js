@@ -14,6 +14,18 @@
 							}
 						}
 						$(this).find('input').attr(parsley);
+						
+						// Clean attributes
+						var attributes = this.attributes;
+						var keys = $.map(attributes , function(key, value) { 
+							return key.name; 
+						});
+						for(var i = 0; i < keys.length; i++) {
+							if (keys[i].indexOf('data-parsley') === 0) {
+								$(this).removeAttr(keys[i]);
+							}
+						}
+						$(this).removeData();
 					});
 					
         			$(this).parsley({
@@ -50,13 +62,12 @@
 			}
 			// If no action is specified, default action (the first) is used by Silverstripe (eg: if form is submitted with enter)
 		});
-
+		
 		// Bypass validation on :hidden fields
 		$.listen('parsley:field:validated', function(fieldInstance){
 		    if (fieldInstance.$element.is(":hidden")) {
 		        fieldInstance._ui.$errorsWrapper.css('display', 'none');
 		        fieldInstance.validationResult = true;
-		        return true;
 		    }
 		});
 
