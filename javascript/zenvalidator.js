@@ -64,6 +64,14 @@
 		});
 		
 		// Bypass validation on :hidden fields
+		$.listen('parsley:field:validate', function(fieldInstance){
+		    if (fieldInstance.$element.is(":hidden")) {
+				fieldInstance._asyncIsValidField = function() {
+					deferred = $.Deferred();
+					return deferred.resolveWith(this);
+				};
+		    }
+		});
 		$.listen('parsley:field:validated', function(fieldInstance){
 		    if (fieldInstance.$element.is(":hidden")) {
 		        fieldInstance._ui.$errorsWrapper.css('display', 'none');
