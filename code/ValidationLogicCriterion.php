@@ -102,13 +102,13 @@ class ValidationLogicCriterion extends Object {
 				return $value1 . '==""';
 
             case 'hasCheckedOption':
-                return 'in_array("'.$value2.'", '.$value1.')';
+                return 'strpos(' . $value1 . '' . ", \"$value2\") !== false";
 
             case 'hasCheckedAtLeast':
-                return 'count('.$value1.') >= ' . $value2;
+                return 'substr_count('.$value1.',",") >= ' . $value2;
 
             case 'hasCheckedLessThan':
-                return 'count('.$value1.') <= ' . $value2;
+                return 'substr_count('.$value1.',",") <= ' . $value2;
 				
 			default:
 				user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.",E_USER_ERROR);
