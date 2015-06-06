@@ -62,7 +62,7 @@ class ValidationLogicCriteria extends Object {
 	 * @param [type]    $master The name of the form field to respond to
 	 * @param [type]    $parent The parent {@link ValidationLogicCriteria}
 	 */
-	public function __construct(ZenValidatorConstraint $slave, $master, $parent = null) {
+	public function __construct(FormField $slave, $master, $parent = null) {
 		parent::__construct();
 		$this->slave = $slave;
 		$this->master = $master;
