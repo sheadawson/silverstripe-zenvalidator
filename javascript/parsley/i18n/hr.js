@@ -10,7 +10,7 @@ window.ParsleyConfig.i18n.hr = $.extend(window.ParsleyConfig.i18n.hr || {}, {
     url:          "Vrijednost treba biti valjan url.",
     number:       "Vrijednost treba biti valjan broj.",
     integer:      "Vrijednost treba biti valjan broj.",
-    digits:       "Vrijednost treba biti brojčana.This value should be digits.",
+    digits:       "Vrijednost treba biti brojčana.",
     alphanum:     "Vrijednost treba biti alfanumerička."
   },
   notblank:       "Vrijednost je može biti prazna.",
@@ -23,7 +23,7 @@ window.ParsleyConfig.i18n.hr = $.extend(window.ParsleyConfig.i18n.hr || {}, {
   maxlength:      "Vrijednost je preduga. Treba imati %s znakova ili manje.",
   length:         "Vrijednost je nevažeća. Treba imati između %s i %s znakova.",
   mincheck:       "Izaberite najmanje %s odgovor.",
-  maxcheck:       "Izabarite %s ili manje odgovora.",
+  maxcheck:       "Izaberite %s ili manje odgovora.",
   check:          "Izaberite između %s i %s.",
   equalto:        "Vrijednost treba biti ista."
 });
