@@ -14,7 +14,7 @@ class FormActionNoValidation extends FormAction
 
     public function Field($properties = array())
     {
-        Requirements::customScript("$('#".$this->ID()."').click(function() { $(this).parents('form').parsley().destroy();})");
+        Requirements::customScript("jQuery('#".$this->ID()."').click(function() { $(this).parents('form').parsley().destroy();})");
         return parent::Field($properties);
     }
 }
