@@ -80,9 +80,7 @@ class ZenValidator extends Validator{
 	public function applyParsley(){
 		$this->parsleyEnabled = true;
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
-		Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
 		
 		$lang = i18n::get_lang_from_locale(i18n::get_locale());
 		if($lang != 'en') {
@@ -92,6 +90,8 @@ class ZenValidator extends Validator{
 		if($this->form){
 			if ($this->defaultJS) {
 				$this->form->addExtraClass('parsley');
+				Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
+				Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
 			}else{
 				$this->form->addExtraClass('custom-parsley');
 			}
