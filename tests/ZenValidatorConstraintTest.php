@@ -113,6 +113,15 @@ class ZenValidatorConstraintTest extends SapphireTest{
 		$zv->php($data);
 		$errors = $zv->getErrors();
 		$this->assertTrue($errors[0]['fieldName'] == 'Title');
+		
+		$zv = $this->Form()->getValidator();
+		$zv->setConstraint('Title', Constraint_value::create('min', 5));
+
+		//test zero is invalid
+		$data['Title'] = '0';
+		$zv->php($data);
+		$errors = $zv->getErrors();
+		$this->assertTrue($errors[0]['fieldName'] == 'Title');
 	}
 
 
