@@ -13,7 +13,7 @@
 	"require": 
 	{
 		"composer/installers": "*",
-		"silverstripe/framework": ">=3.0"
+		"silverstripe/framework": "3.*"
 	},
 	"support": {
 		"issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
