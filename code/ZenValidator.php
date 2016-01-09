@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
@@ -37,7 +37,7 @@ class ZenValidator extends Validator
     public function __construct($constraints = array(), $parsleyEnabled = true, $defaultJS = null)
     {
         parent::__construct();
-        
+
         $this->parsleyEnabled = $parsleyEnabled;
         $this->defaultJS = ($defaultJS !== null) ? $defaultJS : $this->config()->get('default_js');
 
@@ -53,7 +53,7 @@ class ZenValidator extends Validator
     public function setForm($form)
     {
         parent::setForm($form);
-        
+
         // a bit of a hack, need a security token to be set on form so that we can iterate over $form->Fields()
         if (!$form->getSecurityToken()) {
             $form->disableSecurityToken();
@@ -89,12 +89,12 @@ class ZenValidator extends Validator
         $this->parsleyEnabled = true;
         Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
         Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
-        
+
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
         if ($lang != 'en') {
             Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
         }
-        
+
         if ($this->form) {
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
@@ -143,7 +143,7 @@ class ZenValidator extends Validator
     /**
      * setConstraint - sets a ZenValidatorContraint on this validator
      * @param String $field - name of the field to be validated
-     * @param ZenFieldValidator $constraint 
+     * @param ZenFieldValidator $constraint
      * @return $this
      **/
     public function setConstraint($fieldName, $constraint)

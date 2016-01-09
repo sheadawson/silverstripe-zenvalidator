@@ -49,7 +49,7 @@ class ValidationLogicCriteria extends Object
 
 
     /**
-     * 
+     *
      * @var array
      */
     private static $comparisons;
@@ -107,7 +107,7 @@ class ValidationLogicCriteria extends Object
      * @param  int  $max The maxiumum value
      * @return ValidationLogicCriteria
      */
-    // public function isBetween($min, $max) {		
+    // public function isBetween($min, $max) {
     // 	$this->addCriterion(ValidationLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
     // 	return $this;
     // }
@@ -226,7 +226,7 @@ class ValidationLogicCriteria extends Object
     }
 
     /**
-     * Creates a JavaScript readable representation of the logic	 
+     * Creates a JavaScript readable representation of the logic
      * @return string
      */
     public function toScript()

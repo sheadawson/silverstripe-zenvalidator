@@ -8,16 +8,16 @@ class ZenValidatorConstraintTest extends SapphireTest
         $fields    = FieldList::create(TextField::create('Title'), TextField::create('Subtitle'));
         $actions    = FieldList::create(FormAction::create('submit', 'submit'));
         $validator    = ZenValidator::create();
-        
+
         return Form::create(Controller::curr(), 'Form', $fields, $actions, $validator);
     }
 
-    
+
     public function testRequired()
     {
         $zv = $this->Form()->getValidator();
         $zv->addRequiredFields(array('Title'));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_required')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-required') == 'true');
@@ -39,7 +39,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_length::create('min', 5));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_length')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-minlength') == '5');
@@ -61,7 +61,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_length::create('max', 5));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_length')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-maxlength') == '5');
@@ -83,7 +83,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_length::create('range', 5, 10));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_length')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-length') == '[5,10]');
@@ -105,7 +105,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_value::create('min', 5));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_value')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-min') == '5');
@@ -120,7 +120,7 @@ class ZenValidatorConstraintTest extends SapphireTest
         $zv->php($data);
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
-        
+
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_value::create('min', 5));
 
@@ -136,7 +136,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_value::create('max', 5));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_value')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-max') == '5');
@@ -158,7 +158,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_value::create('range', 5, 10));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_value')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-range') == '[5,10]');
@@ -180,7 +180,7 @@ class ZenValidatorConstraintTest extends SapphireTest
     {
         $zv = $this->Form()->getValidator();
         $zv->setConstraint('Title', Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"));
-        
+
         // test attributes
         $field = $zv->getConstraint('Title', 'Constraint_regex')->getField();
         $this->assertTrue($field->getAttribute('data-parsley-pattern') == "^#(?:[0-9a-fA-F]{3}){1,2}$");
