@@ -8,7 +8,7 @@ class ZenValidatorTest extends SapphireTest
         $fields    = FieldList::create(TextField::create('Title'), TextField::create('Subtitle'));
         $actions    = FieldList::create(FormAction::create('submit', 'submit'));
         $validator    = ZenValidator::create();
-        
+
         return Form::create(Controller::curr(), 'Form', $fields, $actions, $validator);
     }
 
@@ -39,7 +39,7 @@ class ZenValidatorTest extends SapphireTest
             ),
             'Subtitle' => Constraint_required::create()
         ));
-        
+
         $this->assertTrue(count($zv->getConstraints('Title')) == 2);
         $this->assertTrue(count($zv->getConstraints('Subtitle')) == 1);
 

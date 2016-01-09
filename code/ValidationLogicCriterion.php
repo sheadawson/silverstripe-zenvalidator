@@ -91,7 +91,7 @@ class ValidationLogicCriterion extends Object
     {
         $value1 = '$fields->dataFieldByName(\'' . $this->master . '\')->dataValue()';
         $value2 = $this->value;
-        
+
         if ($operator = $this->phpOperator()) {
             return $value1 . " {$operator} \"$value2\"";
         }
@@ -102,7 +102,7 @@ class ValidationLogicCriterion extends Object
 
             case 'Checked':
                 return "$value1 == \"1\"";
-            
+
             case 'Empty':
                 return $value1 . '==""';
 
@@ -114,7 +114,7 @@ class ValidationLogicCriterion extends Object
 
             case 'hasCheckedLessThan':
                 return 'substr_count('.$value1.',",") <= ' . $value2;
-                
+
             default:
                 user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.", E_USER_ERROR);
                 return;

@@ -14,11 +14,11 @@
 							}
 						}
 						$(this).find('input').attr(parsley);
-						
+
 						// Clean attributes
 						var attributes = this.attributes;
-						var keys = $.map(attributes , function(key, value) { 
-							return key.name; 
+						var keys = $.map(attributes , function(key, value) {
+							return key.name;
 						});
 						for(var i = 0; i < keys.length; i++) {
 							if (keys[i].indexOf('data-parsley') === 0) {
@@ -27,7 +27,7 @@
 						}
 						$(this).removeData();
 					});
-					
+
         			$(this).parsley({
             				excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], .ignore-validation',
 							errorsContainer: function (el) {
@@ -48,7 +48,7 @@
 			}
 			fieldInstance.options['remoteMessage'] = fieldInstance._xhr.responseText;
 		});
-		
+
 		// Add action to submitted form for parsley.remote
 		// See issue https://github.com/guillaumepotier/Parsley.js/issues/826
 		var submitActor = null;
@@ -62,7 +62,7 @@
 			}
 			// If no action is specified, default action (the first) is used by Silverstripe (eg: if form is submitted with enter)
 		});
-		
+
 		// Bypass validation on :hidden fields
 		$.listen('parsley:field:validate', function(fieldInstance){
 		    if (fieldInstance.$element.parents('.field').is(":hidden")) {
@@ -134,7 +134,7 @@
 			onmatch: function () {
 				masters = this.getMasters();
 				for(m in masters) {
-					this.closest('form').find('#'+masters[m]).addClass("validation-logic-master");				
+					this.closest('form').find('#'+masters[m]).addClass("validation-logic-master");
 				}
 			},
 
@@ -144,7 +144,7 @@
 
 			parseLogic: function() {
 				js = this.getLogic();
-				result = eval(js);			
+				result = eval(js);
 				return result;
 			},
 
@@ -162,7 +162,7 @@
 		$('.field.optionset').entwine({
 
 			getFormField: function() {
-				f = this._super().filter(":checked");			
+				f = this._super().filter(":checked");
 				return f;
 			}
 
@@ -181,7 +181,7 @@
 			},
 
 			evaluateHasCheckedLessThan: function(num) {
-				return this.find(':checked').length <= num;	
+				return this.find(':checked').length <= num;
 			}
 		});
 
@@ -200,7 +200,7 @@
 
 		$('.field.validation-logic.validation-logic-exclude').entwine({
 			testLogic: function() {
-				if(!this.parseLogic()){					
+				if(!this.parseLogic()){
 					this.find('ul.parsley-errors-list').hide();
 				}else{
 					this.find('ul.parsley-errors-list').show();
@@ -220,11 +220,11 @@
 		});
 
 		$('.field.validation-logic-master :checkbox, .field.validation-logic-master :radio').entwine({
-			onmatch: function() {			
+			onmatch: function() {
 				this.closest(".field").notify();
 			},
 
-			onclick: function() {	
+			onclick: function() {
 				this.closest(".field").notify();
 			}
 		});
@@ -233,7 +233,7 @@
 			Listeners: null,
 
 			notify: function() {
-				$.each(this.getListeners(), function() {				
+				$.each(this.getListeners(), function() {
 					$(this).testLogic();
 				});
 			},
@@ -257,6 +257,6 @@
 				return this.getListeners();
 			}
 		});
-	});	
+	});
 
 })(jQuery);

@@ -117,7 +117,7 @@ abstract class ZenValidatorConstraint extends Object
     }
 
     /**
-     * Performs php validation on the value 
+     * Performs php validation on the value
      * @param $value
      * @return bool
      * */
@@ -135,7 +135,7 @@ abstract class ZenValidatorConstraint extends Object
 }
 
 /**
- * Constraint_required 
+ * Constraint_required
  * Basic required field form validation
  * */
 class Constraint_required extends ZenValidatorConstraint
@@ -168,7 +168,7 @@ class Constraint_required extends ZenValidatorConstraint
 
 /**
  * Constraint_length
- * Constrain a field value to be a of a min length, max length or between a range  
+ * Constrain a field value to be a of a min length, max length or between a range
  *
  * @example Constraint_length::create('min', 5); // minimum length of 5 characters
  * @example Constraint_length::create('max', 5); // maximum length of 5 characters
@@ -377,10 +377,10 @@ class Constraint_check extends ZenValidatorConstraint
 
 /**
  * Constraint_value
- * Constrain a field value to be a of a min value, max value or between a range  
+ * Constrain a field value to be a of a min value, max value or between a range
  *
  * @example Constraint_value::create('min', 5); // minimum value of 5
- * @example Constraint_value::create('max', 5); // maximum value of 5 
+ * @example Constraint_value::create('max', 5); // maximum value of 5
  * @example Constraint_value::create('range', 5, 10); // value between 5 and 10 characters
  * */
 class Constraint_value extends ZenValidatorConstraint
@@ -481,7 +481,7 @@ class Constraint_value extends ZenValidatorConstraint
 
 /**
  * Constraint_regex
- * Constrain a field to match a regular expression  
+ * Constrain a field to match a regular expression
  *
  * @example Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"); // value must be a valid hex color
  * */
@@ -624,7 +624,7 @@ class Constraint_remote extends ZenValidatorConstraint
         $query = http_build_query($this->params);
         $url = $this->method == 'GET' ? $this->url . '?' . $query : $this->url;
 
-        // If the url is a relative one, use Director::test() to get the response 
+        // If the url is a relative one, use Director::test() to get the response
         if (Director::is_relative_url($url)) {
             $url = Director::makeRelative($url);
             $postVars = $this->method == 'POST' ? $this->params : null;
@@ -679,7 +679,7 @@ class Constraint_remote extends ZenValidatorConstraint
 
 /**
  * Constraint_type
- * Constrain a field value to be a of a min value, max value or between a range  
+ * Constrain a field value to be a of a min value, max value or between a range
  *
  * @example Constraint_type::create('email'); // require valid email
  * @example Constraint_type::create('url'); // require valid url
@@ -767,7 +767,7 @@ class Constraint_type extends ZenValidatorConstraint
 
 /**
  * Constraint_equalto
- * Constrain a field value to be the same as another field 
+ * Constrain a field value to be the same as another field
  *
  * @example Constraint_equalto::create('OtherField');
  * */
@@ -842,7 +842,7 @@ class Constraint_comparison extends ZenValidatorConstraint
     protected $targetField;
 
     /**
-     * @var type 
+     * @var type
      * */
     protected $type;
 
@@ -939,7 +939,7 @@ class Constraint_words extends ZenValidatorConstraint
     protected $val2;
 
     /**
-     * @var type 
+     * @var type
      * */
     protected $type;
 
