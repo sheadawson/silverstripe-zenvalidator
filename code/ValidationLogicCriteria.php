@@ -77,9 +77,9 @@ class ValidationLogicCriteria extends Object
 
     /**
      * Wildcard method for applying all the possible conditions
-     * @param  sting $method The method name
-     * @param  array $args The arguments
-     * @return  ValidationLogicCriteria
+     * @param sting $method The method name
+     * @param array $args The arguments
+     * @return ValidationLogicCriteria
      */
     public function __call($method, $args)
     {
@@ -103,8 +103,8 @@ class ValidationLogicCriteria extends Object
 
     /**
      * Adds a {@link ValidationLogicCriterion} for a range of values
-     * @param  int  $min The minimum value
-     * @param  int  $max The maxiumum value
+     * @param int  $min The minimum value
+     * @param int  $max The maxiumum value
      * @return ValidationLogicCriteria
      */
     // public function isBetween($min, $max) {
@@ -116,7 +116,7 @@ class ValidationLogicCriteria extends Object
 
     /**
      * Adds a new criterion, and makes this set use conjuctive logic
-     * @param  string $master The master form field
+     * @param string $master The master form field
      * @return ValidationLogicCriteria
      */
     public function andIf($master = null)
@@ -136,7 +136,7 @@ class ValidationLogicCriteria extends Object
 
     /**
      * Adds a new criterion, and makes this set use disjunctive logic
-     * @param  string $master The master form field
+     * @param string $master The master form field
      * @return ValidationLogicCriteria
      */
     public function orIf($master = null)

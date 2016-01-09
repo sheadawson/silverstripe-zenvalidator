@@ -142,7 +142,7 @@ class ZenValidator extends Validator
 
     /**
      * setConstraint - sets a ZenValidatorContraint on this validator
-     * @param String $field - name of the field to be validated
+     * @param string $field - name of the field to be validated
      * @param ZenFieldValidator $constraint
      * @return $this
      **/
@@ -188,8 +188,8 @@ class ZenValidator extends Validator
 
     /**
      * get a constraint by fieldName, constraintName
-     * @param String $fieldName
-     * @param String $constraintName
+     * @param string $fieldName
+     * @param string $constraintName
      * @return ZenValidatorConstraint
      **/
     public function getConstraint($fieldName, $constraintName)
@@ -202,7 +202,7 @@ class ZenValidator extends Validator
 
     /**
      * get constraints by fieldName
-     * @param String $fieldName
+     * @param string $fieldName
      * @return array
      **/
     public function getConstraints($fieldName)
@@ -215,8 +215,8 @@ class ZenValidator extends Validator
 
     /**
      * remove a constraint from a field
-     * @param String $field - name of the field to have a constraint removed from
-     * @param String $constraintName - class name of constraint
+     * @param string $field - name of the field to have a constraint removed from
+     * @param string $constraintName - class name of constraint
      * @return $this
      **/
     public function removeConstraint($fieldName, $constraintName)
@@ -234,7 +234,7 @@ class ZenValidator extends Validator
 
     /**
      * remove all constraints from a field
-     * @param String $field - name of the field to have constraints removed from
+     * @param string $field - name of the field to have constraints removed from
      * @return $this
      **/
     public function removeConstraints($fieldName)

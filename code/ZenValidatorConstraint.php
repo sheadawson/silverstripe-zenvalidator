@@ -44,7 +44,7 @@ abstract class ZenValidatorConstraint extends Object
 
     /**
      * Set a custom message for this constraint
-     * @param String $message
+     * @param string $message
      * @return this
      * */
     public function setMessage($message)
