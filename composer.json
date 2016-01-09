@@ -1,24 +1,28 @@
 {
-	"name": "sheadawson/silverstripe-zenvalidator",
-	"type": "silverstripe-module",
-	"description": "Faster, easier client and server-side form validation for SilverStripe",
-	"keywords": ["silverstripe", "parsley", "forms", "validation"],
-	"license": "BSD License",
-	"authors": [
-		{
-			"name": "Shea Dawson",
-			"email": "shea@silverstripe.com.au"
-		}
-	],
-	"require": 
-	{
-		"composer/installers": "*",
-		"silverstripe/framework": "3.*"
-	},
-	"support": {
-		"issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
-	},
-	"extra": {
-		"installer-name": "zenvalidator"
-	}
+    "name": "sheadawson/silverstripe-zenvalidator",
+    "type": "silverstripe-module",
+    "description": "Faster, easier client and server-side form validation for SilverStripe",
+    "keywords": [
+        "silverstripe",
+        "parsley",
+        "forms",
+        "validation"
+    ],
+    "license": "BSD License",
+    "authors": [
+        {
+            "name": "Shea Dawson",
+            "email": "shea@silverstripe.com.au"
+        }
+    ],
+    "require": {
+        "composer/installers": "*",
+        "silverstripe/framework": "3.*"
+    },
+    "support": {
+        "issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
+    },
+    "extra": {
+        "installer-name": "zenvalidator"
+    }
 }
