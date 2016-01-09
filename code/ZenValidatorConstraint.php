@@ -653,7 +653,7 @@ class Constraint_remote extends ZenValidatorConstraint
             }
         }
 
-        $isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result))))) ? true : false;
+        $isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result)))));
 
         if ($isJson) {
             $result = Convert::json2obj($result);
