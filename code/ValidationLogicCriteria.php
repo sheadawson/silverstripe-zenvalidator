@@ -7,39 +7,33 @@
  */
 class ValidationLogicCriteria extends Object
 {
-
-
     /**
      * The name of the form field that depends on the criteria
+     *
      * @var string
      */
     protected $master = null;
 
-
-
     /**
      * The form field that responds to the state of {@link $master}
+     *
      * @var FormField
      */
     protected $slave = null;
 
-
-
     /**
      * A parent {@link ValidationLogicCriteria}, for grouping
+     *
      * @var ValidationLogicCriteria
      */
     protected $parent = null;
 
-
-
     /**
      * A list of {@link ValidationLogicCriterion} objects
+     *
      * @var array
      */
     protected $criteria = array();
-
-
 
     /**
      * Either "and" or "or", determines disjunctive or conjunctive logic for the whole criteria set
@@ -47,18 +41,14 @@ class ValidationLogicCriteria extends Object
      */
     protected $logicalOperator = null;
 
-
     /**
-     *
      * @var array
      */
     private static $comparisons;
 
-
-
-
     /**
      * Constructor
+     *
      * @param FormField $slave  The form field that responds to changes of another form field
      * @param [type]    $master The name of the form field to respond to
      * @param [type]    $parent The parent {@link ValidationLogicCriteria}
@@ -72,11 +62,9 @@ class ValidationLogicCriteria extends Object
         return $this;
     }
 
-
-
-
     /**
      * Wildcard method for applying all the possible conditions
+     *
      * @param sting $method The method name
      * @param array $args The arguments
      * @return ValidationLogicCriteria
@@ -98,11 +86,9 @@ class ValidationLogicCriteria extends Object
         return parent::__call($method, $args);
     }
 
-
-
-
     /**
      * Adds a {@link ValidationLogicCriterion} for a range of values
+     *
      * @param int  $min The minimum value
      * @param int  $max The maxiumum value
      * @return ValidationLogicCriteria
@@ -112,10 +98,9 @@ class ValidationLogicCriteria extends Object
     // 	return $this;
     // }
 
-
-
     /**
      * Adds a new criterion, and makes this set use conjuctive logic
+     *
      * @param string $master The master form field
      * @return ValidationLogicCriteria
      */
@@ -131,11 +116,9 @@ class ValidationLogicCriteria extends Object
         return $this;
     }
 
-
-
-
     /**
      * Adds a new criterion, and makes this set use disjunctive logic
+     *
      * @param string $master The master form field
      * @return ValidationLogicCriteria
      */
@@ -151,11 +134,9 @@ class ValidationLogicCriteria extends Object
         return $this;
     }
 
-
-
-
     /**
      * Adds a new criterion
+     *
      * @param ValidationLogicCriterion $c
      */
     public function addCriterion(ValidationLogicCriterion $c)
@@ -163,10 +144,9 @@ class ValidationLogicCriteria extends Object
         $this->criteria[] = $c;
     }
 
-
-
     /**
      * Gets all the criteria
+     *
      * @return array
      */
     public function getCriteria()
@@ -174,10 +154,9 @@ class ValidationLogicCriteria extends Object
         return $this->criteria;
     }
 
-
-
     /**
      * Gets a Javascript symbol for the logical operator
+     *
      * @return string
      */
     public function getLogicalOperator()
@@ -185,10 +164,9 @@ class ValidationLogicCriteria extends Object
         return $this->logicalOperator == "or" ? "||" : "&&";
     }
 
-
-
     /**
      * Creates a nested {@link ValidationLogicCriteria}
+     *
      * @return ValidationLogicCriteria
      */
     public function group()
@@ -196,11 +174,9 @@ class ValidationLogicCriteria extends Object
         return ValidationLogicCriteria::create($this->slave, $this->master, $this);
     }
 
-
-
-
     /**
      * Ends the chaining and returns the parent object, either {@link ValidationLogicCriteria} or {@link FormField}
+     *
      * @return FormField/ValidationLogicCriteria
      */
     public function end()
@@ -211,7 +187,9 @@ class ValidationLogicCriteria extends Object
         return $this->slave;
     }
 
-
+    /**
+     * @return string
+     */
     public function phpEvalString()
     {
         $string = "(";
@@ -227,6 +205,7 @@ class ValidationLogicCriteria extends Object
 
     /**
      * Creates a JavaScript readable representation of the logic
+     *
      * @return string
      */
     public function toScript()
@@ -242,9 +221,9 @@ class ValidationLogicCriteria extends Object
         return $script;
     }
 
-
     /**
      * Gets a list of all the master fields in this criteria set
+     *
      * @return string
      */
     public function getMasterList()
