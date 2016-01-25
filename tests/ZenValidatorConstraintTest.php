@@ -195,6 +195,59 @@ class ZenValidatorConstraintTest extends SapphireTest
         $zv->php($data);
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
+
+        // Following are tests to ensure that a string, which matches the regex on the
+        //  first char will be validated correctly.
+
+        // This regex requires a string like this: '22/11/1999' or '1/4/2005'
+        $zv->setConstraint('Date', Constraint_regex::create("/^[0-9]{1,2}[\/][0-9]{1,2}[\/][0-9]{4}$/"));
+
+        // test attributes
+        $field = $zv->getConstraint('Date', 'Constraint_regex')->getField();
+        $this->assertTrue($field->getAttribute('data-parsley-pattern') == "^[0-9]{1,2}[\/][0-9]{1,2}[\/][0-9]{4}$");
+
+        // test valid cases
+        $data['Date'] = '22/11/1999';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+
+        $data['Date'] = '22/1/1999';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+
+        $data['Date'] = '2/11/1999';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+
+        $data['Date'] = '2/1/1999';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+
+        // test invalid
+        $data['Date'] = ' 10/11/2000';
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Date');
+
+        $data['Date'] = '10/11/200';
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Date');
+
+        $data['Date'] = '10/Jan/2000';
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Date');
+
+        $data['Date'] = '10-20-2010';
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Date');
+
+        $data['Date'] = '10-2-2010';
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Date');
     }
 
 

@@ -524,7 +524,9 @@ class Constraint_regex extends ZenValidatorConstraint
         if (!$value) {
             return true;
         }
-        return preg_match($this->regex, $value);
+
+        // preg_match returns 0 if the string starts with the regex pattern - which casts to false
+        return preg_match($this->regex, $value) !== false;
     }
 
     public function getDefaultMessage()
