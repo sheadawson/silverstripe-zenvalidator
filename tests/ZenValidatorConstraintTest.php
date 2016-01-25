@@ -196,6 +196,9 @@ class ZenValidatorConstraintTest extends SapphireTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
 
+        // reset data otherwise the following tests will fail. Should be refactored
+        $data = array();
+
         // Following are tests to ensure that a string, which matches the regex on the
         //  first char will be validated correctly.
 
