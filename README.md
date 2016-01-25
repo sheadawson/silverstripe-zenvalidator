@@ -213,7 +213,8 @@ Any of the above examples can be configured to display a custom error message. F
 ```php
 $validator->setConstraint(
     'FavoriteColor',
-    Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")->setMessage('Please enter a valid HEX color code, starting with a #')
+    Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")
+        ->setMessage('Please enter a valid HEX color code, starting with a #')
 );
 ```
 
