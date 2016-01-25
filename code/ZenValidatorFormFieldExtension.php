@@ -19,6 +19,7 @@ class ZenValidatorFormFieldExtension extends Extension
     /**
      * Checks to see if any ValidationLogicCriteria has been set and if so,
      * should the validation constraints still be applied
+     *
      * @return bool
      **/
     public function validationApplies()

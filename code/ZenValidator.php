@@ -14,6 +14,7 @@ class ZenValidator extends Validator
 
     /**
      * constraints assigned to this validator
+     *
      * @var array
      **/
     protected $constraints = array();
@@ -82,6 +83,7 @@ class ZenValidator extends Validator
 
     /**
      * applyParsley
+     *
      * @return this
      **/
     public function applyParsley()
@@ -117,6 +119,7 @@ class ZenValidator extends Validator
 
     /**
      * disableParsley
+     *
      * @return this
      **/
     public function disableParsley()
@@ -132,6 +135,7 @@ class ZenValidator extends Validator
 
     /**
      * parsleyIsEnabled
+     *
      * @return boolean
      **/
     public function parsleyIsEnabled()
@@ -142,6 +146,7 @@ class ZenValidator extends Validator
 
     /**
      * setConstraint - sets a ZenValidatorContraint on this validator
+     *
      * @param string $field - name of the field to be validated
      * @param ZenFieldValidator $constraint
      * @return $this
@@ -168,6 +173,7 @@ class ZenValidator extends Validator
 
     /**
      * setConstraints - sets multiple constraints on this validator
+     *
      * @param array $constraints - $fieldName => ZenValidatorConstraint
      * @return $this
      **/
@@ -202,6 +208,7 @@ class ZenValidator extends Validator
 
     /**
      * get constraints by fieldName
+     *
      * @param string $fieldName
      * @return array
      **/
@@ -215,6 +222,7 @@ class ZenValidator extends Validator
 
     /**
      * remove a constraint from a field
+     *
      * @param string $field - name of the field to have a constraint removed from
      * @param string $constraintName - class name of constraint
      * @return $this
@@ -234,6 +242,7 @@ class ZenValidator extends Validator
 
     /**
      * remove all constraints from a field
+     *
      * @param string $field - name of the field to have constraints removed from
      * @return $this
      **/
@@ -251,6 +260,7 @@ class ZenValidator extends Validator
 
     /**
      * A quick way of adding required constraints to a number of fields
+     *
      * @param array $fieldNames - can be either indexed array of fieldnames, or associative array of fieldname => message
      * @return this
      */
@@ -276,6 +286,7 @@ class ZenValidator extends Validator
 
     /**
      * Performs the php validation on all ZenValidatorConstraints attached to this validator
+     *
      * @return boolean
      **/
     public function php($data)

@@ -4,6 +4,7 @@
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
+ *
  * Credit to Uncle Cheese for the recipe
  */
 class ValidationLogicCriterion extends Object
@@ -12,6 +13,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * The name of the form field that is controlling the Validation
+     *
      * @var string
      */
     protected $master = null;
@@ -29,6 +31,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * The value to compare to
+     *
      * @var mixed
      */
     protected $value = null;
@@ -45,6 +48,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * Constructor
+     *
      * @param string               $master   The name of the master field
      * @param string               $operator The name of the comparison function
      * @param string               $value    The value to compare to
@@ -64,6 +68,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * Accessor for the master field
+     *
      * @return string
      */
     public function getMaster()
@@ -85,6 +90,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * Returns a string of php code to be evaluated
+     *
      * @return string
      **/
     public function toPHP()
@@ -126,6 +132,7 @@ class ValidationLogicCriterion extends Object
 
     /**
      * Creates a JavaScript-readable representation of this criterion
+     *
      * @return string
      */
     public function toScript()
