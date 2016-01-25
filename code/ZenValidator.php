@@ -8,8 +8,9 @@
  **/
 class ZenValidator extends Validator
 {
-
-
+    /**
+     * @var boolean
+     */
     private static $default_js = true;
 
     /**
@@ -19,21 +20,20 @@ class ZenValidator extends Validator
      **/
     protected $constraints = array();
 
-
     /**
-     * @var Boolean
+     * @var boolean
      **/
     protected $parsleyEnabled;
 
-
     /**
-     * @var Boolean
+     * @var boolean
      **/
     protected $defaultJS;
 
-
     /**
-     * @param boolean $parsleyEnabled
+     * @param array $constraints
+     * @param boolean $parsleyEnabled (default: true)
+     * @param boolean $defaultJS (default: null)
      **/
     public function __construct($constraints = array(), $parsleyEnabled = true, $defaultJS = null)
     {
@@ -46,7 +46,6 @@ class ZenValidator extends Validator
             $this->setConstraints($constraints);
         }
     }
-
 
     /**
      * @param Form $form
@@ -80,11 +79,10 @@ class ZenValidator extends Validator
         return $this;
     }
 
-
     /**
      * applyParsley
      *
-     * @return this
+     * @return $this
      **/
     public function applyParsley()
     {
@@ -132,7 +130,6 @@ class ZenValidator extends Validator
         return $this;
     }
 
-
     /**
      * parsleyIsEnabled
      *
@@ -142,7 +139,6 @@ class ZenValidator extends Validator
     {
         return $this->parsleyEnabled;
     }
-
 
     /**
      * setConstraint - sets a ZenValidatorContraint on this validator
@@ -170,7 +166,6 @@ class ZenValidator extends Validator
         return $this;
     }
 
-
     /**
      * setConstraints - sets multiple constraints on this validator
      *
@@ -188,9 +183,9 @@ class ZenValidator extends Validator
                 $this->setConstraint($fieldName, $v);
             }
         }
+
         return $this;
     }
-
 
     /**
      * get a constraint by fieldName, constraintName
@@ -205,7 +200,6 @@ class ZenValidator extends Validator
         }
     }
 
-
     /**
      * get constraints by fieldName
      *
@@ -218,7 +212,6 @@ class ZenValidator extends Validator
             return $this->constraints[$fieldName];
         }
     }
-
 
     /**
      * remove a constraint from a field
@@ -236,9 +229,9 @@ class ZenValidator extends Validator
             unset($this->constraints[$fieldName][$constraint->class]);
             unset($constraint);
         }
+
         return $this;
     }
-
 
     /**
      * remove all constraints from a field
@@ -254,9 +247,9 @@ class ZenValidator extends Validator
             }
             unset($this->constraints[$fieldName]);
         }
+
         return $this;
     }
-
 
     /**
      * A quick way of adding required constraints to a number of fields
@@ -283,7 +276,6 @@ class ZenValidator extends Validator
         return $this;
     }
 
-
     /**
      * Performs the php validation on all ZenValidatorConstraints attached to this validator
      *
@@ -309,7 +301,10 @@ class ZenValidator extends Validator
             $field = $this->form->Fields()->dataFieldByName($fieldName);
 
             if (!$field) {
-                throw new Exception("There is a constraint for $fieldName but this field does not exist. Maybe you should remove the constraint?");
+                throw new Exception(
+                    "There is a constraint for $fieldName but this field does not exist. " .
+                    "Maybe you should remove the constraint?"
+                );
             }
 
             if ($field->validationApplies()) {
@@ -321,9 +316,9 @@ class ZenValidator extends Validator
                 }
             }
         }
+
         return $valid;
     }
-
 
     /**
      * This method is not imeplemented because form->transform calls it, but not all FormTransformations
@@ -333,7 +328,6 @@ class ZenValidator extends Validator
     public function removeValidation()
     {
     }
-
 
     /**
      * Removes all constraints from this validator.
