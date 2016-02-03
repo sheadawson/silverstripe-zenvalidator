@@ -1046,3 +1046,121 @@ class Constraint_date extends ZenValidatorConstraint
         return _t('ZenValidator.DATEISO', 'This value should be a date');
     }
 }
+
+/**
+ * Constraint_Dimension
+ * Constrain an image field to have the specified dimension(s)
+ *
+ * @example Constraint_dimension::create('width', 100);
+ * */
+class Constraint_dimension extends ZenValidatorConstraint
+{
+    protected $type;
+    protected $val1;
+    protected $val2;
+
+    const WIDTH = 'width';
+    const HEIGHT = 'height';
+    const WIDTH_HEIGHT = 'width_height';
+    const RATIO = 'ratio';
+
+    public function __construct($type,$val1,$val2=null)
+    {
+        $this->type = $type;
+        $this->val1 = $val1;
+        $this->val2 = $val2;
+
+        parent::__construct();
+    }
+
+    /**
+     * Validate function called for validator.
+     * @param  Mixed $value the value of the field being validated.
+     * @return boolean
+     */
+    public function validate($value)
+    {
+        // The value which comes in is a files array so we can look through this
+        // to and then get the files to test aspects of them.
+        // @TODO does the normal upload field allow for multiple files
+        // think we are using speical one in the whitireia site.
+        if (isset($value['Files'])) {
+            foreach($value['Files'] as $fileID) {
+                $file = File::get()->byId($fileID);
+
+                // Now have the file double-check it is an image and if so then
+                // get some information about the image using PHPs getimagesize()
+                if ($file->ClassName == 'Image') {
+                    $info = getimagesize($_SERVER['DOCUMENT_ROOT'] . "/" . $file->Filename);
+
+                    if ($info && is_array($info)) {
+                        $width = $info[0];
+                        $height = $info[1];
+
+                        switch ($this->type) {
+                            case 'width':
+                                return $width == $this->val1 ? true : false;
+                                break;
+                            case 'height':
+                                return $height == $this->val1 ? true : false;
+                                break;
+                            case 'width_height':
+                                if (($width == $this->val1) && ($height == $this->val2)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                                break;
+                            case 'ratio':
+                                return $this->ratioValidation($width, $height);
+                            default:
+                                throw new Exception('Invalid type : ' . $this->type);
+                        }
+                    }
+                }
+            }
+        }
+
+        exit();
+    }
+
+    /**
+     * Does the ratio validation
+     * @param  Int $width  width of the image
+     * @param  Int $height height of the image
+     * @return boolean
+     */
+    protected function ratioValidation($width,$height)
+    {
+        $validationResult = false;
+
+        // Divide the width and height by the ratio, ignore the decimal points as can't have part pixles.
+        $baseWidth = floor($width / $this->val1);
+        $baseHeight = floor($height / $this->val2);
+
+        // Compare the base values, if they match then the image is in the correct aspect ratio.
+        if ($baseWidth == $baseHeight) {
+            $validationResult = true;
+        }
+
+        return $validationResult;
+    }
+
+    public function getDefaultMessage()
+    {
+        switch ($this->type) {
+            case 'width':
+                return sprintf(_t('ZenValidator.DIMWIDTH', 'Image width must be %s pixles'), $this->val1);
+                break;
+            case 'height':
+                return sprintf(_t('ZenValidator.DIMHEIGHT', 'Image height must be %s pixles'), $this->val1);
+                break;
+            case 'width_height':
+                return sprintf(_t('ZenValidator.DIMWIDTHHEIGHT', 'Image width must be %s pixles and Image height must be %s pixles'), $this->val1, $this->val2);
+                break;
+            case 'ratio':
+                return sprintf(_t('ZenValidator.DIMRATIO', 'Image aspect ratio (shape) must be %s:%s'), $this->val1, $this->val2);
+                break;
+        }
+    }
+}
