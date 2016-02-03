@@ -1144,6 +1144,10 @@ class Constraint_dimension extends ZenValidatorConstraint
         return $validationResult;
     }
 
+    /**
+     * Gets the default message for the validator
+     * @return String the validation message
+     */
     public function getDefaultMessage()
     {
         switch ($this->type) {
