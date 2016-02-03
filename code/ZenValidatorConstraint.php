@@ -1082,8 +1082,6 @@ class Constraint_dimension extends ZenValidatorConstraint
     {
         // The value which comes in is a files array so we can look through this
         // to and then get the files to test aspects of them.
-        // @TODO does the normal upload field allow for multiple files
-        // think we are using speical one in the whitireia site.
         if (isset($value['Files'])) {
             foreach($value['Files'] as $fileID) {
                 $file = File::get()->byId($fileID);
