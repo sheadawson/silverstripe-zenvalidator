@@ -24,7 +24,7 @@ Out of the box constraints include:
 
 ## Usage examples
 
-### Create a form, add ZenValidator.
+### Create a form, add ZenValidator.  
 
 ```php
 public function Form(){
@@ -176,7 +176,7 @@ $validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a
 
 ##### Remote validation
 
-Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" }
+Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" } 
 
 ```php
 $validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
@@ -287,7 +287,6 @@ $.each($('form.parsley').parsley(),function(i,parsleyForm) {
 
 See [Parsley.js](http://parsleyjs.org/doc/index.html) for the full list of configuration settings
 
-
 ### CMS Usage
 
 To use ZenValidator in the CMS, simply implement a getCMSValidator() method on your custom Page type or DataObject class
@@ -303,7 +302,61 @@ public function getCMSValidator(){
     $validator->disableParsley();
 }
 ```
+##### Image Dimension Constraints (CMS only)
 
+You can add constraints to image selection/upload fields to ensure that users are saving images of the correct size or shape, or that the image is of a minimum/maximum width and height to prevent issues with the display of the image in the site.
+
+Note: the validation is run when the page is saved, not at time of image choosing or upload.
+
+Width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('width', 100));
+```
+
+Height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('height', 150));
+```
+
+Width and Height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('width_height', 100, 150));
+```
+
+Ratio
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('ratio', 16, 9));
+```
+
+Min width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_width', 50));
+```
+
+Min height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_height', 75));
+```
+
+Min width and height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_width_height', 50, 75));
+```
+
+Max width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_width', 300));
+```
+
+Max height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_height', 200));
+```
+
+Max width and height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_width_height', 300, 200));
+```
 
 ## Validation Logic - Conditional Constraints
 
