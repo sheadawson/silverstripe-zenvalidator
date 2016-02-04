@@ -303,76 +303,76 @@ public function getCMSValidator(){
     $validator->disableParsley();
 }
 ```
-##### Image Dimension Constraints (CMS only)
+#### Image Dimension Constraints (CMS only)
 
 You can add constraints to image selection/upload fields to ensure that users are saving images of the correct size or shape, or that the image is of a minimum/maximum width and height to prevent issues with the display of the image in the site.
 
 Note: the validation is run when the page is saved, not at time of image choosing or upload.
 
-Width
+##### Width
 
 Use this to require the width of an image to be a certain number of pixels. Handy if you require images to be an exact size.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('width', 100));
 ```
 
-Height
+##### Height
 
 Use this to require the height of an image is the specified pixels.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('height', 150));
 ```
 
-Width and Height
+##### Width and Height
 
 Use this to require both the width and height are the specified pixels.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('width_height', 100, 150));
 ```
 
-Ratio
+##### Ratio
 
 Use this to require images to be a certain shape, for example 6:4 photo, 5:5 square etc. Handy when you need an image to be a particular shape but are relaxed about the size as that might be dealt with by CSS.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('ratio', 16, 9));
 ```
 
-Min width
+##### Min width
 
 Use this to ensure the width of an image is equal to or greater than the specified pixels, handy to ensure that users don't use images which are too small and might loose quality if stretched by CSS.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('min_width', 50));
 ```
 
-Min height
+##### Min height
 
 Use this to ensure that the height of an image is equal to or greater than the specified pixels.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('min_height', 75));
 ```
 
-Min width and height
+##### Min width and height
 
 Use this to ensure that the width and the height of the image are equal to or greater than the specified pixels.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('min_width_height', 50, 75));
 ```
 
-Max width
+##### Max width
 
 Use this to ensure that the width of an image is less than or equal to the specified pixels. Handy to ensure that users don't select images far larger than required, especially if these images have a max-width set by CSS as that would result in a lot of wasted bandwidth.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('max_width', 300));
 ```
 
-Max height
+##### Max height
 
 Use this to ensure the height of an image is less than or equal to the specified pixels.
 ```php
 $validator->setConstraint('HeroImage', Constraint_dimension::create('max_height', 200));
 ```
 
-Max width and height
+##### Max width and height
 
 Use this to ensure the width and height is of an image does not exceed the specified pixels.
 ```php
