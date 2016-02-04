@@ -20,6 +20,7 @@ Out of the box constraints include:
 * equalto (equal to the value of another field)
 * regex
 * remote (validate remotely via ajax)
+* dimension (image width, height, aspect ratio. CMS only)
 
 
 ## Usage examples
