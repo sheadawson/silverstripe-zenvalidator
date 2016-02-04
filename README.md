@@ -1,11 +1,11 @@
 # SilverStripe ZenValidator
 
-[![Build Status](https://travis-ci.org/sheadawson/silverstripe-zenvalidator.png?branch=master)](https://travis-ci.org/sheadawson/silverstripe-zenvalidator) 
+[![Build Status](https://travis-ci.org/sheadawson/silverstripe-zenvalidator.png?branch=master)](https://travis-ci.org/sheadawson/silverstripe-zenvalidator)
 
 
 ## Description
 
-ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through one simple API. 
+ZenValidator aims to make silverstripe form validation as painless as possible, by allowing configuration of serverside and clientside validation through one simple API.
 [Parsley.js](http://parsleyjs.org/documentation.html) is used for the clientside validation in the frontend.
 
 ## Validation Constraints
@@ -23,7 +23,7 @@ Out of the box constraints include:
 
 
 ## Usage examples
-	
+
 ### Create a form, add ZenValidator.  
 
 ```php
@@ -40,7 +40,7 @@ public function Form(){
 	$actions = FieldList::create(FormAction::create('submit', 'submit'));
 
 	$validator = ZenValidator::create();
-	
+
 	return Form::create($this, 'Form', $fields, $actions, $validator);
 }
 ```
@@ -59,7 +59,7 @@ $validator->addRequiredFields(array(
 	'Email'
 ));
 ```
-	
+
 ##### Required Fields - Custom Messages
 
 ```php
@@ -76,20 +76,20 @@ All other constraints are added via the setConstraint() method. This method take
 ##### Value Constraints
 
 Test for number of min, max or between range value
-	
+
 Min
-```php	
+```php
 $validator->setConstraint('Age', Constraint_value::create('min', 18));
 ```
 Max
-```php	
+```php
 $validator->setConstraint('Age', Constraint_value::create('max', 25));
 ```
 Range
 ```php
 $validator->setConstraint('Age', Constraint_value::create('range', 18, 25));
 ```
-	
+
 ##### Length Constraints
 
 Test for a min, max or between range length of string
@@ -100,7 +100,7 @@ $validator->setConstraint('Username', Constraint_length::create('min', 3));
 ```
 Max
 ```php
-$validator->setConstraint('Username', Constraint_length::create('max', 5));	
+$validator->setConstraint('Username', Constraint_length::create('max', 5));
 ```
 Range
 ```php
@@ -117,13 +117,13 @@ $validator->setConstraint('Options', Constraint_check::create('min', 3));
 ```
 Max
 ```php
-$validator->setConstraint('Options', Constraint_check::create('max', 5));	
+$validator->setConstraint('Options', Constraint_check::create('max', 5));
 ```
 Range
 ```php
 $validator->setConstraint('Options', Constraint_check::create('range', 3, 5));
 ```
-	
+
 ##### Type Constraints
 
 The Constraint_type constraint can be used to validate inputs of type email, url, number, integer, digits or alphanum. Pass one of said options as the first parameter into the constructor.
@@ -137,7 +137,7 @@ URL
 ```php
 $validator->setConstraint('Website', Constraint_type::create('url'));
 ```
-	
+
 Number
 ```php
 $validator->setConstraint('Age', Constraint_type::create('number'));
@@ -152,7 +152,7 @@ Digits
 ```php
 $validator->setConstraint('Age', Constraint_type::create('digits'));
 ```
-	
+
 Alphanum
 ```php
 $validator->setConstraint('Username', Constraint_type::create('alphanum'));
@@ -173,10 +173,10 @@ Check for a valid hex color, for example…
 ```php
 $validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"));
 ```
-	
+
 ##### Remote validation
 
-Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" } 
+Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" }
 
 ```php
 $validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
@@ -187,17 +187,17 @@ The above example will send an ajax request to my checkusername method on the sa
 ```php
 public function checkusername($request){
 	$username = $request->requestVar('Username');
-	
+
 	// check for existing user with same username
 	if(Member::get()->filter('Username', $username)->count()){
 		return $this->httpError(400, 'Sorry, that username is already taken.');
-		));	
+		));
 	}else{
 		return $this->getResponse()->setBody('OK');
-	}	
+	}
 }
 ```
-	
+
 All arguments/settings for the Constraint_remote constructor:
 
 * $url - The URL to send the validation request to (do not include a query string, use $params)
@@ -206,18 +206,18 @@ All arguments/settings for the Constraint_remote constructor:
 * $validator - Use a specific remote validator. Default validators are 'default' and 'reverse'
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
-	
+
 ### Setting Custom Messages
 
 Any of the above examples can be configured to display a custom error message. For example:
 
 ```php
 $validator->setConstraint(
-	'FavoriteColor', 
+	'FavoriteColor',
 	Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/")->setMessage('Please enter a valid HEX color code, starting with a #')
 );
 ```
-	
+
 ### Bulk setting of constraints
 
 ```php
@@ -228,7 +228,7 @@ $validator->setConstraints(array(
 		Constraint_type::create('alphanum'),
 	)
 ));
-```	
+```
 
 The setConstraint() method is also chainable so you can:
 
@@ -242,7 +242,7 @@ $validator
 
 ```php
 $validator->removeConstraint(string $fieldName, string $constraintClassname);
-```	
+```
 OR
 ```php
 $validator->removeConstraints(string $fieldName);
@@ -251,7 +251,7 @@ $validator->removeConstraints(string $fieldName);
 ### Customising frontend validation behaviour (Parsley)
 
 It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, you can set the third parameter ($defaultJS) of Zenvalidator's __construct to false.
-	
+
 ```php
 $validator = ZenValidator::create(null, true, false);
 ```
@@ -286,11 +286,11 @@ $.each($('form.parsley').parsley(),function(i,parsleyForm) {
 ```
 
 See [Parsley.js](http://parsleyjs.org/doc/index.html) for the full list of configuration settings
-	
-	
+
+
 ### CMS Usage
 
-To use ZenValidator in the CMS, simply implement a getCMSValidator() method on your custom Page type or DataObject class 
+To use ZenValidator in the CMS, simply implement a getCMSValidator() method on your custom Page type or DataObject class
 
 ```php
 public function getCMSValidator(){
@@ -299,9 +299,63 @@ public function getCMSValidator(){
 
 	// currently parsley validation doesn't work so well in the cms, so disable.
 	$validator->disableParsley();
-} 
+}
+```
+##### Image Dimension Constraints (CMS only)
+
+You can add constraints to image selection/upload fields to ensure that users are saving images of the correct size or shape, or that the image is of a minimum/maximum width and height to prevent issues with the display of the image in the site.
+
+Note: the validation is run when the page is saved, not at time of image choosing or upload.
+
+Width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('width', 100));
 ```
 
+Height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('height', 150));
+```
+
+Width and Height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('width_height', 100, 150));
+```
+
+Ratio
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('ratio', 16, 9));
+```
+
+Min width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_width', 50));
+```
+
+Min height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_height', 75));
+```
+
+Min width and height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('min_width_height', 50, 75));
+```
+
+Max width
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_width', 300));
+```
+
+Max height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_height', 200));
+```
+
+Max width and height
+```php
+$validator->setConstraint('HeroImage', Constraint_dimension::create('max_width_height', 300, 200));
+```
 
 ## Validation Logic - Conditional Constraints
 
@@ -343,14 +397,14 @@ Although this is easy to achieve by yourself, the module provides a standard imp
 
 Instead of using the standard FormAction class, you can use its subclass "FormActionNoValidation". It will prevent the client and server side validation from happening.
 
-	
+
 ## Extending
 
 You can create your own validation constraints by subclassing the abstract ZenValidatorConstraint class. For frontend implementation of your custom validator, see [Parsley.extend.js](https://github.com/guillaumepotier/Parsley.js/blob/master/parsley.extend.js). Unfortunately there is no real documentation other than the code itself at this stage so good luck!
 
-For everything else in the frontend (triggers, error classes, error placement, etc) See the [Parsley.js documentation](http://parsleyjs.org/documentation.html#javascript) 
+For everything else in the frontend (triggers, error classes, error placement, etc) See the [Parsley.js documentation](http://parsleyjs.org/documentation.html#javascript)
 
-	
+
 
 
 ## Requirements
