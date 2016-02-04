@@ -1063,6 +1063,12 @@ class Constraint_dimension extends ZenValidatorConstraint
     const HEIGHT = 'height';
     const WIDTH_HEIGHT = 'width_height';
     const RATIO = 'ratio';
+    const MIN_WIDTH = 'min_width';
+    const MIN_HEIGHT = 'min_height';
+    const MIN_WIDTH_HEIGHT = 'min_width_height';
+    const MAX_WIDTH = 'max_width';
+    const MAX_HEIGHT = 'max_height';
+    const MAX_WIDTH_HEIGHT = 'max_width_height';
 
     public function __construct($type,$val1,$val2=null)
     {
@@ -1096,21 +1102,48 @@ class Constraint_dimension extends ZenValidatorConstraint
                         $height = $info[1];
 
                         switch ($this->type) {
-                            case 'width':
-                                return $width == $this->val1 ? true : false;
+                            case self::WIDTH:
+                                return $width == $this->val1;
                                 break;
-                            case 'height':
-                                return $height == $this->val1 ? true : false;
+                            case self::HEIGHT:
+                                return $height == $this->val1;
                                 break;
-                            case 'width_height':
+                            case self::WIDTH_HEIGHT:
                                 if (($width == $this->val1) && ($height == $this->val2)) {
                                     return true;
                                 } else {
                                     return false;
                                 }
                                 break;
-                            case 'ratio':
+                            case self::RATIO:
                                 return $this->ratioValidation($width, $height);
+                                break;
+                            case self::MIN_WIDTH:
+                                return $width >= $this->val1;
+                                break;
+                            case self::MIN_HEIGHT:
+                                return $height >= $this->val1;
+                                break;
+                            case self::MIN_WIDTH_HEIGHT:
+                                if (($width >= $this->val1) && ($height >= $this->val2)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                                break;
+                            case self::MAX_WIDTH:
+                                return $width <= $this->val1;
+                                break;
+                            case self::MAX_HEIGHT:
+                                return $height <= $this->val1;
+                                break;
+                            case self::MAX_WIDTH_HEIGHT:
+                                if (($width <= $this->val1) && ($height <= $this->val2)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                                break;
                             default:
                                 throw new Exception('Invalid type : ' . $this->type);
                         }
@@ -1151,17 +1184,35 @@ class Constraint_dimension extends ZenValidatorConstraint
     public function getDefaultMessage()
     {
         switch ($this->type) {
-            case 'width':
+            case self::WIDTH:
                 return sprintf(_t('ZenValidator.DIMWIDTH', 'Image width must be %s pixles'), $this->val1);
                 break;
-            case 'height':
+            case self::HEIGHT:
                 return sprintf(_t('ZenValidator.DIMHEIGHT', 'Image height must be %s pixles'), $this->val1);
                 break;
-            case 'width_height':
+            case self::WIDTH_HEIGHT:
                 return sprintf(_t('ZenValidator.DIMWIDTHHEIGHT', 'Image width must be %s pixles and Image height must be %s pixles'), $this->val1, $this->val2);
                 break;
-            case 'ratio':
+            case self::RATIO:
                 return sprintf(_t('ZenValidator.DIMRATIO', 'Image aspect ratio (shape) must be %s:%s'), $this->val1, $this->val2);
+                break;
+            case self::MIN_WIDTH:
+                return sprintf(_t('ZenValidator.DIMMINWIDTH', 'Image width must be greater than or equal to %s pixles'), $this->val1);
+                break;
+            case self::MIN_HEIGHT:
+                return sprintf(_t('ZenValidator.DIMMINHEIGHT', 'Image height must be greater than or equal to %s pixles'), $this->val1);
+                break;
+            case self::MIN_WIDTH_HEIGHT:
+                return sprintf(_t('ZenValidator.DIMMINWIDTHHEIGHT', 'Image width must be greater than or equal to %s pixles and Image height must be greater than or equal to %s pixles'), $this->val1, $this->val2);
+                break;
+            case self::MAX_WIDTH:
+                return sprintf(_t('ZenValidator.DIMMAXWIDTH', 'Image width must be less than or equal to %s pixles'), $this->val1);
+                break;
+            case self::MAX_HEIGHT:
+                return sprintf(_t('ZenValidator.DIMMAXHEIGHT', 'Image height must be less than or equal to %s pixles'), $this->val1);
+                break;
+            case self::MAX_WIDTH_HEIGHT:
+                return sprintf(_t('ZenValidator.DIMMAXWIDTHHEIGHT', 'Image width must be less than or equal to %s pixles and Image height must be less than or equal to %s pixles'), $this->val1, $this->val2);
                 break;
         }
     }
