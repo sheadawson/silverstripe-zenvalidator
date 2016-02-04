@@ -1171,7 +1171,7 @@ class Constraint_dimension extends ZenValidatorConstraint
     {
         $validationResult = false;
 
-        // Divide the width and height by the ratio, ignore the decimal points as can't have part pixles.
+        // Divide the width and height by the ratio, ignore the decimal points as can't have part pixels.
         $baseWidth = floor($width / $this->val1);
         $baseHeight = floor($height / $this->val2);
 
@@ -1194,7 +1194,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMWIDTH',
-                        'Image width must be %s pixles'
+                        'Image width must be %s pixels'
                     ),
                     $this->val1
                 );
@@ -1203,7 +1203,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMHEIGHT',
-                        'Image height must be %s pixles'
+                        'Image height must be %s pixels'
                     ),
                     $this->val1
                 );
@@ -1212,7 +1212,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMWIDTHHEIGHT',
-                        'Image width must be %s pixles and Image height must be %s pixles'
+                        'Image width must be %s pixels and Image height must be %s pixels'
                     ),
                     $this->val1,
                     $this->val2
@@ -1232,7 +1232,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMINWIDTH',
-                        'Image width must be greater than or equal to %s pixles'
+                        'Image width must be greater than or equal to %s pixels'
                     ),
                     $this->val1
                 );
@@ -1241,7 +1241,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMINHEIGHT',
-                        'Image height must be greater than or equal to %s pixles'
+                        'Image height must be greater than or equal to %s pixels'
                     ),
                     $this->val1
                 );
@@ -1250,7 +1250,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMINWIDTHHEIGHT',
-                        'Image width must be greater than or equal to %s pixles and Image height must be greater than or equal to %s pixles'
+                        'Image width must be greater than or equal to %s pixels and Image height must be greater than or equal to %s pixels'
                     ),
                     $this->val1,
                     $this->val2
@@ -1260,7 +1260,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMAXWIDTH',
-                        'Image width must be less than or equal to %s pixles'
+                        'Image width must be less than or equal to %s pixels'
                     ),
                     $this->val1
                 );
@@ -1269,7 +1269,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMAXHEIGHT',
-                        'Image height must be less than or equal to %s pixles'
+                        'Image height must be less than or equal to %s pixels'
                     ),
                     $this->val1
                 );
@@ -1278,7 +1278,7 @@ class Constraint_dimension extends ZenValidatorConstraint
                 return sprintf(
                     _t(
                         'ZenValidator.DIMMAXWIDTHHEIGHT',
-                        'Image width must be less than or equal to %s pixles and Image height must be less than or equal to %s pixles'
+                        'Image width must be less than or equal to %s pixels and Image height must be less than or equal to %s pixels'
                     ),
                     $this->val1,
                     $this->val2
