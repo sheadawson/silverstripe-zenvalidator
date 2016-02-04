@@ -1132,7 +1132,9 @@ class Constraint_dimension extends ZenValidatorConstraint
                                 return (($width == $this->val1) && ($height == $this->val2));
                                 break;
                             case self::RATIO:
-                                return $this->ratioValidation($width, $height);
+                                $baseWidth = floor($width / $this->val1);
+                                $baseHeight = floor($height / $this->val2);
+                                return $baseWidth == $baseHeight;
                                 break;
                             case self::MIN_WIDTH:
                                 return $width >= $this->val1;
@@ -1159,28 +1161,6 @@ class Constraint_dimension extends ZenValidatorConstraint
                 }
             }
         }
-    }
-
-    /**
-     * Does the ratio validation
-     * @param  Int $width  width of the image
-     * @param  Int $height height of the image
-     * @return boolean
-     */
-    protected function ratioValidation($width,$height)
-    {
-        $validationResult = false;
-
-        // Divide the width and height by the ratio, ignore the decimal points as can't have part pixels.
-        $baseWidth = floor($width / $this->val1);
-        $baseHeight = floor($height / $this->val2);
-
-        // Compare the base values, if they match then the image is in the correct aspect ratio.
-        if ($baseWidth == $baseHeight) {
-            $validationResult = true;
-        }
-
-        return $validationResult;
     }
 
     /**
