@@ -1046,3 +1046,224 @@ class Constraint_date extends ZenValidatorConstraint
         return _t('ZenValidator.DATEISO', 'This value should be a date');
     }
 }
+
+/**
+ * Constraint_Dimension
+ * Constrain an image field to have the specified dimension(s)
+ *
+ * @example Constraint_dimension::create('width', 100);
+ * */
+class Constraint_dimension extends ZenValidatorConstraint
+{
+    /**
+     * @var String
+     */
+    protected $type;
+
+    /**
+     * @var Int
+     */
+    protected $val1;
+
+    /**
+     * @var Int
+     */
+    protected $val2;
+
+    /**
+     * Validation type constants.
+     */
+    const WIDTH = 'width';
+    const HEIGHT = 'height';
+    const WIDTH_HEIGHT = 'width_height';
+    const RATIO = 'ratio';
+    const MIN_WIDTH = 'min_width';
+    const MIN_HEIGHT = 'min_height';
+    const MIN_WIDTH_HEIGHT = 'min_width_height';
+    const MAX_WIDTH = 'max_width';
+    const MAX_HEIGHT = 'max_height';
+    const MAX_WIDTH_HEIGHT = 'max_width_height';
+
+    /**
+     * Constructor
+     * @param String $type Type of validation
+     * @param Int $val1 First value
+     * @param Int $val2 Second value
+     */
+    public function __construct($type,$val1,$val2=null)
+    {
+        $this->type = $type;
+        $this->val1 = $val1;
+        $this->val2 = $val2;
+
+        parent::__construct();
+    }
+
+    /**
+     * Validate function called for validator.
+     * @param  Mixed $value the value of the field being validated.
+     * @return boolean
+     */
+    public function validate($value)
+    {
+        // The value which comes in is a files array so we can look through this
+        // to and then get the files to test aspects of them.
+        if (isset($value['Files'])) {
+            foreach($value['Files'] as $fileID) {
+                $file = File::get()->byId($fileID);
+
+                // Now have the file double-check it is an image and if so then
+                // get some information about the image using PHPs getimagesize()
+                if ($file->ClassName == 'Image') {
+                    $info = getimagesize(BASE_PATH . "/" . $file->Filename);
+
+                    if ($info && is_array($info)) {
+                        $width = $info[0];
+                        $height = $info[1];
+
+                        switch ($this->type) {
+                            case self::WIDTH:
+                                return $width == $this->val1;
+                                break;
+                            case self::HEIGHT:
+                                return $height == $this->val1;
+                                break;
+                            case self::WIDTH_HEIGHT:
+                                return (($width == $this->val1) && ($height == $this->val2));
+                                break;
+                            case self::RATIO:
+                                $baseWidth = floor($width / $this->val1);
+                                $baseHeight = floor($height / $this->val2);
+                                return $baseWidth == $baseHeight;
+                                break;
+                            case self::MIN_WIDTH:
+                                return $width >= $this->val1;
+                                break;
+                            case self::MIN_HEIGHT:
+                                return $height >= $this->val1;
+                                break;
+                            case self::MIN_WIDTH_HEIGHT:
+                                return (($width >= $this->val1) && ($height >= $this->val2));
+                                break;
+                            case self::MAX_WIDTH:
+                                return $width <= $this->val1;
+                                break;
+                            case self::MAX_HEIGHT:
+                                return $height <= $this->val1;
+                                break;
+                            case self::MAX_WIDTH_HEIGHT:
+                                return (($width <= $this->val1) && ($height <= $this->val2));
+                                break;
+                            default:
+                                throw new Exception('Invalid type : ' . $this->type);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets the default message for the validator
+     * @return String the validation message
+     */
+    public function getDefaultMessage()
+    {
+        switch ($this->type) {
+            case self::WIDTH:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMWIDTH',
+                        'Image width must be %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMHEIGHT',
+                        'Image height must be %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::WIDTH_HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMWIDTHHEIGHT',
+                        'Image width must be %s pixels and Image height must be %s pixels'
+                    ),
+                    $this->val1,
+                    $this->val2
+                );
+                break;
+            case self::RATIO:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMRATIO',
+                        'Image aspect ratio (shape) must be %s:%s'
+                    ),
+                    $this->val1,
+                    $this->val2
+                );
+                break;
+            case self::MIN_WIDTH:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMINWIDTH',
+                        'Image width must be greater than or equal to %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::MIN_HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMINHEIGHT',
+                        'Image height must be greater than or equal to %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::MIN_WIDTH_HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMINWIDTHHEIGHT',
+                        'Image width must be greater than or equal to %s pixels and Image height must be greater than or equal to %s pixels'
+                    ),
+                    $this->val1,
+                    $this->val2
+                );
+                break;
+            case self::MAX_WIDTH:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMAXWIDTH',
+                        'Image width must be less than or equal to %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::MAX_HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMAXHEIGHT',
+                        'Image height must be less than or equal to %s pixels'
+                    ),
+                    $this->val1
+                );
+                break;
+            case self::MAX_WIDTH_HEIGHT:
+                return sprintf(
+                    _t(
+                        'ZenValidator.DIMMAXWIDTHHEIGHT',
+                        'Image width must be less than or equal to %s pixels and Image height must be less than or equal to %s pixels'
+                    ),
+                    $this->val1,
+                    $this->val2
+                );
+                break;
+        }
+    }
+}
