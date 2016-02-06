@@ -25,7 +25,7 @@ Out of the box constraints include:
 
 ## Usage examples
 
-### Create a form, add ZenValidator.  
+### Create a form, add ZenValidator.
 
 ```php
 public function Form(){
@@ -177,7 +177,7 @@ $validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a
 
 ##### Remote validation
 
-Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" } 
+Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" }
 
 ```php
 $validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
