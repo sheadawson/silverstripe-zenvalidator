@@ -1056,17 +1056,17 @@ class Constraint_date extends ZenValidatorConstraint
 class Constraint_dimension extends ZenValidatorConstraint
 {
     /**
-     * @var String
+     * @var string
      */
     protected $type;
 
     /**
-     * @var Int
+     * @var int
      */
     protected $val1;
 
     /**
-     * @var Int
+     * @var int
      */
     protected $val2;
 
@@ -1086,9 +1086,9 @@ class Constraint_dimension extends ZenValidatorConstraint
 
     /**
      * Constructor
-     * @param String $type Type of validation
-     * @param Int $val1 First value
-     * @param Int $val2 Second value
+     * @param string $type Type of validation
+     * @param int $val1 First value
+     * @param int $val2 Second value
      */
     public function __construct($type,$val1,$val2=null)
     {
@@ -1101,7 +1101,7 @@ class Constraint_dimension extends ZenValidatorConstraint
 
     /**
      * Validate function called for validator.
-     * @param  Mixed $value the value of the field being validated.
+     * @param Mixed $value the value of the field being validated.
      * @return boolean
      */
     public function validate($value)
@@ -1165,7 +1165,7 @@ class Constraint_dimension extends ZenValidatorConstraint
 
     /**
      * Gets the default message for the validator
-     * @return String the validation message
+     * @return string the validation message
      */
     public function getDefaultMessage()
     {
