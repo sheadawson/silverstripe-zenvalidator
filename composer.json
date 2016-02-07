@@ -24,5 +24,6 @@
     },
     "extra": {
         "installer-name": "zenvalidator"
-    }
+    },
+    "homepage": "https://github.com/sheadawson/silverstripe-zenvalidator"
 }
