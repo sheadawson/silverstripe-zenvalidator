@@ -1102,7 +1102,7 @@ class Constraint_dateOutside extends ZenValidatorConstraint
             }
         } else {
             // Throw error as the timestring did not parse.
-            throw new Exception('Time string invalid : ' . $this->time);
+            throw new Exception('Time string invalid : ' . $time);
         }
 
         parent::__construct();
@@ -1224,7 +1224,7 @@ class Constraint_dateInside extends ZenValidatorConstraint
             }
         } else {
             // Throw error as the timestring did not parse.
-            throw new Exception('Time string invalid : ' . $this->time);
+            throw new Exception('Time string invalid : ' . $time);
         }
 
         parent::__construct();
