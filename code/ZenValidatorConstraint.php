@@ -1051,7 +1051,7 @@ class Constraint_date extends ZenValidatorConstraint
  * Constraint_dateOutside
  * Validates the field is a date equal to or outside the specified boundary.
  *
- * @example Constraint_date_outside::create('-18 years');
+ * @example Constraint_dateOutside::create('-18 years');
  * */
 class Constraint_dateOutside extends ZenValidatorConstraint
 {
@@ -1073,7 +1073,7 @@ class Constraint_dateOutside extends ZenValidatorConstraint
     /**
      * Constructor
      * @param string $time A date/time string, normally relative.
-     * @param boolean $convertSlashes Set to true if forward slashes to be converted to dashes.
+     * @param boolean $convertSlashes Set this to true if forward slashes should be converted to dashes when validating.
      * @param timestamp $now Specify this if don't want current date as the base for the timestring.
      */
     public function __construct($time, $convertSlashes=false, $now=null)
@@ -1081,20 +1081,17 @@ class Constraint_dateOutside extends ZenValidatorConstraint
         // Set this to value passed in.
         $this->convertSlashes = $convertSlashes;
 
-        // If the timestamp for 'now' is passed in then use it,
-        // otherwise set now to the current date without the time!
+        // If timestamp for now now passed in use timestamp for the current date without the time.
         if (!$now) {
             $now = strtotime(date('Y-m-d'));
         }
 
-        // Calculate the boundary timestamp by just passing through the time string
-        // and the now to PHP's strtotime.
+        // Calculate the boundary timestamp by just passing through the time string and the now to PHP's strtotime.
         $this->boundaryTimestamp = strtotime($time, $now);
 
-        // If strtotime was successful work out if the boundary is less or more than
-        // the time specified in 'now' and set type which is used to display of the
-        // validation message and also to help with the validation calculation.
+        // If strtotime was successful.
         if ($this->boundaryTimestamp) {
+            // Work out if boundary less or greater than now.
             if ($this->boundaryTimestamp <= $now) {
                 $this->type = 'less';
             } else {
@@ -1115,33 +1112,39 @@ class Constraint_dateOutside extends ZenValidatorConstraint
      */
     public function validate($value)
     {
-        $isValid = false;
+        // Only validate if there is a value, otherwise instead of just checking the value is
+        // outside the boundary it makes the field required which may not be wanted.
+        if ($value !== null) {
+            $isValid = false;
 
-        // If convertSlashes is true then string replace any slashes '/' in the value with dashes
-        // to overcome strtotime 'feature' where if the value is d/m/y (seperated by slashes)
-        // then it is treated as American format m/d/y.
+            // If convertSlashes is true then string replace any slashes '/' in the value with dashes
+            // to overcome strtotime 'feature' where if the value is d/m/y (seperated by slashes)
+            // then it is treated as American format m/d/y.
 
-        // In many countries users will enter the date as d/m/y so this allows the validation
-        // to still work in this case rather than the value being parsed to an incorrect timestamp.
-        if ($this->convertSlashes && strpos($value, '/')) {
-            $value = str_replace('/', '-', $value);
-        }
-
-        // Convert the value in the field to a timestamp.
-        $dateTimestamp = strtotime($value);
-
-        // If date parsed then test if outside or equal to the boundary.
-        if ($dateTimestamp) {
-            if ($this->type == 'less') {
-                $isValid = $dateTimestamp <= $this->boundaryTimestamp;
-            } else {
-                $isValid = $dateTimestamp >= $this->boundaryTimestamp;
+            // In many countries users will enter the date as d/m/y so this allows the validation
+            // to still work in this case rather than the value being parsed to an incorrect timestamp.
+            if ($this->convertSlashes && strpos($value, '/')) {
+                $value = str_replace('/', '-', $value);
             }
+
+            // Convert the value in the field to a timestamp.
+            $dateTimestamp = strtotime($value);
+
+            // If date parsed then test if outside or equal to the boundary.
+            if ($dateTimestamp) {
+                if ($this->type == 'less') {
+                    $isValid = $dateTimestamp <= $this->boundaryTimestamp;
+                } else {
+                    $isValid = $dateTimestamp >= $this->boundaryTimestamp;
+                }
+            } else {
+                $this->type = 'error';
+            }
+
+            return $isValid;
+        } else {
+            return true;
         }
-
-        // @TODO sort if parsley needed for this and how to do that.
-
-        return $isValid;
     }
 
     /**
@@ -1150,13 +1153,28 @@ class Constraint_dateOutside extends ZenValidatorConstraint
      */
     public function getDefaultMessage()
     {
-        return sprintf(
-            _t(
-                'ZenValidator.DATEOUTSIDE',
-                'Date must be ' . $this->type . ' than or equal to %s'
-            ),
-            date('Y-m-d', $this->boundaryTimestamp)
-        );
+        if ($this->type == 'less') {
+            return sprintf(
+                _t(
+                    'ZenValidator.DATEOUTSIDELESS',
+                    'Date must be less than or equal to %s'
+                ),
+                date('Y-m-d', $this->boundaryTimestamp)
+            );
+        } else if ($this->type == 'greater') {
+            return sprintf(
+                _t(
+                    'ZenValidator.DATEOUTSIDEGREATER',
+                    'Date must be greater than or equal to %s'
+                ),
+                date('Y-m-d', $this->boundaryTimestamp)
+            );
+        } else {
+            return _t(
+                'ZenValidator.DATEISO',
+                'This value should be a date'
+            );
+        }
     }
 }
 
@@ -1165,7 +1183,7 @@ class Constraint_dateOutside extends ZenValidatorConstraint
  * Validates the field is a date equal to or inside the range of
  * the specified boundary and the 'now' (normally current date).
  *
- * @example Constraint_date_inside::create('-120 years');
+ * @example Constraint_dateInside::create('-120 years');
  * */
 class Constraint_dateInside extends ZenValidatorConstraint
 {
@@ -1192,16 +1210,15 @@ class Constraint_dateInside extends ZenValidatorConstraint
     /**
      * Constructor
      * @param string $time A date/time string, normally relative.
-     * @param boolean $convertSlashes Set to true if forward slashes to be converted to dashes.
-     * @param timestamp $now Specify this if don't want current date as base for the time string.
+     * @param boolean $convertSlashes Set this to true if forward slashes should be converted to dashes during validation.
+     * @param timestamp $now Specify this if don't want current date as the base for the timestring.
      */
     public function __construct($time, $convertSlashes=false, $now=null)
     {
         // Set this to value passed in.
         $this->convertSlashes = $convertSlashes;
 
-        // If the timestamp for 'now' is passed in then use it,
-        // otherwise set now to the current date without the time!
+        // If now now passed in set to timestamp for current date without time.
         if (!$now) {
             $now = strtotime(date('Y-m-d'));
         }
@@ -1209,14 +1226,13 @@ class Constraint_dateInside extends ZenValidatorConstraint
         // Save now timestamp in the object as need it when validating.
         $this->nowTimestamp = $now;
 
-        // Calculate the boundary timestamp by just passing through the time string
-        // and the now to PHP's strtotime.
+        // Calculate the boundary timestamp by just passing through the time string and the now to PHP's strtotime.
         $this->boundaryTimestamp = strtotime($time, $now);
 
-        // If strtotime was successful work out if the boundary is less or more than
-        // the time specified in 'now' and set type which is used to display of the
-        // validation message and also to help with the validation calculation.
+        // If strtotime was successful.
         if ($this->boundaryTimestamp) {
+            // Work out if type is greater or less than. This is opposite for dateInside
+            // than for the dateAOutside as the value of the field must be greater than boundary.
             if ($this->boundaryTimestamp <= $now) {
                 $this->type = 'greater';
             } else {
@@ -1237,34 +1253,41 @@ class Constraint_dateInside extends ZenValidatorConstraint
      */
     public function validate($value)
     {
-        $isValid = false;
+        // Only validate if there is a value, otherwise instead of just checking the value is inside
+        // the boundary it makes the field required which might not be wanted.
+        if ($value !== null) {
+            $isValid = false;
 
-        // If convertSlashes is true then string replace any slashes '/' in the value with dashes
-        // to overcome strtotime 'feature' where if the value is d/m/y (seperated by slashes)
-        // then it is treated as American format m/d/y.
+            // If convertSlashes is true then string replace any slashes '/' in the value with dashes
+            // to overcome strtotime 'feature' where if the value is d/m/y (seperated by slashes)
+            // then it is treated as American format m/d/y.
 
-        // In many countries users will enter the date as d/m/y so this allows the validation
-        // to still work in this case rather than the value being parsed to an incorrect timestamp.
-        if ($this->convertSlashes && strpos($value, '/')) {
-            $value = str_replace('/', '-', $value);
-        }
-
-        // Convert the value in the field to a timestamp.
-        $dateTimestamp = strtotime($value);
-
-        // If date parsed then test if inside or equal to the boundary
-        // and inside or equal to the 'now' (normally current date).
-        if ($dateTimestamp) {
-            if ($this->type == 'less') {
-                $isValid = ($dateTimestamp <= $this->boundaryTimestamp) && ($dateTimestamp >= $this->nowTimestamp);
-            } else {
-                $isValid = ($dateTimestamp >= $this->boundaryTimestamp) && ($dateTimestamp <= $this->nowTimestamp);
+            // In many countries users will enter the date as d/m/y so this allows the validation
+            // to still work in this case rather than the value being parsed to an incorrect timestamp.
+            if ($this->convertSlashes && strpos($value, '/')) {
+                $value = str_replace('/', '-', $value);
             }
+
+            // Convert the value in the field to a timestamp.
+            $dateTimestamp = strtotime($value);
+
+            // If date parsed
+            if ($dateTimestamp) {
+                // Test if value is inside or equal to the boundary and inside or equal to the 'now' (normally current date).
+                if ($this->type == 'less') {
+                    $isValid = ($dateTimestamp <= $this->boundaryTimestamp) && ($dateTimestamp >= $this->nowTimestamp);
+                } else {
+                    $isValid = ($dateTimestamp >= $this->boundaryTimestamp) && ($dateTimestamp <= $this->nowTimestamp);
+                }
+            } else {
+                // Date did not parse, so must be invalid.
+                $this->type = 'error';
+            }
+
+            return $isValid;
+        } else {
+            return true;
         }
-
-        // @TODO sort if parsley needed for this and how to do that.
-
-        return $isValid;
     }
 
     /**
@@ -1277,19 +1300,24 @@ class Constraint_dateInside extends ZenValidatorConstraint
             return sprintf(
                 _t(
                     'ZenValidator.DATEINSIDE',
-                    'Date must be greater than or equal to %s and less than or equal to %s'
+                    'Date must be between or equal to %s and %s'
                 ),
                 date('Y-m-d', $this->nowTimestamp),
                 date('Y-m-d', $this->boundaryTimestamp)
             );
-        } else {
+        } else if ($this->type == 'greater') {
             return sprintf(
                 _t(
                     'ZenValidator.DATEINSIDE',
-                    'Date must be greater than or equal to %s and less than or equal to %s'
+                    'Date must be between or equal to %s and %s'
                 ),
                 date('Y-m-d', $this->boundaryTimestamp),
                 date('Y-m-d', $this->nowTimestamp)
+            );
+        } else {
+            return _t(
+                'ZenValidator.DATEISO',
+                'This value should be a date'
             );
         }
     }
