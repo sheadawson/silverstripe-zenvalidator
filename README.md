@@ -209,9 +209,9 @@ All arguments/settings for the Constraint_remote constructor:
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
 
-#### Date Boundary validation
+#### Date Boundary constraints
 
-These 2 types of validation allow you to require an entered date to be either outside or inside a specified date boundary. The boundary is usually relative to the current date for example '-18 years' and can be used, for example, to ensure that the date of birth entered on a form is equal to or more than 18 years ago, or perhaps inside 120 years of the current date so people cannot enter dates dates too far in the past or greater than the current date.
+These 2 constraints allow you to require an entered date to be either outside or inside a specified date boundary. The boundary is usually relative to the current date for example '-18 years' and can be used, for example, to ensure that the date of birth entered on a form is equal to or more than 18 years ago, or perhaps inside 120 years of the current date so people cannot enter dates dates too far in the past or greater than the current date.
 
 Note that date boundaries can be in the past e.g. '-7 days' or in the future e.g. '+7 days'. Under the hood the constraints use PHP's strtotime() so any relative date string it supports will work.
 
@@ -291,14 +291,16 @@ $validator->setConstraint(
 
 You can also specify an exact date boundaries by passing a date in as the first parameter when adding the constraint, this might be handy if the value for a field must be before or after a fixed point in time.
 
+In the following example the value for the field must always be between 2016-01-01 and the current date.
+
 ```php
 $validator->setConstraint(
     'StartDate',
-    Constraint_dateOutside::create('2016-01-01')
+    Constraint_dateInside::create('2016-01-01')
 );
 ```
 
-@TODO sort what happens in this case when boundary is less than current date, equal to current date, greater than current date. Also how does inside and outside handle it and, does it work as expected.
+Be careful if specifying a fixed boundary because the constraint still takes in to account the current date; if you set the boundary to be a date in the future there will be issues when the current date equals or surpasses that boundary. Its safest to specify dates in the past if using a non-relative boundary.
 
 ##### Other things to note
 
