@@ -285,7 +285,7 @@ In the following example the value for the field must always be equal to or betw
 ```php
 $validator->setConstraint(
     'EventDate',
-    Constraint_dateInside::create('+3 months', true, strtotime('2016-02-11))
+    Constraint_dateInside::create('+3 months', true, strtotime('2016-02-11'))
 );
 ```
 
