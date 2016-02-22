@@ -1056,7 +1056,7 @@ class Constraint_date extends ZenValidatorConstraint
 class Constraint_dateOutside extends ZenValidatorConstraint
 {
     /**
-     * @var timestamp
+     * @var int
      */
     protected $boundaryTimestamp;
 
@@ -1188,7 +1188,7 @@ class Constraint_dateOutside extends ZenValidatorConstraint
 class Constraint_dateInside extends ZenValidatorConstraint
 {
     /**
-     * @var timestamp
+     * @var int
      */
     protected $boundaryTimestamp;
 
