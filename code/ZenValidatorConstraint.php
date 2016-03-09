@@ -1160,6 +1160,10 @@ class Constraint_dimension extends ZenValidatorConstraint
                     }
                 }
             }
+        } else {
+            // Return true so if no file selected then not shown validation message
+            // when the field is optional. If required dev should add to required fields as well.
+            return true;
         }
     }
 
