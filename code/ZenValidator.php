@@ -66,8 +66,11 @@ class ZenValidator extends Validator
 
         // set the field on all constraints
         foreach ($this->constraints as $fieldName => $constraints) {
-            foreach ($constraints as $constraint) {
-                $constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
+            // Check field exists before trying to add constraints.
+            if ($this->form->Fields()->dataFieldByName($fieldName)) {
+                foreach ($constraints as $constraint) {
+                    $constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
+                }
             }
         }
 
