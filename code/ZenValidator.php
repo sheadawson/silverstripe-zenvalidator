@@ -304,10 +304,7 @@ class ZenValidator extends Validator
             $field = $this->form->Fields()->dataFieldByName($fieldName);
 
             if (!$field) {
-                throw new Exception(
-                    "There is a constraint for $fieldName but this field does not exist. " .
-                    "Maybe you should remove the constraint?"
-                );
+                continue;
             }
 
             if ($field->validationApplies()) {
