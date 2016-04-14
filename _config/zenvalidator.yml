@@ -12,3 +12,7 @@ ValidationLogicCriteria:
 FormField:
   extensions:
     - ZenValidatorFormFieldExtension
+
+Director:
+  rules:
+    'ZenValidatorTestController': 'ZenValidatorTestController'

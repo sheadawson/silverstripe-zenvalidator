@@ -1,17 +1,31 @@
 <?php
 
-class ZenValidatorConstraintTest extends SapphireTest
+class ZenValidatorConstraintTest extends FunctionalTest
 {
+
+    private $testController;
+
+    private function getTestController() {
+        if (!$this->testController) {
+            $this->testController = new ZenValidatorTestController();
+        }
+        return $this->testController;
+    }
 
     private function Form()
     {
-        $fields    = FieldList::create(TextField::create('Title'), TextField::create('Subtitle'));
-        $actions    = FieldList::create(FormAction::create('submit', 'submit'));
-        $validator    = ZenValidator::create();
+        $fields = FieldList::create(TextField::create('Title'), TextField::create('Subtitle'));
+        $actions = FieldList::create(FormAction::create('submit', 'submit'));
+        $validator = ZenValidator::create();
 
-        return Form::create(Controller::curr(), 'Form', $fields, $actions, $validator);
+        return Form::create($this->getTestController(), 'Form', $fields, $actions, $validator);
     }
 
+    public function setUp() {
+		parent::setUp();
+		// Suppress themes
+		Config::inst()->remove('SSViewer', 'theme');
+	}
 
     public function testRequired()
     {
@@ -312,12 +326,43 @@ class ZenValidatorConstraintTest extends SapphireTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testRemote()
     {
+        $form = $this->Form();
+        $zv = $form->getValidator();
+
+        $link = Director::absoluteURL($this->getTestController()->Link('remotetitlecheck'));
+        $zv->setConstraint('Title', Constraint_remote::create($link));
+        $data['Title'] = 'valid title';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+        $data['Title'] = 'invalid title';
+        $form->loadDataFrom($data);
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Title');
+
         // TODO
-        // test remote CURL
-        // test remote local
+        // test attributes
         // test get/post options
     }
+
+    public function testRemoteLocal()
+    {
+        $form = $this->Form();
+        $zv = $form->getValidator();
+
+        $link = Director::makeRelative($this->getTestController()->Link('remotetitlecheck'));
+        $zv->setConstraint('Title', Constraint_remote::create($link));
+        $data['Title'] = 'valid title';
+        $zv->php($data);
+        $this->assertEmpty($zv->getErrors());
+        $data['Title'] = 'invalid title';
+        $form->loadDataFrom($data);
+        $zv->php($data);
+        $errors = $zv->getErrors();
+        $this->assertTrue($errors[0]['fieldName'] == 'Title');
+
+    }
+
 }

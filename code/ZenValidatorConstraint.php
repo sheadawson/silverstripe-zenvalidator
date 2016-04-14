@@ -629,7 +629,8 @@ class Constraint_remote extends ZenValidatorConstraint
             $url = Director::makeRelative($url);
             $postVars = $this->method == 'POST' ? $this->params : null;
             $response = Director::test($url, $postVars = null, Controller::curr()->getSession(), $this->method);
-            $result = ($response->getStatusCode() == 200) ? $response->getBody() : 0;
+            $result = ($response->getStatusCode() == 200) ? true : false;
+
             // Otherwise CURL to remote url
         } else {
             $ch = curl_init();
@@ -640,33 +641,29 @@ class Constraint_remote extends ZenValidatorConstraint
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_USERAGENT, 'ZENVALIDATOR');
-            $result = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            $response = curl_exec($ch);
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+            $result = ($status == 200) ? true : false;
         }
 
-        // validate result
-        if ($result == '1' || $result == 'true') {
-            if ($this->validator == 'reverse') {
-                return false;
-            } else {
-                return true;
-            }
-        }
+        return $this->validator == 'reverse' ? !$result : $result;
 
-        $isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result)))));
-
-        if ($isJson) {
-            $result = Convert::json2obj($result);
-            if (isset($result->success)) {
-                return true;
-            } else {
-                if (isset($result->message)) {
-                    $this->setMessage($result->message);
-                } elseif (isset($result->error)) {
-                    $this->setMessage($result->error);
-                }
-            }
-        }
+        // $isJson = ((is_string($result) && (is_object(json_decode($result)) || is_array(json_decode($result)))));
+        //
+        // if ($isJson) {
+        //     $result = Convert::json2obj($result);
+        //     if (isset($result->success)) {
+        //         return true;
+        //     } else {
+        //         if (isset($result->message)) {
+        //             $this->setMessage($result->message);
+        //         } elseif (isset($result->error)) {
+        //             $this->setMessage($result->error);
+        //         }
+        //     }
+        // }
 
         return false;
     }

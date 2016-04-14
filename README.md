@@ -177,7 +177,7 @@ $validator->setConstraint('FavoriteColor', Constraint_regex::create("/^#(?:[0-9a
 
 ##### Remote validation
 
-Validate based on the response from a remote url. The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise. You can show a specific specific error message by returning { "error": "your custom message" } or { "message": "your custom message" }
+Validate based on the response from a remote url. Validation is based on the response http status code. A status of 200 will validate, anything else will cause a validation error.
 
 ```php
 $validator->setConstraint('Username', Constraint_remote::create($this->Link('checkusername')));
@@ -191,9 +191,9 @@ public function checkusername($request) {
 
     // check for existing user with same username
     if (Member::get()->filter('Username', $username)->count()) {
-        return $this->httpError(400, 'Sorry, that username is already taken.');
+        return $this->httpError(400);
     } else {
-        return $this->getResponse()->setBody('OK');
+        return $this->getResponse()->setBody('');
     }
 }
 ```
