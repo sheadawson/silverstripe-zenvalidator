@@ -326,26 +326,26 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-    public function testRemote()
-    {
-        $form = $this->Form();
-        $zv = $form->getValidator();
-
-        $link = Director::absoluteURL($this->getTestController()->Link('remotetitlecheck'));
-        $zv->setConstraint('Title', Constraint_remote::create($link));
-        $data['Title'] = 'valid title';
-        $zv->php($data);
-        $this->assertEmpty($zv->getErrors());
-        $data['Title'] = 'invalid title';
-        $form->loadDataFrom($data);
-        $zv->php($data);
-        $errors = $zv->getErrors();
-        $this->assertTrue($errors[0]['fieldName'] == 'Title');
-
-        // TODO
-        // test attributes
-        // test get/post options
-    }
+    // public function testRemote()
+    // {
+    //     $form = $this->Form();
+    //     $zv = $form->getValidator();
+    //
+    //     $link = Director::absoluteURL($this->getTestController()->Link('remotetitlecheck'));
+    //     $zv->setConstraint('Title', Constraint_remote::create($link));
+    //     $data['Title'] = 'valid title';
+    //     $zv->php($data);
+    //     $this->assertEmpty($zv->getErrors());
+    //     $data['Title'] = 'invalid title';
+    //     $form->loadDataFrom($data);
+    //     $zv->php($data);
+    //     $errors = $zv->getErrors();
+    //     $this->assertTrue($errors[0]['fieldName'] == 'Title');
+    //
+    //     // TODO
+    //     // test attributes
+    //     // test get/post options
+    // }
 
     public function testRemoteLocal()
     {
