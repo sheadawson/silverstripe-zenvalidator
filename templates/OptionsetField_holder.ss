@@ -1,4 +1,4 @@
-<div id="$Name" class="field<% if $extraClass %> $extraClass<% end_if %>" $AttributesHTML>
+<div id="$HolderID" class="field<% if $extraClass %> $extraClass<% end_if %>" $AttributesHTML>
 	<% if $Title %><label class="left">$Title</label><% end_if %>
 	<div class="middleColumn">
 		$Field
