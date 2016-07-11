@@ -126,18 +126,4 @@ class ValidationLogicCriterion extends Object
                 return;
         }
     }
-
-
-
-
-    /**
-     * Creates a JavaScript-readable representation of this criterion
-     *
-     * @return string
-     */
-    public function toScript()
-    {
-        $operator = ucfirst($this->operator);
-        return "\$(\"#{$this->master}\").evaluate{$operator}(\"".addslashes($this->value)."\")";
-    }
 }

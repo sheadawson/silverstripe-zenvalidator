@@ -255,7 +255,7 @@ $validator->removeConstraints(string $fieldName);
 
 ### Customising frontend validation behaviour (Parsley)
 
-It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, you can set the third parameter ($defaultJS) of Zenvalidator's __construct to false.
+It is likely that you may want to have your validation messages displaying in a custom element, with custom classes or any other custom frontend validation behaviour that is configurable with Parsley. In this case, you can set the third parameter ($defaultJS) of Zenvalidator's constructor to false.
 
 ```php
 $validator = ZenValidator::create(null, true, false);
@@ -385,7 +385,7 @@ $validator->setConstraint('HeroImage', Constraint_dimension::create('max_width_h
 
 ## Validation Logic - Conditional Constraints
 
-This feature allows you to specify under what conditions a field should or should not have it's validation constraints applied, based on the value(s) of other fields on the form. The concept borrows heavily from and compliments Uncle Cheese's [Display Logic module](https://github.com/unclecheese/silverstripe-display-logic).
+This feature allows you to specify under what conditions a field should or should not have it's validation constraints applied, based on the value(s) of other fields on the form. The concept borrows heavily from and compliments Uncle Cheese's [Display Logic module](https://github.com/unclecheese/silverstripe-display-logic). Note that no frontend logic is applied, this is backend only. If you use display logic, that will allow you to hide fields that shouldn't be shown/validated on the frontend.
 
 ### Validation Logic Examples
 

@@ -11,7 +11,6 @@ class ZenValidatorFormFieldExtension extends Extension
 
     public function validateIf($master)
     {
-        $this->owner->addExtraClass("validation-logic validation-logic-exclude validation-logic-validate");
         return $this->validationLogicCriteria = ValidationLogicCriteria::create($this->owner, $master);
     }
 
@@ -38,20 +37,5 @@ class ZenValidatorFormFieldExtension extends Extension
         }
 
         return $return;
-    }
-
-
-    public function onBeforeRender($field)
-    {
-        if (!$this->validationLogicCriteria) {
-            return;
-        }
-
-        $masters = array_unique($this->validationLogicCriteria->getMasterList());
-
-        if (count($masters)) {
-            $this->owner->setAttribute('data-validation-logic-masters', implode(',', $masters));
-            $this->owner->setAttribute('data-validation-logic-eval', $this->validationLogicCriteria->toScript());
-        }
     }
 }
