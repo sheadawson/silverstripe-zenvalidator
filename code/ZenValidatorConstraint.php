@@ -560,7 +560,7 @@ class Constraint_remote extends ZenValidatorConstraint
     /**
      * @var string
      * */
-    protected $validator;
+    protected $validator = 'zenRemote';
 
     /**
      * @var string
@@ -580,7 +580,9 @@ class Constraint_remote extends ZenValidatorConstraint
         $this->url = $url;
         $this->params = $params;
         $this->options = $options;
-        $this->validator = $validator;
+        if($validator !== null) {
+            $this->validator = $validator;
+        }
 
         if (is_array($options) && isset($this->options['type'])) {
             $this->method = $this->options['type'];
