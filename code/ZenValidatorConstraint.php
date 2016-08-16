@@ -560,7 +560,7 @@ class Constraint_remote extends ZenValidatorConstraint
     /**
      * @var string
      * */
-    protected $validator;
+    protected $validator = 'zenRemote';
 
     /**
      * @var string
@@ -580,7 +580,9 @@ class Constraint_remote extends ZenValidatorConstraint
         $this->url = $url;
         $this->params = $params;
         $this->options = $options;
-        $this->validator = $validator;
+        if($validator !== null) {
+            $this->validator = $validator;
+        }
 
         if (is_array($options) && isset($this->options['type'])) {
             $this->method = $this->options['type'];
@@ -849,7 +851,6 @@ class Constraint_comparison extends ZenValidatorConstraint
      * */
     public function __construct($type, $field)
     {
-        $this->loadExtra('comparison');
         $this->type = $type;
         $this->targetField = $field;
         parent::__construct();
@@ -866,6 +867,7 @@ class Constraint_comparison extends ZenValidatorConstraint
     public function applyParsley()
     {
         parent::applyParsley();
+        $this->loadExtra('comparison');
         $this->field->setAttribute('data-parsley-' . $this->type, '#' . $this->getTargetField()->getAttribute('id'));
     }
 
@@ -947,7 +949,6 @@ class Constraint_words extends ZenValidatorConstraint
      * */
     public function __construct($type, $val1, $val2 = null)
     {
-        $this->loadExtra('words');
         $this->type = $type;
         $this->val1 = $val1;
         $this->val2 = $val2;
@@ -964,6 +965,7 @@ class Constraint_words extends ZenValidatorConstraint
         if ($this->val2) {
             $value = '[' . $value . ',' . $this->val2 . ']';
         }
+        $this->loadExtra('words');
         $this->field->setAttribute('data-parsley-' . $this->type, $value);
     }
 
@@ -1017,13 +1019,13 @@ class Constraint_date extends ZenValidatorConstraint
      * */
     public function __construct()
     {
-        $this->loadExtra('dateiso');
         parent::__construct();
     }
 
     public function applyParsley()
     {
         parent::applyParsley();
+        $this->loadExtra('dateiso');
         $this->field->setAttribute('data-parsley-dateiso', 'true');
     }
 

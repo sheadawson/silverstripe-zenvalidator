@@ -1,3 +1,5 @@
+ZenValidator:
+  parsley_version: '2.4.4'
 ValidationLogicCriteria:
   comparisons:
     isEqualTo: "=="
@@ -12,7 +14,6 @@ ValidationLogicCriteria:
 FormField:
   extensions:
     - ZenValidatorFormFieldExtension
-
 Director:
   rules:
     'ZenValidatorTestController': 'ZenValidatorTestController'
