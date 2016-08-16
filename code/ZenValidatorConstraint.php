@@ -849,7 +849,6 @@ class Constraint_comparison extends ZenValidatorConstraint
      * */
     public function __construct($type, $field)
     {
-        $this->loadExtra('comparison');
         $this->type = $type;
         $this->targetField = $field;
         parent::__construct();
@@ -866,6 +865,7 @@ class Constraint_comparison extends ZenValidatorConstraint
     public function applyParsley()
     {
         parent::applyParsley();
+        $this->loadExtra('comparison');
         $this->field->setAttribute('data-parsley-' . $this->type, '#' . $this->getTargetField()->getAttribute('id'));
     }
 
@@ -947,7 +947,6 @@ class Constraint_words extends ZenValidatorConstraint
      * */
     public function __construct($type, $val1, $val2 = null)
     {
-        $this->loadExtra('words');
         $this->type = $type;
         $this->val1 = $val1;
         $this->val2 = $val2;
@@ -964,6 +963,7 @@ class Constraint_words extends ZenValidatorConstraint
         if ($this->val2) {
             $value = '[' . $value . ',' . $this->val2 . ']';
         }
+        $this->loadExtra('words');
         $this->field->setAttribute('data-parsley-' . $this->type, $value);
     }
 
@@ -1017,13 +1017,13 @@ class Constraint_date extends ZenValidatorConstraint
      * */
     public function __construct()
     {
-        $this->loadExtra('dateiso');
         parent::__construct();
     }
 
     public function applyParsley()
     {
         parent::applyParsley();
+        $this->loadExtra('dateiso');
         $this->field->setAttribute('data-parsley-dateiso', 'true');
     }
 
