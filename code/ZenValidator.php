@@ -344,4 +344,30 @@ class ZenValidator extends Validator
         }
         $this->constraints = array();
     }
+
+	/**
+	 * Returns whether the field in question is required. This will usually display '*' next to the
+	 * field.
+	 *
+	 * @param string $fieldName
+	 *
+	 * @return bool
+	 */
+    public function fieldIsRequired($fieldName)
+    {
+        $required = false;
+
+        $constraints = $this->getConstraints($fieldName);
+        if ($constraints) {
+            foreach ($constraints as $constraint) {
+                if ($constraint instanceof Constraint_required) {
+                    $required = true;
+                    break;
+                }
+            }
+        }
+
+        return $required || parent::fieldIsRequired($fieldName);
+    }
+    
 }
