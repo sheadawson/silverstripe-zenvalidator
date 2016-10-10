@@ -1,3 +1,5 @@
+ZenValidator:
+  use_current: true
 ValidationLogicCriteria:
   comparisons:
     isEqualTo: "=="
@@ -12,7 +14,6 @@ ValidationLogicCriteria:
 FormField:
   extensions:
     - ZenValidatorFormFieldExtension
-
 Director:
   rules:
     'ZenValidatorTestController': 'ZenValidatorTestController'

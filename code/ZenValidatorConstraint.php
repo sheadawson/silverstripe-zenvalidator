@@ -68,10 +68,15 @@ abstract class ZenValidatorConstraint extends Object
      * */
     public function loadExtra($name)
     {
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/extra/validator/' . $name . '.js');
+        $useCurrent = ZenValidator::config()->use_current;
+        $parsleyFolder = 'parsley';
+        if($useCurrent) {
+            $parsleyFolder = 'parsley_current';
+        }
+        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/'.$parsleyFolder.'/extra/validator/' . $name . '.js');
 
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.extra.js');
+        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/'.$parsleyFolder.'/i18n/' . $lang . '.extra.js');
     }
 
     /**
@@ -272,7 +277,7 @@ class Constraint_length extends ZenValidatorConstraint
 
 /**
  * Constraint_check
- * Constrain checkbox set field to have a minimum or maximum number of elements checked
+ * Constrain CheckBoxSetField to have a minimum or maximum number of elements checked
  *
  * @example Constraint_length::create('min', 5); // minimum of 5 elements checked
  * @example Constraint_length::create('max', 5); // maximum of 5 elements checked
@@ -311,6 +316,9 @@ class Constraint_check extends ZenValidatorConstraint
     public function applyParsley()
     {
         parent::applyParsley();
+        if(!$this->field instanceof CheckboxSetField) {
+            user_error("Constraint_check expects a CheckboxSetField, not a " . get_class($this->field), E_USER_ERROR);
+        }
         switch ($this->type) {
             case 'min':
                 $this->field->setAttribute('data-parsley-mincheck', $this->val1);
@@ -572,15 +580,21 @@ class Constraint_remote extends ZenValidatorConstraint
      * @param array $params - request vars
      * @param string $options - array of options like { "type": "POST", "dataType": "jsonp", "data": { "token": "value" } }
      * @param boolean|string $validator  - custom validator or "reverse"
-     * The following are valid responses from the remote url, with a 200 response code: 1, true, { "success": "..." } and assume false otherwise
-     * You can show frontend server-side specific error messages by returning { "error": "your custom message" } or { "message": "your custom message" }
+     * By default, all 2xx ajax returs are considered valid, all others failure.
+     * You can show frontend server-side specific error messages by returning a 404 error with the error message in the body of the response
      * */
     public function __construct($url, $params = array(), $options = true, $validator = null)
     {
         $this->url = $url;
         $this->params = $params;
         $this->options = $options;
-        $this->validator = $validator;
+        if($validator !== null) {
+            $this->validator = $validator;
+        }
+        // For current version of Parsley, we have defined a custom async validator for default use cases
+        if($this->validator === null && ZenValidator::config()->use_current) {
+            $this->validator = 'zenRemote';
+        }
 
         if (is_array($options) && isset($this->options['type'])) {
             $this->method = $this->options['type'];

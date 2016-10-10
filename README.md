@@ -12,6 +12,25 @@ ZenValidator aims to make silverstripe form validation as painless as possible, 
 
 `composer require sheadawson/silverstripe-zenvalidator`
 
+## Using an up to date version of Parsley
+
+This module ships with the version 2.5.0 of Parsley. This version is compatible with
+jQuery 1.8 and above. Unfortunately, SilverStripe is shipped with version 1.7.2.
+Therefore, it is expected that you include an up to date version of jQuery to
+use this module to ensure perfect compatibility.
+
+If you need to use the version bundled with SilverStripe, you can use an older version
+of Parsley (2.0.7) by defining the following config key:
+
+```yml
+ZenValidator:
+  use_current: false
+```
+
+We recommend using the up to date version of Parsley, since it provides
+faster validation, better translations, new features (debouncing, ...) and fixes issues and edge cases
+that had to be handled separately before (multiple actions, remote issues...).
+
 ## Validation Constraints
 
 Out of the box constraints include:
@@ -195,7 +214,7 @@ public function checkusername($request) {
 
     // check for existing user with same username
     if (Member::get()->filter('Username', $username)->count()) {
-        return $this->httpError(400);
+        return $this->httpError(400, 'This member already exists');
     } else {
         return $this->getResponse()->setBody('');
     }
@@ -208,6 +227,9 @@ All arguments/settings for the Constraint_remote constructor:
 * $params - An array of request vars to be sent with the request
 * $options - An array of key => value options for the validator (eg: ['type' : 'POST', 'dataType' : 'jsonp'])
 * $validator - Use a specific remote validator. Default validators are 'default' and 'reverse'
+
+By default, ZenValidator uses a custom async validator that reads error message in your 4xx responses and display them
+below the invalid field (instead of a generic message "this value seems invalid").
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
 
@@ -298,13 +320,15 @@ To use ZenValidator in the CMS, simply implement a getCMSValidator() method on y
 
 ```php
 public function getCMSValidator(){
-    return ZenValidator::create()->setConstraint(
+    $validator = ZenValidator::create()->setConstraint(
         'Content',
         Constraint_required::create()->setMessage('Please enter some content')
     );
 
     // currently parsley validation doesn't work so well in the cms, so disable.
     $validator->disableParsley();
+    
+    return $validator;
 }
 ```
 #### Image Dimension Constraints (CMS only)

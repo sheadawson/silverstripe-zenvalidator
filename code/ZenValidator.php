@@ -90,19 +90,38 @@ class ZenValidator extends Validator
     public function applyParsley()
     {
         $this->parsleyEnabled = true;
-        Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
+
+        $useCurrent = self::config()->use_current;
+
+        if($useCurrent) {
+            // Include your own version of jQuery (>= 1.8)
+            Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/parsley.min.js');
+        }
+        else {
+            Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+            Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
+        }
 
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
         if ($lang != 'en') {
-            Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
+            if($useCurrent) {
+                Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/i18n/' . $lang . '.js');
+            }
+            else {
+                Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
+            }
         }
 
         if ($this->form) {
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
                 Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-                Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
+                if($useCurrent) {
+                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator_current.js');
+                }
+                else {
+                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
+                }
             } else {
                 $this->form->addExtraClass('custom-parsley');
             }
@@ -160,9 +179,14 @@ class ZenValidator extends Validator
         $this->constraints[$fieldName][$constraint->class] = $constraint;
 
         if ($this->form) {
-            $field = $constraint->setField($this->form->Fields()->dataFieldByName($fieldName));
+            $dataField = $this->form->Fields()->dataFieldByName($fieldName);
+            $constraint->setField($dataField);
             if ($this->parsleyEnabled) {
-                $field->applyParsley();
+                // If there is no field, output a clear error message before trying to apply parsley
+                if(!$dataField) {
+                    user_error("You have set a constraint on '$fieldName' but it does not exist in the FieldList.", E_USER_ERROR);
+                }
+                $constraint->applyParsley();
             }
         }
 
