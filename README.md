@@ -41,6 +41,7 @@ Out of the box constraints include:
 * check (min, max, range)
 * type (email, url, number, integer, digits, alphanumeric)
 * equalto (equal to the value of another field)
+* notequalto (not equal to the value of another field)
 * regex
 * remote (validate remotely via ajax)
 * dimension (image width, height, aspect ratio. CMS only)
@@ -184,10 +185,18 @@ $validator->setConstraint('Username', Constraint_type::create('alphanum'));
 
 ##### Equal To Constraint
 
-Check for a value equal to that of another field
+Validates that the value is identical to another field's value (useful for password confirmation check).
 
 ```php
 $validator->setConstraint('Username', Constraint_equalto::create('Name'));
+```
+
+##### Not Equal To Constraint
+
+Validates that the value is different from another field's value (useful to avoid duplicates).
+
+```php
+$validator->setConstraint('Surname', Constraint_notequalto::create('FirstName'));
 ```
 
 ##### Regex validation

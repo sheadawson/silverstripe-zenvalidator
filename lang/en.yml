@@ -5,6 +5,7 @@ en:
     DIGITS: 'This value should be a number'
     EMAIL: 'This value should be a valid email'
     EQUALTO: 'This value should be the same as the field %s'
+    NOTEQUALTO: 'This value should be the different from the field %s'
     GREATER: 'This value should be greater than the field %s'
     GREATEROREQUAL: 'This value should be greater or equal than the field %s'
     INTEGER: 'This value should be a number'

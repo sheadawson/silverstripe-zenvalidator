@@ -831,6 +831,61 @@ class Constraint_equalto extends ZenValidatorConstraint
 }
 
 /**
+ * Constraint_notequalto
+ * Constrain a field value to be the different from another field
+ *
+ * @example Constraint_notequalto::create('OtherField');
+ * */
+class Constraint_notequalto extends ZenValidatorConstraint
+{
+
+    /**
+     * @var string
+     * */
+    protected $targetField;
+
+    /**
+     * @param string $field the Name of the field to check
+     * */
+    public function __construct($field)
+    {
+        $this->targetField = $field;
+        parent::__construct();
+    }
+
+    /**
+     * @return FormField
+     */
+    public function getTargetField()
+    {
+        return $this->field->getForm()->Fields()->dataFieldByName($this->targetField);
+    }
+
+    public function applyParsley()
+    {
+        parent::applyParsley();
+        $this->loadExtra('notequalto');
+        $this->field->setAttribute('data-parsley-notequalto', '#' . $this->getTargetField()->getAttribute('id'));
+    }
+
+    public function removeParsley()
+    {
+        parent::removeParsley();
+        $this->field->setAttribute('data-parsley-notequalto', '');
+    }
+
+    public function validate($value)
+    {
+        return $this->getTargetField()->dataValue() != $value;
+    }
+
+    public function getDefaultMessage()
+    {
+        return sprintf(_t('ZenValidator.NOTEQUALTO', 'This value should be the different from the field %s'), $this->getTargetField()->Title());
+    }
+}
+
+/**
  * Constraint_comparison
  * Compare the value from one field to another field
  *

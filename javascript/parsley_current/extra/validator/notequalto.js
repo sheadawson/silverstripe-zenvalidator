@@ -1,13 +1,12 @@
 (function () {
-// notequalto extra validators
-window.ParsleyConfig = window.ParsleyConfig || {};
-window.ParsleyConfig.validators = window.ParsleyConfig.validators || {};
-
-// Greater than validator
-window.ParsleyConfig.validators.notequalto = {
-  fn: function (value, requirement) {
-    return value !== ($(requirement).length ? $(requirement).val() : requirement);
-  },
-  priority: 256
-};
+    window.Parsley.addValidator('notequalto', {
+        validateString: function (value, refOrValue) {
+            var $reference = $(refOrValue);
+            if ($reference.length)
+                return value !== $reference.val();
+            else
+                return value !== refOrValue;
+        },
+        priority: 256
+    });
 })();
