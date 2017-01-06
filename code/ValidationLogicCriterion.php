@@ -122,8 +122,7 @@ class ValidationLogicCriterion extends Object
                 return 'substr_count('.$value1.',",") <= ' . $value2;
 
             default:
-                user_error("ValidationLogicCriteria: php operator \"$this->operator\" not configured.", E_USER_ERROR);
-                return;
+                throw new Exception("ValidationLogicCriteria: php operator \"$this->operator\" not configured.");
         }
     }
 }

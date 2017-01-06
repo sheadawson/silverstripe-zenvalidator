@@ -128,7 +128,11 @@ class ZenValidator extends Validator
 
             foreach ($this->constraints as $fieldName => $constraints) {
                 foreach ($constraints as $constraint) {
-                    $constraint->applyParsley();
+                    try {
+                        $constraint->applyParsley();
+                    } catch (Exception $ex) {
+                        throw new Exception("An exception occured while applying constraint on $fieldName : " . $ex->getMessage());
+                    }
                 }
             }
         }
@@ -184,7 +188,7 @@ class ZenValidator extends Validator
             if ($this->parsleyEnabled) {
                 // If there is no field, output a clear error message before trying to apply parsley
                 if(!$dataField) {
-                    user_error("You have set a constraint on '$fieldName' but it does not exist in the FieldList.", E_USER_ERROR);
+                    throw new Exception("You have set a constraint on '$fieldName' but it does not exist in the FieldList.");
                 }
                 $constraint->applyParsley();
             }

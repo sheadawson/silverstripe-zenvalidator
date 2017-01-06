@@ -28,10 +28,7 @@ class ZenValidatorFormFieldExtension extends Extension
         if ($criteria = $this->validationLogicCriteria) {
             $fields = $this->owner->rootFieldList();
             if (eval($criteria->phpEvalString()) === false) {
-                user_error(
-                    "There is a syntax error in the constaint logic phpEvalString \"{$criteria->phpEvalString()}\"",
-                    E_USER_ERROR
-                );
+                throw new Exception("There is a syntax error in the constaint logic phpEvalString \"{$criteria->phpEvalString()}\"");
             }
             $return = eval('return ' . $criteria->phpEvalString());
         }

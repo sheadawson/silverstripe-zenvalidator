@@ -107,7 +107,7 @@ class ValidationLogicCriteria extends Object
     public function andIf($master = null)
     {
         if ($this->logicalOperator == "or") {
-            user_error("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified andIf() after calling orIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.", E_USER_ERROR);
+            throw new Exception("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified andIf() after calling orIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.");
         }
         if ($master) {
             $this->master = $master;
@@ -125,7 +125,7 @@ class ValidationLogicCriteria extends Object
     public function orIf($master = null)
     {
         if ($this->logicalOperator == "and") {
-            user_error("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified orIf() after calling andIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.", E_USER_ERROR);
+            throw new Exception("ValidationLogicCriteria: Cannot declare a logical operator more than once. (Specified orIf() after calling andIf()). Use a nested ValidationLogicCriteriaSet to combine conjunctive and disjuctive logic.");
         }
         if ($master) {
             $this->master = $master;

@@ -93,7 +93,7 @@ abstract class ZenValidatorConstraint extends Object
     public function applyParsley()
     {
         if (!$this->field) {
-            user_error("A constrained Field does not exist on the FieldSet, check you have the right field name for your ZenValidatorConstraint.", E_USER_ERROR);
+            throw new Exception("A constrained Field does not exist on the FieldSet, check you have the right field name for your ZenValidatorConstraint.");
         }
         $this->parsleyApplied = true;
         if ($this->customMessage) {
@@ -317,7 +317,7 @@ class Constraint_check extends ZenValidatorConstraint
     {
         parent::applyParsley();
         if(!$this->field instanceof CheckboxSetField) {
-            user_error("Constraint_check expects a CheckboxSetField, not a " . get_class($this->field), E_USER_ERROR);
+            throw new Exception("Constraint_check expects a CheckboxSetField, not a " . get_class($this->field));
         }
         switch ($this->type) {
             case 'min':
