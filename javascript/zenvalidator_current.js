@@ -53,7 +53,7 @@
     });
     // Bypass validation on hidden fields by Display Logic
     window.Parsley.on('field:validated', function(fieldInstance) {
-        if (fieldInstance.hasClass('display-logic') && fieldInstance.$element.is(":hidden")) {
+        if (fieldInstance.$element.hasClass('display-logic') && fieldInstance.$element.is(":hidden")) {
             fieldInstance._ui.$errorsWrapper.css('display', 'none');
             fieldInstance.validationResult = true;
             return true;
