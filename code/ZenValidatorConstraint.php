@@ -252,13 +252,20 @@ class Constraint_length extends ZenValidatorConstraint
             return true;
         }
 
+        if(function_exists('mb_strlen')) {
+            $len = mb_strlen(trim($value));
+        }
+        else {
+            $len = strlen(trim($value));
+        }
+
         switch ($this->type) {
             case 'min':
-                return strlen(trim($value)) >= $this->val1;
+                return $len >= $this->val1;
             case 'max':
-                return strlen(trim($value)) <= $this->val1;
+                return $len <= $this->val1;
             case 'range':
-                return strlen(trim($value)) >= $this->val1 && strlen(trim($value)) <= $this->val2;
+                return $len >= $this->val1 && $len <= $this->val2;
         }
     }
 
