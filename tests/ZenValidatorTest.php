@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Control\Controller;
+
 class ZenValidatorTest extends SapphireTest
 {
 

@@ -13,17 +13,29 @@
         {
             "name": "Shea Dawson",
             "email": "shea@silverstripe.com.au"
+        },
+        {
+            "name": "LeKoala",
+            "email": "thomas@lekoala.be"
         }
     ],
     "require": {
-        "composer/installers": "*",
-        "silverstripe/framework": "^3.0"
+        "silverstripe/framework": "^4.0@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
     },
     "support": {
         "issues": "https://github.com/sheadawson/silverstripe-zenvalidator/issues"
     },
     "extra": {
-        "installer-name": "zenvalidator"
+        "installer-name": "zenvalidator",
+        "expose": [
+            "css",
+            "javascript"
+        ]
     },
-    "homepage": "https://github.com/sheadawson/silverstripe-zenvalidator"
+    "homepage": "https://github.com/sheadawson/silverstripe-zenvalidator",
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

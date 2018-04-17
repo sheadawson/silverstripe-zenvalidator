@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Core\Extension;
+
 class ZenValidatorFormFieldExtension extends Extension
 {
 

@@ -1,12 +1,18 @@
 <?php
+
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 /**
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
  * Credit to Uncle Cheese for the recipe
  */
-class ValidationLogicCriteria extends Object
+class ValidationLogicCriteria
 {
+    use Configurable;
+    use Injectable;
+
     /**
      * The name of the form field that depends on the criteria
      *

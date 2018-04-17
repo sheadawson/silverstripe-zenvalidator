@@ -1,0 +1,32 @@
+.field {
+    input,
+    select,
+    textarea {
+        &.parsley-success {
+            color: $form-feedback-valid-color;
+            background-color: lighten($form-feedback-valid-color, 40%);
+            border: 1px solid lighten($form-feedback-valid-color, 30%);
+        }
+        &.parsley-error {
+            color: $form-feedback-invalid-color;
+            background-color: lighten($form-feedback-invalid-color, 40%);
+            border: 1px solid lighten($form-feedback-invalid-color, 30%);
+        }
+    }
+}
+
+.parsley-errors-list {
+    color: $form-feedback-invalid-color;
+    margin: $spacer/2 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity .3s ease-in;
+    -o-transition: opacity .3s ease-in;
+    -moz-transition: opacity .3s ease-in;
+    -webkit-transition: opacity .3s ease-in;
+    &.filled {
+        opacity: 1;
+    }
+}

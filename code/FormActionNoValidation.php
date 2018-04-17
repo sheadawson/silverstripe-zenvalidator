@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Forms\FormAction;
+
 /**
  * A form action that does not triggers parsley validation
  *

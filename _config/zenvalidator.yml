@@ -1,5 +1,8 @@
+---
+Name: zenvalidator
+---
 ZenValidator:
-  use_current: true
+  default_js: true
 ValidationLogicCriteria:
   comparisons:
     isEqualTo: "=="
@@ -11,9 +14,6 @@ ValidationLogicCriteria:
     hasCheckedOption: ""
     hasCheckedAtLeast: ""
     hasCheckedLessThan: ""
-FormField:
+SilverStripe\Forms\FormField:
   extensions:
     - ZenValidatorFormFieldExtension
-Director:
-  rules:
-    'ZenValidatorTestController': 'ZenValidatorTestController'

@@ -12,24 +12,20 @@ ZenValidator aims to make silverstripe form validation as painless as possible, 
 
 `composer require sheadawson/silverstripe-zenvalidator`
 
-## Using an up to date version of Parsley
+## SilverStripe 4 support
 
-This module ships with the version 2.5.0 of Parsley. This version is compatible with
-jQuery 1.8 and above. Unfortunately, SilverStripe is shipped with version 1.7.2.
-Therefore, it is expected that you include an up to date version of jQuery to
-use this module to ensure perfect compatibility.
+This version of the module only supports SilverStripe 4. The current version of the module try as much
+as possible to remain compatible with previous code.
+SilverStripe 4 support is pretty much work in progress so you can expect a few issues.
 
-If you need to use the version bundled with SilverStripe, you can use an older version
-of Parsley (2.0.7) by defining the following config key:
+You can also check this other module that uses ParsleyJS as well:
+https://github.com/praxisnetau/silverware-validator
 
-```yml
-ZenValidator:
-  use_current: false
-```
+Future versions of this module will break BC to promote namespaced classes and other improvements.
 
-We recommend using the up to date version of Parsley, since it provides
-faster validation, better translations, new features (debouncing, ...) and fixes issues and edge cases
-that had to be handled separately before (multiple actions, remote issues...).
+## SilverStripe 3 support
+
+For SilverStripe 3 support, please use branch 1.
 
 ## Validation Constraints
 
@@ -336,7 +332,7 @@ public function getCMSValidator(){
 
     // currently parsley validation doesn't work so well in the cms, so disable.
     $validator->disableParsley();
-    
+
     return $validator;
 }
 ```

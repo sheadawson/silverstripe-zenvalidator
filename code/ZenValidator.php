@@ -1,4 +1,12 @@
 <?php
+
+use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Forms\Validator;
+use SilverStripe\View\Requirements;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Admin\LeftAndMain;
+
 /**
  *
  * @package ZenValidator
@@ -8,6 +16,8 @@
  **/
 class ZenValidator extends Validator
 {
+    use Configurable;
+
     /**
      * @var boolean
      */
@@ -60,7 +70,7 @@ class ZenValidator extends Validator
         }
 
         // disable parsley in the cms
-        if (is_subclass_of($form->getController()->class, 'LeftAndMain')) {
+        if (is_subclass_of($form->getController()->class, LeftAndMain::class)) {
             $this->parsleyEnabled = false;
         }
 
@@ -82,6 +92,13 @@ class ZenValidator extends Validator
         return $this;
     }
 
+    public static function globalRequirements() {
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", ['defer' => true]);
+        // Because it still relies in $.support which is deprecated in jQuery 1.9.0
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.4.1/jquery-migrate.min.js", ['defer' => true]);
+        Requirements::javascript("https://cdn.rawgit.com/hafriedlander/jquery.entwine/3a923fbc/dist/jquery.entwine-dist.js", ['defer' => true]);
+    }
+
     /**
      * applyParsley
      *
@@ -93,35 +110,19 @@ class ZenValidator extends Validator
 
         $useCurrent = self::config()->use_current;
 
-        if($useCurrent) {
-            // Include your own version of jQuery (>= 1.8)
-            Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/parsley.min.js');
-        }
-        else {
-            Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-            Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
-        }
+        // Include your own version of jQuery (>= 1.8) and entwine
+        // You can also simply call globalRequirements()
+        Requirements::javascript('zenvalidator/javascript/parsley-2.8.1/parsley.min.js', ['defer' => true]);
 
-        $lang = i18n::get_lang_from_locale(i18n::get_locale());
+        $lang = strtolower(substr(i18n::get_locale(), 0, 2));
         if ($lang != 'en') {
-            if($useCurrent) {
-                Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/i18n/' . $lang . '.js');
-            }
-            else {
-                Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
-            }
+            Requirements::javascript('zenvalidator/javascript/parsley-2.8.1/i18n/' . $lang . '.js', ['defer' => true]);
         }
 
         if ($this->form) {
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
-                Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-                if($useCurrent) {
-                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator_current.js');
-                }
-                else {
-                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
-                }
+                Requirements::javascript('zenvalidator/javascript/zenvalidator.js', ['defer' => true]);
             } else {
                 $this->form->addExtraClass('custom-parsley');
             }
@@ -175,19 +176,20 @@ class ZenValidator extends Validator
      **/
     public function setConstraint($fieldName, $constraint)
     {
+        $class = get_class($constraint);
         // remove existing constraint if it already exists
-        if ($this->getConstraint($fieldName, $constraint->class)) {
-            $this->removeConstraint($fieldName, $constraint->class);
+        if ($this->getConstraint($fieldName, $class)) {
+            $this->removeConstraint($fieldName, $class);
         }
 
-        $this->constraints[$fieldName][$constraint->class] = $constraint;
+        $this->constraints[$fieldName][$class] = $constraint;
 
         if ($this->form) {
             $dataField = $this->form->Fields()->dataFieldByName($fieldName);
             $constraint->setField($dataField);
             if ($this->parsleyEnabled) {
                 // If there is no field, output a clear error message before trying to apply parsley
-                if(!$dataField) {
+                if (!$dataField) {
                     throw new Exception("You have set a constraint on '$fieldName' but it does not exist in the FieldList.");
                 }
                 $constraint->applyParsley();
@@ -257,7 +259,8 @@ class ZenValidator extends Validator
             if ($this->form) {
                 $constraint->removeParsley();
             }
-            unset($this->constraints[$fieldName][$constraint->class]);
+            $class = get_class($constraint);
+            unset($this->constraints[$fieldName][$class]);
             unset($constraint);
         }
 
@@ -286,10 +289,17 @@ class ZenValidator extends Validator
      * A quick way of adding required constraints to a number of fields
      *
      * @param array $fieldNames - can be either indexed array of fieldnames, or associative array of fieldname => message
+     * @param array $otherFields
      * @return this
      */
-    public function addRequiredFields($fields)
+    public function addRequiredFields($fields, ...$otherFields)
     {
+        if(!empty($otherFields)) {
+            if(!is_array($fields)) {
+                $fields = [$fields];
+            }
+            $fields = array_merge($fields, $otherFields);
+        }
         if (ArrayLib::is_associative($fields)) {
             foreach ($fields as $k => $v) {
                 $constraint = Constraint_required::create();
@@ -317,7 +327,7 @@ class ZenValidator extends Validator
         $valid = true;
 
         // If we want to ignore validation
-        if (get_class($this->form->buttonClicked()) === 'FormActionNoValidation') {
+        if (get_class($this->form->getRequestHandler()->buttonClicked()) === 'FormActionNoValidation') {
             return $valid;
         }
 
@@ -373,14 +383,14 @@ class ZenValidator extends Validator
         $this->constraints = array();
     }
 
-	/**
-	 * Returns whether the field in question is required. This will usually display '*' next to the
-	 * field.
-	 *
-	 * @param string $fieldName
-	 *
-	 * @return bool
-	 */
+    /**
+     * Returns whether the field in question is required. This will usually display '*' next to the
+     * field.
+     *
+     * @param string $fieldName
+     *
+     * @return bool
+     */
     public function fieldIsRequired($fieldName)
     {
         $required = false;
@@ -397,5 +407,5 @@ class ZenValidator extends Validator
 
         return $required || parent::fieldIsRequired($fieldName);
     }
-    
+
 }

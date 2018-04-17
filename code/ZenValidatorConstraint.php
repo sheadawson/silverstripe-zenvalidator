@@ -1,27 +1,38 @@
 <?php
 
+use SilverStripe\Forms\FormField;
+use SilverStripe\Core\Injector\Injectable;
+
 /**
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
  * */
-abstract class ZenValidatorConstraint extends Object
+abstract class ZenValidatorConstraint
 {
+    use Injectable;
 
     /**
      * @var FormField
-     * */
+     */
     protected $field;
 
     /**
      * @var string
-     * */
+     */
     protected $customMessage;
 
     /**
      * @var boolean
-     * */
+     */
     protected $parsleyApplied;
+
+    /**
+     *
+     * */
+    public function __construct()
+    {
+    }
 
     /**
      * Set the field this constraint is applied to
@@ -135,7 +146,7 @@ abstract class ZenValidatorConstraint extends Object
      * */
     public function getConstraintName()
     {
-        return str_replace('Constraint_', '', $this->class);
+        return str_replace('Constraint_', '', get_called_class());
     }
 }
 
