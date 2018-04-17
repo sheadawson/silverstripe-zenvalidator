@@ -94,9 +94,7 @@ class ZenValidator extends Validator
 
     public static function globalRequirements() {
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", ['defer' => true]);
-        // Because it still relies in $.support which is deprecated in jQuery 1.9.0
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.4.1/jquery-migrate.min.js", ['defer' => true]);
-        Requirements::javascript("https://cdn.rawgit.com/hafriedlander/jquery.entwine/3a923fbc/dist/jquery.entwine-dist.js", ['defer' => true]);
+        Requirements::javascript("zenvalidator/javascript/entwine/jquery.entwine-dist.js", ['defer' => true]);
     }
 
     /**
