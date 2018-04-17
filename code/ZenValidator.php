@@ -1,11 +1,13 @@
 <?php
 
 use SilverStripe\i18n\i18n;
+use Psr\Log\LoggerInterface;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\Validator;
-use SilverStripe\View\Requirements;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\View\Requirements;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  *
@@ -316,6 +318,14 @@ class ZenValidator extends Validator
     }
 
     /**
+     * @param string $message
+     * @return void
+     */
+    protected function debug($message) {
+        Injector::inst()->get(LoggerInterface::class)->debug($message);
+    }
+
+    /**
      * Performs the php validation on all ZenValidatorConstraints attached to this validator
      *
      * @return boolean
@@ -348,6 +358,7 @@ class ZenValidator extends Validator
                     if (!$constraint->validate($data[$fieldName])) {
                         $this->validationError($fieldName, $constraint->getMessage(), 'required');
                         $valid = false;
+                        $this->debug("Validation (".get_class($constraint).") failed for $fieldName with message: " . $constraint->getMessage());
                     }
                 }
             }

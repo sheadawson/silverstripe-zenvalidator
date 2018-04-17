@@ -772,6 +772,8 @@ class Constraint_type extends ZenValidatorConstraint
                 return preg_match('/^[0-9]*$/', $value);
             case 'alphanum':
                 return ctype_alnum($value);
+            default:
+                throw new Exception($this->type . " is not a valid type");
         }
     }
 
