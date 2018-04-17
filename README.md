@@ -41,6 +41,8 @@ Out of the box constraints include:
 * regex
 * remote (validate remotely via ajax)
 * dimension (image width, height, aspect ratio. CMS only)
+* dateOutside (checks value is equal to or outside a specified date boundary)
+* dateInside (checks value is equal to or inside a specified date boundary)
 
 
 ## Usage examples
@@ -237,6 +239,107 @@ By default, ZenValidator uses a custom async validator that reads error message 
 below the invalid field (instead of a generic message "this value seems invalid").
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
+
+#### Date Boundary constraints
+
+These 2 constraints allow you to require an entered date to be either outside or inside a specified date boundary. The boundary is usually relative to the current date for example '-18 years' and can be used, for example, to ensure that the date of birth entered on a form is equal to or more than 18 years ago, or perhaps inside 120 years of the current date so people cannot enter dates dates too far in the past or greater than the current date.
+
+Note that date boundaries can be in the past e.g. '-7 days' or in the future e.g. '+7 days'. Under the hood the constraints use PHP's strtotime() so any relative date string it supports will work.
+
+##### dateOutside
+
+Use this to require a date be equal to or outside the specified boundary.
+
+In the case of boundaries less than the current date e.g. '-18 years' the value for the field must be equal to or less than (<=) the current date minus 18 years. So if used on a date of birth field this means the person must be 18 years or older.
+
+```php
+$validator->setConstraint(
+    'DateOfBirth',
+    Constraint_dateOutside::create('-18 years')
+);
+```
+
+In the case of boundaries greater than the current date e.g. '+1 year' the value for the field must be equal to or greater than (>=) the current date plus 1 year.
+
+```php
+$validator->setConstraint(
+    'TennacyEndDate',
+    Constraint_dateOutside::create('+1 year')
+);
+```
+
+##### dateInside
+
+Use this to require a date to be between the current date and the specified boundary.
+
+In the case of boundaries less than the current date e.g. '-120 years' the value for the field must be equal to or between the current date and the current date minus 120 years.
+
+```php
+$validator->setConstraint(
+    'DateOfBirth',
+    Constraint_dateInside::create('-120 years')
+);
+```
+
+In the case of boundaries greater than the current date e.g. '+3 months' the value for the field must be equal to or between the current date and the current date plus 3 months.
+
+```php
+$validator->setConstraint(
+    'ServiceStartDate',
+    Constraint_dateInside::create('+3 months')
+);
+```
+
+##### Convert slashes
+
+If you are familiar with PHP's strtotime() function you will know that when dates values contain forward slashes (/) it is assumed the date is in the American format m/d/y (month, day, year) even if the user entered the date as d/m/y (day, month, year).
+
+This can be an issue because in some countries users will want (or your website design specifies) to enter the date as d/m/y (not d-m-y or y-m-d) and this would cause strtotime() to parse the entered value incorrectly and the validation may not work as expected.
+
+So to overcome this issue, you can pass true as the second parameter (convertSlashes) when specifying the constraint. If any slashes are found in the value they will be replaced with dashes (-) before the value is sent to strtotime() to get a timestamp when the validation runs.
+
+```php
+$validator->setConstraint(
+    'ServiceStartDate',
+    Constraint_dateInside::create('+3 months', true)
+);
+```
+
+This does not alter the value of the field, so it will still have the value of d/m/y after the form is posted.
+
+##### Boundaries relative to a date other than the current date
+
+While in most cases you will want the date boundaries for these constraints to be relative to the current date (which is the default), it is possible to make those boundaries relative to a date you specify by passing a timestamp of that date as the third parameter when adding the constraint.
+
+In the following example the value for the field must always be equal to or between the dates 2016-02-11 and 2016-05-11.
+
+```php
+$validator->setConstraint(
+    'EventDate',
+    Constraint_dateInside::create('+3 months', true, strtotime('2016-02-11'))
+);
+```
+
+You can also specify an exact date boundaries by passing a date in as the first parameter when adding the constraint, this might be handy if the value for a field must be before or after a fixed point in time.
+
+In the following example the value for the field must always be between 2016-01-01 and the current date.
+
+```php
+$validator->setConstraint(
+    'StartDate',
+    Constraint_dateInside::create('2016-01-01')
+);
+```
+
+Be careful if specifying a fixed boundary because the constraint still takes in to account the current date; if you set the boundary to be a date in the future there will be issues when the current date equals or surpasses that boundary. Its safest to specify dates in the past if using a non-relative boundary.
+
+##### Other things to note
+
+The date boundary constraints will only run if a value has been entered in the field; You should still add the field to the required fields if it is required.
+
+The date boundary validations will inform the user if the date they entered is invalid, so there is no need to also add a constraint to the field to check if it is a date when using dateInside or dateOutside.
+
+As mentioned, by default the date boundaries are relative to the current date. Note this is without the time. If you need the time to be part of it then please pass in a timestamp as the third parameter when adding the validation.
 
 ### Setting Custom Messages
 

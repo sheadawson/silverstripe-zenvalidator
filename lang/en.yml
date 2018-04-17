@@ -28,3 +28,6 @@ en:
     REQUIRED: 'This field is required'
     URL: 'This value should be a valid URL'
     WORDS: 'This value should be between %s and %s words'
+    DATEOUTSIDELESS: 'Date must be less than or equal to %s'
+    DATEOUTSIDEGREATER: 'Date must be greater than or equal to %s'
+    DATEINSIDE: 'Date must be between or equal to %s and %s'
