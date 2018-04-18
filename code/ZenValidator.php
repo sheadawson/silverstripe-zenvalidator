@@ -294,10 +294,10 @@ class ZenValidator extends Validator
      */
     public function addRequiredFields($fields, ...$otherFields)
     {
+        if(!is_array($fields)) {
+            $fields = [$fields];
+        }
         if(!empty($otherFields)) {
-            if(!is_array($fields)) {
-                $fields = [$fields];
-            }
             $fields = array_merge($fields, $otherFields);
         }
         if (ArrayLib::is_associative($fields)) {
