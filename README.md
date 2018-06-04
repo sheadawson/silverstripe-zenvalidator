@@ -460,14 +460,6 @@ You can create your own validation constraints by subclassing the abstract ZenVa
 For everything else in the frontend (triggers, error classes, error placement, etc) See the [Parsley.js documentation](http://parsleyjs.org/documentation.html#javascript)
 
 
-
-
-## Requirements
-
-* SilverStripe 3.*
-
-
-
 ## Maintainers
 
 * shea@silverstripe.com.au
