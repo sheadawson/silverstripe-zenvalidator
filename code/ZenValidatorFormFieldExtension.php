@@ -5,15 +5,10 @@ use SilverStripe\Core\Extension;
 class ZenValidatorFormFieldExtension extends Extension
 {
 
-    /**
-     * @var ValidationLogicCriteria
-     **/
-    private $validationLogicCriteria;
-
 
     public function validateIf($master)
     {
-        return $this->validationLogicCriteria = ValidationLogicCriteria::create($this->owner, $master);
+        return $this->owner->validationLogicCriteria = ValidationLogicCriteria::create($this->owner, $master);
     }
 
 
@@ -27,7 +22,7 @@ class ZenValidatorFormFieldExtension extends Extension
     {
         $return = true;
 
-        if ($criteria = $this->validationLogicCriteria) {
+        if ($criteria = $this->owner->validationLogicCriteria) {
             $fields = $this->owner->rootFieldList();
             if (eval($criteria->phpEvalString()) === false) {
                 throw new Exception("There is a syntax error in the constaint logic phpEvalString \"{$criteria->phpEvalString()}\"");
