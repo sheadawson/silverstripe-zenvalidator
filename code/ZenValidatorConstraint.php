@@ -649,7 +649,7 @@ class Constraint_remote extends ZenValidatorConstraint
         if (Director::is_relative_url($url)) {
             $url = Director::makeRelative($url);
             $postVars = $this->method == 'POST' ? $this->params : null;
-            $response = Director::test($url, $postVars = null, Controller::curr()->getSession(), $this->method);
+            $response = Director::test($url, $postVars, Controller::curr()->getSession(), $this->method);
             $result = ($response->getStatusCode() == 200) ? true : false;
 
             // Otherwise CURL to remote url
