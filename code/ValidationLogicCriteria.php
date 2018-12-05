@@ -5,7 +5,7 @@
  * @author <shea@silverstripe.com.au>
  * Credit to Uncle Cheese for the recipe
  */
-class ValidationLogicCriteria extends Object
+class ValidationLogicCriteria extends SS_Object
 {
     /**
      * The name of the form field that depends on the criteria

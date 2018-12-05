@@ -7,7 +7,7 @@
  *
  * Credit to Uncle Cheese for the recipe
  */
-class ValidationLogicCriterion extends Object
+class ValidationLogicCriterion extends SS_Object
 {
 
 

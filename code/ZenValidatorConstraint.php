@@ -5,7 +5,7 @@
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
  * */
-abstract class ZenValidatorConstraint extends Object
+abstract class ZenValidatorConstraint extends SS_Object
 {
 
     /**
