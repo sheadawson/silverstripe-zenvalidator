@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 /**
@@ -61,7 +62,6 @@ class ValidationLogicCriteria
      */
     public function __construct(FormField $slave, $master, $parent = null)
     {
-        parent::__construct();
         $this->slave = $slave;
         $this->master = $master;
         $this->parent = $parent;
