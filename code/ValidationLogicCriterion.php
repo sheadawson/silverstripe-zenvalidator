@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injectable;
+
 /**
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
@@ -10,6 +13,7 @@
 class ValidationLogicCriterion
 {
 
+    use Injectable;
 
     /**
      * The name of the form field that is controlling the Validation
@@ -56,7 +60,6 @@ class ValidationLogicCriterion
      */
     public function __construct($master, $operator, $value, ValidationLogicCriteria $set)
     {
-        parent::__construct();
         $this->master = $master;
         $this->operator = $operator;
         $this->value = $value;
