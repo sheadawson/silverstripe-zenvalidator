@@ -48,7 +48,7 @@ before_script:
   - composer install --prefer-source --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
 
 # Log constants to CI for debugging purposes
-  - php ./tests/dump_constants.php
+  - php vendor/silverstripe/framework/tests/dump_constants.php
 
 script:
   - if [[ $PHPUNIT_TEST ]]; then vendor/bin/phpunit; fi

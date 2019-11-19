@@ -360,7 +360,7 @@ class ZenValidator extends Validator
                     if (!$constraint->validate($data[$fieldName])) {
                         $this->validationError($fieldName, $constraint->getMessage(), 'required');
                         $valid = false;
-                        $this->debug("Validation (".get_class($constraint).") failed for $fieldName with message: " . $constraint->getMessage());
+                        $this->debug("Validation (" . get_class($constraint) . ") failed for $fieldName with message: " . $constraint->getMessage());
                     }
                 }
             }
@@ -376,6 +376,7 @@ class ZenValidator extends Validator
      **/
     public function removeValidation()
     {
+        //
     }
 
     /**
