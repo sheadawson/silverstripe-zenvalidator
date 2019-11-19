@@ -5,6 +5,7 @@ For detailed changes, please checks the commits
 ## 1.0.3
 
 - Fixing imports and add more tests
+- change to vendormodule
 
 ## 1.0.2
 

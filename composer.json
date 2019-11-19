@@ -1,6 +1,6 @@
 {
     "name": "sheadawson/silverstripe-zenvalidator",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "Faster, easier client and server-side form validation for SilverStripe",
     "keywords": [
         "silverstripe",

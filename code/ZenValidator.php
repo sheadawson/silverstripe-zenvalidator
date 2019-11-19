@@ -94,6 +94,11 @@ class ZenValidator extends Validator
         return $this;
     }
 
+    /**
+     * Helper function, but feel free to include your own
+     *
+     * @return void
+     */
     public static function globalRequirements()
     {
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", ['defer' => true]);
