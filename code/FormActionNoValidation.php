@@ -2,6 +2,7 @@
 
 use SilverStripe\Forms\FormAction;
 use SilverStripe\View\Requirements;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * A form action that does not triggers parsley validation
@@ -22,7 +23,7 @@ class FormActionNoValidation extends FormAction
 
     /**
      * @param array $properties
-     * @return Field
+     * @return DBHTMLText
      */
     public function Field($properties = array())
     {

@@ -9,8 +9,7 @@
         "validation"
     ],
     "license": "BSD License",
-    "authors": [
-        {
+    "authors": [{
             "name": "Shea Dawson",
             "email": "shea@silverstripe.com.au"
         },
@@ -34,6 +33,11 @@
             "css",
             "javascript"
         ]
+    },
+    "scripts": {
+        "lint": "phpcs code/ tests/",
+        "lint-clean": "phpcbf code/ tests/",
+        "test": "phpunit -v"
     },
     "homepage": "https://github.com/sheadawson/silverstripe-zenvalidator",
     "minimum-stability": "dev",

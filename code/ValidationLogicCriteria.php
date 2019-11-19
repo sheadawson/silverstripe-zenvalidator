@@ -55,11 +55,9 @@ class ValidationLogicCriteria
     private static $comparisons;
 
     /**
-     * Constructor
-     *
      * @param FormField $slave  The form field that responds to changes of another form field
-     * @param [type]    $master The name of the form field to respond to
-     * @param [type]    $parent The parent {@link ValidationLogicCriteria}
+     * @param string    $master The name of the form field to respond to
+     * @param ValidationLogicCriteria  $parent The parent {@link ValidationLogicCriteria}
      */
     public function __construct(FormField $slave, $master, $parent = null)
     {
@@ -197,7 +195,7 @@ class ValidationLogicCriteria
     }
 
     /**
-     * @return string
+     * @return string|bool
      */
     public function phpEvalString()
     {

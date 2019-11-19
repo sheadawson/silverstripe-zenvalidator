@@ -6,13 +6,19 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 class ZenValidatorTest extends SapphireTest
 {
 
     private function Form()
     {
-        $fields    = FieldList::create(TextField::create('Title'), TextField::create('Subtitle'));
+        $fields    = FieldList::create(
+            TextField::create('Title'),
+            TextField::create('Subtitle'),
+            CheckboxField::create('IsChecked')
+        );
         $actions    = FieldList::create(FormAction::create('submit', 'submit'));
         $validator    = ZenValidator::create();
 
@@ -98,5 +104,23 @@ class ZenValidatorTest extends SapphireTest
         $zv->disableParsley();
         $this->assertFalse($zv->parsleyIsEnabled());
         $this->assertNotContains('parsley', explode(' ', $form->extraClass()));
+    }
+
+    public function testFormActionNoValidation()
+    {
+        $act = new FormActionNoValidation("testAction", "Test action");
+        $field = $act->Field();
+
+        $this->assertTrue($field instanceof DBHTMLText);
+    }
+
+    public function testValidationLogic()
+    {
+        $form = $this->Form();
+        $field = $form->Fields()->dataFieldByName('Title');
+        $field->validateIf('IsChecked')->isEmpty();
+
+        // will evaluate ($fields->dataFieldByName('IsChecked')->dataValue()=="")
+        $this->assertTrue($field->validationApplies());
     }
 }
