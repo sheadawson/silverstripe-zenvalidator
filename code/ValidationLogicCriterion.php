@@ -22,16 +22,11 @@ class ValidationLogicCriterion
      */
     protected $master = null;
 
-
-
     /**
      * The comparison function to use, e.g. "EqualTo"
      * @var string
      */
     protected $operator = null;
-
-
-
 
     /**
      * The value to compare to
@@ -40,15 +35,11 @@ class ValidationLogicCriterion
      */
     protected $value = null;
 
-
-
     /**
      * The parent {@link ValidationLogicCriteria}
      * @var ValidationLogicCriteria
      */
     protected $set = null;
-
-
 
     /**
      * Constructor
@@ -65,9 +56,6 @@ class ValidationLogicCriterion
         $this->value = $value;
         $this->set = $set;
     }
-
-
-
 
     /**
      * Accessor for the master field
@@ -89,7 +77,6 @@ class ValidationLogicCriterion
             return $operators['is' . $this->operator];
         }
     }
-
 
     /**
      * Returns a string of php code to be evaluated
@@ -119,10 +106,10 @@ class ValidationLogicCriterion
                 return 'strpos(' . $value1 . '' . ", \"$value2\") !== false";
 
             case 'hasCheckedAtLeast':
-                return 'substr_count('.$value1.',",") >= ' . $value2;
+                return 'substr_count(' . $value1 . ',",") >= ' . $value2;
 
             case 'hasCheckedLessThan':
-                return 'substr_count('.$value1.',",") <= ' . $value2;
+                return 'substr_count(' . $value1 . ',",") <= ' . $value2;
 
             default:
                 throw new Exception("ValidationLogicCriteria: php operator \"$this->operator\" not configured.");

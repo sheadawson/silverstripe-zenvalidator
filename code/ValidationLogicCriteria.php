@@ -3,6 +3,7 @@
 use SilverStripe\Forms\FormField;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
+
 /**
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
@@ -71,7 +72,7 @@ class ValidationLogicCriteria
     /**
      * Wildcard method for applying all the possible conditions
      *
-     * @param sting $method The method name
+     * @param string $method The method name
      * @param array $args The arguments
      * @return ValidationLogicCriteria
      */
@@ -83,7 +84,7 @@ class ValidationLogicCriteria
                 $operator = substr($method, 2);
             } else {
                 $operator = $method;
-//				$operator = ucwords($method);
+                //              $operator = ucwords($method);
             }
 
             $this->addCriterion(ValidationLogicCriterion::create($this->master, $operator, $val, $this));
@@ -99,10 +100,11 @@ class ValidationLogicCriteria
      * @param int  $max The maxiumum value
      * @return ValidationLogicCriteria
      */
-    // public function isBetween($min, $max) {
-    // 	$this->addCriterion(ValidationLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
-    // 	return $this;
-    // }
+    public function isBetween($min, $max)
+    {
+        $this->addCriterion(ValidationLogicCriterion::create($this->master, "Between", "{$min}-{$max}", $this));
+        return $this;
+    }
 
     /**
      * Adds a new criterion, and makes this set use conjuctive logic
@@ -181,15 +183,16 @@ class ValidationLogicCriteria
     }
 
     /**
-     * Ends the chaining and returns the parent object, either {@link ValidationLogicCriteria} or {@link FormField}
+     * Ends the chaining and returns the parent {@link FormField} object
      *
-     * @return FormField/ValidationLogicCriteria
+     * @return FormField
      */
     public function end()
     {
-        if ($this->parent) {
-            $this->parent->addCriterion($this);
-        }
+        // TODO: fix this
+        // if ($this->parent) {
+        //     $this->parent->addCriterion($this);
+        // }
         return $this->slave;
     }
 
@@ -201,7 +204,7 @@ class ValidationLogicCriteria
         $string = "(";
         $first = true;
         foreach ($this->getCriteria() as $c) {
-            $string .= $first ? "" :  " {$this->getLogicalOperator()} ";
+            $string .= $first ? "" : " {$this->getLogicalOperator()} ";
             $string .= $c->toPHP();
             $first = false;
         }
@@ -219,7 +222,7 @@ class ValidationLogicCriteria
         $script = "(";
         $first = true;
         foreach ($this->getCriteria() as $c) {
-            $script .= $first ? "" :  " {$this->getLogicalOperator()} ";
+            $script .= $first ? "" : " {$this->getLogicalOperator()} ";
             $script .= $c->toScript();
             $first = false;
         }

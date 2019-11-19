@@ -94,7 +94,8 @@ class ZenValidator extends Validator
         return $this;
     }
 
-    public static function globalRequirements() {
+    public static function globalRequirements()
+    {
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", ['defer' => true]);
         Requirements::javascript("zenvalidator/javascript/entwine/jquery.entwine-dist.js", ['defer' => true]);
     }
@@ -294,10 +295,10 @@ class ZenValidator extends Validator
      */
     public function addRequiredFields($fields, ...$otherFields)
     {
-        if(!is_array($fields)) {
+        if (!is_array($fields)) {
             $fields = [$fields];
         }
-        if(!empty($otherFields)) {
+        if (!empty($otherFields)) {
             $fields = array_merge($fields, $otherFields);
         }
         if (ArrayLib::is_associative($fields)) {
@@ -321,7 +322,8 @@ class ZenValidator extends Validator
      * @param string $message
      * @return void
      */
-    protected function debug($message) {
+    protected function debug($message)
+    {
         Injector::inst()->get(LoggerInterface::class)->debug($message);
     }
 
@@ -416,5 +418,4 @@ class ZenValidator extends Validator
 
         return $required || parent::fieldIsRequired($fieldName);
     }
-
 }

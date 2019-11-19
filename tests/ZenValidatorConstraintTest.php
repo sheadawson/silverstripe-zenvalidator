@@ -13,7 +13,8 @@ class ZenValidatorConstraintTest extends FunctionalTest
 
     private $testController;
 
-    private function getTestController() {
+    private function getTestController()
+    {
         if (!$this->testController) {
             $this->testController = Controller::curr();
         }
@@ -29,11 +30,12 @@ class ZenValidatorConstraintTest extends FunctionalTest
         return Form::create($this->getTestController(), 'Form', $fields, $actions, $validator);
     }
 
-    public function setUp() {
-		parent::setUp();
-		// Suppress themes
-		Config::inst()->remove('SSViewer', 'theme');
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        // Suppress themes
+        Config::inst()->remove('SSViewer', 'theme');
+    }
 
     public function testRequired()
     {
@@ -56,7 +58,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testMinLength()
     {
         $zv = $this->Form()->getValidator();
@@ -77,7 +78,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testMaxLength()
     {
@@ -100,7 +100,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testRangeLength()
     {
         $zv = $this->Form()->getValidator();
@@ -121,7 +120,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testMinValue()
     {
@@ -153,7 +151,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testMaxValue()
     {
         $zv = $this->Form()->getValidator();
@@ -174,7 +171,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testRangeValue()
     {
@@ -197,7 +193,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testRegex()
     {
         $zv = $this->Form()->getValidator();
@@ -218,7 +213,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testURLType()
     {
@@ -241,7 +235,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testEmailType()
     {
         $zv = $this->Form()->getValidator();
@@ -262,7 +255,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testNumberType()
     {
@@ -285,7 +277,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-
     public function testAlphanumType()
     {
         $zv = $this->Form()->getValidator();
@@ -306,7 +297,6 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $errors = $zv->getErrors();
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
-
 
     public function testEqualto()
     {
@@ -334,43 +324,41 @@ class ZenValidatorConstraintTest extends FunctionalTest
         $this->assertTrue($errors[0]['fieldName'] == 'Title');
     }
 
-    // public function testRemote()
-    // {
-    //     $form = $this->Form();
-    //     $zv = $form->getValidator();
-    //
-    //     $link = Director::absoluteURL($this->getTestController()->Link('remotetitlecheck'));
-    //     $zv->setConstraint('Title', Constraint_remote::create($link));
-    //     $data['Title'] = 'valid title';
-    //     $zv->php($data);
-    //     $this->assertEmpty($zv->getErrors());
-    //     $data['Title'] = 'invalid title';
-    //     $form->loadDataFrom($data);
-    //     $zv->php($data);
-    //     $errors = $zv->getErrors();
-    //     $this->assertTrue($errors[0]['fieldName'] == 'Title');
-    //
-    //     // TODO
-    //     // test attributes
-    //     // test get/post options
-    // }
+    public function testRemote()
+    {
+        // $form = $this->Form();
+        // $zv = $form->getValidator();
 
-    // public function testRemoteLocal()
-    // {
-    //     $form = $this->Form();
-    //     $zv = $form->getValidator();
+        // $link = Director::absoluteURL($this->getTestController()->Link('remotetitlecheck'));
+        // $zv->setConstraint('Title', Constraint_remote::create($link));
+        // $data['Title'] = 'valid title';
+        // $zv->php($data);
+        // $this->assertEmpty($zv->getErrors());
+        // $data['Title'] = 'invalid title';
+        // $form->loadDataFrom($data);
+        // $zv->php($data);
+        // $errors = $zv->getErrors();
+        // $this->assertTrue($errors[0]['fieldName'] == 'Title');
 
-    //     $link = Director::makeRelative($this->getTestController()->Link('remotetitlecheck'));
-    //     $zv->setConstraint('Title', Constraint_remote::create($link));
-    //     $data['Title'] = 'valid title';
-    //     $zv->php($data);
-    //     $this->assertEmpty($zv->getErrors());
-    //     $data['Title'] = 'invalid title';
-    //     $form->loadDataFrom($data);
-    //     $zv->php($data);
-    //     $errors = $zv->getErrors();
-    //     $this->assertTrue($errors[0]['fieldName'] == 'Title');
+        // TODO
+        // test attributes
+        // test get/post options
+    }
 
-    // }
+    public function testRemoteLocal()
+    {
+        // $form = $this->Form();
+        // $zv = $form->getValidator();
 
+        // $link = Director::makeRelative($this->getTestController()->Link('remotetitlecheck'));
+        // $zv->setConstraint('Title', Constraint_remote::create($link));
+        // $data['Title'] = 'valid title';
+        // $zv->php($data);
+        // $this->assertEmpty($zv->getErrors());
+        // $data['Title'] = 'invalid title';
+        // $form->loadDataFrom($data);
+        // $zv->php($data);
+        // $errors = $zv->getErrors();
+        // $this->assertTrue($errors[0]['fieldName'] == 'Title');
+    }
 }

@@ -19,7 +19,6 @@ class ZenValidatorTest extends SapphireTest
         return Form::create(Controller::curr(), 'Form', $fields, $actions, $validator);
     }
 
-
     public function testSetGetRemoveContraint()
     {
         $zv = $this->Form()->getValidator();
@@ -32,7 +31,6 @@ class ZenValidatorTest extends SapphireTest
         $zv->removeConstraint('Title', 'Constraint_required');
         $this->assertTrue($zv->getConstraint('Title', 'Constraint_required') == null);
     }
-
 
     public function testSetGetRemoveContraints()
     {
@@ -58,7 +56,6 @@ class ZenValidatorTest extends SapphireTest
         $this->assertTrue(count($zv->getConstraints('Subtitle')) == 0);
     }
 
-
     public function testAddRequiredFields()
     {
         $zv = $this->Form()->getValidator();
@@ -71,7 +68,6 @@ class ZenValidatorTest extends SapphireTest
         $this->assertTrue($zv->getConstraint('Title', 'Constraint_required') instanceof  Constraint_required);
         $this->assertTrue($zv->getConstraint('Subtitle', 'Constraint_required') instanceof  Constraint_required);
     }
-
 
     public function testCustomMessages()
     {
@@ -88,7 +84,6 @@ class ZenValidatorTest extends SapphireTest
         $this->assertTrue($zv->getConstraint('Title', 'Constraint_required')->getMessage() == $titleMessage);
         $this->assertTrue($zv->getConstraint('Subtitle', 'Constraint_required')->getMessage() == $subtitleMessage);
     }
-
 
     public function testApplyAndDisableParsley()
     {

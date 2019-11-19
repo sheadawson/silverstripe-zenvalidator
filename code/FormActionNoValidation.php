@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Forms\FormAction;
+use SilverStripe\View\Requirements;
 
 /**
  * A form action that does not triggers parsley validation
@@ -26,7 +27,7 @@ class FormActionNoValidation extends FormAction
     public function Field($properties = array())
     {
         Requirements::customScript(
-            "jQuery('#".$this->ID()."').click(function() { jQuery(this).parents('form').parsley().destroy();})"
+            "jQuery('#" . $this->ID() . "').click(function() { jQuery(this).parents('form').parsley().destroy();})"
         );
 
         return parent::Field($properties);

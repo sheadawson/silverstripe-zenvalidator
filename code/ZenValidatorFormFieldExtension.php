@@ -4,13 +4,10 @@ use SilverStripe\Core\Extension;
 
 class ZenValidatorFormFieldExtension extends Extension
 {
-
-
     public function validateIf($master)
     {
         return $this->owner->validationLogicCriteria = ValidationLogicCriteria::create($this->owner, $master);
     }
-
 
     /**
      * Checks to see if any ValidationLogicCriteria has been set and if so,

@@ -2,12 +2,17 @@
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Assets\File;
+use SilverStripe\View\Requirements;
+use SilverStripe\i18n\i18n;
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Control\Director;
 
 /**
  * @package ZenValidator
  * @license BSD License http://www.silverstripe.org/bsd-license
  * @author <shea@silverstripe.com.au>
- * */
+ **/
 abstract class ZenValidatorConstraint
 {
     use Injectable;
@@ -29,16 +34,17 @@ abstract class ZenValidatorConstraint
 
     /**
      *
-     * */
+     **/
     public function __construct()
     {
+        //
     }
 
     /**
      * Set the field this constraint is applied to
      * @param FormField $field
      * @return this
-     * */
+     **/
     public function setField(FormField $field)
     {
         $this->field = $field;
@@ -57,7 +63,7 @@ abstract class ZenValidatorConstraint
      * Set a custom message for this constraint
      * @param string $message
      * @return this
-     * */
+     **/
     public function setMessage($message)
     {
         $this->customMessage = $message;
@@ -67,7 +73,7 @@ abstract class ZenValidatorConstraint
     /**
      * Get's the message that was set on the constrctor or falls back to default
      * @return string
-     * */
+     **/
     public function getMessage()
     {
         return $this->customMessage ? $this->customMessage : $this->getDefaultMessage();
@@ -76,31 +82,31 @@ abstract class ZenValidatorConstraint
     /**
      * Load extra validator
      * @param string $name
-     * */
+     **/
     public function loadExtra($name)
     {
         $useCurrent = ZenValidator::config()->use_current;
         $parsleyFolder = 'parsley';
-        if($useCurrent) {
+        if ($useCurrent) {
             $parsleyFolder = 'parsley_current';
         }
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/'.$parsleyFolder.'/extra/validator/' . $name . '.js');
+        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/' . $parsleyFolder . '/extra/validator/' . $name . '.js');
 
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/'.$parsleyFolder.'/i18n/' . $lang . '.extra.js');
+        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/' . $parsleyFolder . '/i18n/' . $lang . '.extra.js');
     }
 
     /**
      * Return the default message for this constraint
      * @return string
-     * */
+     **/
     abstract public function getDefaultMessage();
 
     /**
      * Sets the html attributes required for frontend validation
      * Subclasses should call parent::applyParsley
      * @return void
-     * */
+     **/
     public function applyParsley()
     {
         if (!$this->field) {
@@ -120,7 +126,7 @@ abstract class ZenValidatorConstraint
      * Removes the html attributes required for frontend validation
      * Subclasses should call parent::removeParsley
      * @return void
-     * */
+     **/
     public function removeParsley()
     {
         $this->parsleyApplied = false;
@@ -136,14 +142,14 @@ abstract class ZenValidatorConstraint
      * Performs php validation on the value
      * @param $value
      * @return bool
-     * */
+     **/
     abstract public function validate($value);
 
     /**
      * Gets the name of this constraint from it's classname which should correspond
      * to the string that parsley uses to identify a constraint type
      * @return string
-     * */
+     **/
     public function getConstraintName()
     {
         return str_replace('Constraint_', '', get_called_class());
@@ -153,7 +159,7 @@ abstract class ZenValidatorConstraint
 /**
  * Constraint_required
  * Basic required field form validation
- * */
+ **/
 class Constraint_required extends ZenValidatorConstraint
 {
 
@@ -189,7 +195,7 @@ class Constraint_required extends ZenValidatorConstraint
  * @example Constraint_length::create('min', 5); // minimum length of 5 characters
  * @example Constraint_length::create('max', 5); // maximum length of 5 characters
  * @example Constraint_length::create('range', 5, 10); // length between 5 and 10 characters
- * */
+ **/
 class Constraint_length extends ZenValidatorConstraint
 {
 
@@ -199,19 +205,19 @@ class Constraint_length extends ZenValidatorConstraint
 
     /**
      * @var string
-     * */
+     **/
     protected $type;
 
     /**
      * @var int
-     * */
+     **/
     protected $val1, $val2;
 
     /**
      * @param string $type (min,max,range)
      * @param int $val1
      * @param int $val2
-     * */
+     **/
     public function __construct($type, $val1, $val2 = null)
     {
         $this->type = $type;
@@ -263,10 +269,9 @@ class Constraint_length extends ZenValidatorConstraint
             return true;
         }
 
-        if(function_exists('mb_strlen')) {
+        if (function_exists('mb_strlen')) {
             $len = mb_strlen(trim($value));
-        }
-        else {
+        } else {
             $len = strlen(trim($value));
         }
 
@@ -300,7 +305,7 @@ class Constraint_length extends ZenValidatorConstraint
  * @example Constraint_length::create('min', 5); // minimum of 5 elements checked
  * @example Constraint_length::create('max', 5); // maximum of 5 elements checked
  * @example Constraint_length::create('range', 5, 10); // between 5 and 10 elements checked
- * */
+ **/
 class Constraint_check extends ZenValidatorConstraint
 {
 
@@ -310,19 +315,19 @@ class Constraint_check extends ZenValidatorConstraint
 
     /**
      * @var string
-     * */
+     **/
     protected $type;
 
     /**
      * @var int
-     * */
+     **/
     protected $val1, $val2;
 
     /**
      * @param string $type (min,max,check)
      * @param int $val1
      * @param int $val2
-     * */
+     **/
     public function __construct($type, $val1, $val2 = null)
     {
         $this->type = $type;
@@ -334,7 +339,7 @@ class Constraint_check extends ZenValidatorConstraint
     public function applyParsley()
     {
         parent::applyParsley();
-        if(!$this->field instanceof CheckboxSetField) {
+        if (!$this->field instanceof CheckboxSetField) {
             throw new Exception("Constraint_check expects a CheckboxSetField, not a " . get_class($this->field));
         }
         switch ($this->type) {
@@ -408,7 +413,7 @@ class Constraint_check extends ZenValidatorConstraint
  * @example Constraint_value::create('min', 5); // minimum value of 5
  * @example Constraint_value::create('max', 5); // maximum value of 5
  * @example Constraint_value::create('range', 5, 10); // value between 5 and 10 characters
- * */
+ **/
 class Constraint_value extends ZenValidatorConstraint
 {
 
@@ -418,19 +423,19 @@ class Constraint_value extends ZenValidatorConstraint
 
     /**
      * @var string
-     * */
+     **/
     protected $type;
 
     /**
      * @var int
-     * */
+     **/
     protected $val1, $val2;
 
     /**
      * @param srting $type (min,max,range)
      * @param int $val1
      * @param int $val2
-     * */
+     **/
     public function __construct($type, $val1, $val2 = null)
     {
         $this->type = $type;
@@ -510,18 +515,18 @@ class Constraint_value extends ZenValidatorConstraint
  * Constrain a field to match a regular expression
  *
  * @example Constraint_regex::create("/^#(?:[0-9a-fA-F]{3}){1,2}$/"); // value must be a valid hex color
- * */
+ **/
 class Constraint_regex extends ZenValidatorConstraint
 {
 
     /**
      * @var string
-     * */
+     **/
     protected $regex;
 
     /**
      * @param string $regex
-     * */
+     **/
     public function __construct($regex)
     {
         $this->regex = $regex;
@@ -564,33 +569,33 @@ class Constraint_regex extends ZenValidatorConstraint
  * Validate a field remotely via ajax
  *
  * See readme for example
- * */
+ **/
 class Constraint_remote extends ZenValidatorConstraint
 {
 
     /**
      * @var string
-     * */
+     **/
     protected $url;
 
     /**
      * @var array
-     * */
+     **/
     protected $params;
 
     /**
      * @var array
-     * */
+     **/
     protected $options;
 
     /**
      * @var string
-     * */
+     **/
     protected $validator;
 
     /**
      * @var string
-     * */
+     **/
     protected $method = 'GET';
 
     /**
@@ -600,17 +605,17 @@ class Constraint_remote extends ZenValidatorConstraint
      * @param boolean|string $validator  - custom validator or "reverse"
      * By default, all 2xx ajax returs are considered valid, all others failure.
      * You can show frontend server-side specific error messages by returning a 404 error with the error message in the body of the response
-     * */
+     **/
     public function __construct($url, $params = array(), $options = true, $validator = null)
     {
         $this->url = $url;
         $this->params = $params;
         $this->options = $options;
-        if($validator !== null) {
+        if ($validator !== null) {
             $this->validator = $validator;
         }
         // For current version of Parsley, we have defined a custom async validator for default use cases
-        if($this->validator === null && ZenValidator::config()->use_current) {
+        if ($this->validator === null && ZenValidator::config()->use_current) {
             $this->validator = 'zenRemote';
         }
 
@@ -716,7 +721,7 @@ class Constraint_remote extends ZenValidatorConstraint
  * @example Constraint_type::create('integer'); // require valid integer
  * @example Constraint_type::create('digits'); // require only digits
  * @example Constraint_type::create('alphanum'); // require valid alphanumeric string
- * */
+ **/
 class Constraint_type extends ZenValidatorConstraint
 {
 
@@ -729,12 +734,12 @@ class Constraint_type extends ZenValidatorConstraint
 
     /**
      * @var string
-     * */
+     **/
     protected $type;
 
     /**
      * @param string $type - allowed datatype
-     * */
+     **/
     public function __construct($type)
     {
         $this->type = $type;
@@ -801,18 +806,18 @@ class Constraint_type extends ZenValidatorConstraint
  * Constrain a field value to be the same as another field
  *
  * @example Constraint_equalto::create('OtherField');
- * */
+ **/
 class Constraint_equalto extends ZenValidatorConstraint
 {
 
     /**
      * @var string
-     * */
+     **/
     protected $targetField;
 
     /**
      * @param string $field the Name of the field to match
-     * */
+     **/
     public function __construct($field)
     {
         $this->targetField = $field;
@@ -855,18 +860,18 @@ class Constraint_equalto extends ZenValidatorConstraint
  * Constrain a field value to be the different from another field
  *
  * @example Constraint_notequalto::create('OtherField');
- * */
+ **/
 class Constraint_notequalto extends ZenValidatorConstraint
 {
 
     /**
      * @var string
-     * */
+     **/
     protected $targetField;
 
     /**
      * @param string $field the Name of the field to check
-     * */
+     **/
     public function __construct($field)
     {
         $this->targetField = $field;
@@ -913,7 +918,7 @@ class Constraint_notequalto extends ZenValidatorConstraint
  * @example Constraint_comparison::create('gte','OtherField');
  * @example Constraint_comparison::create('lt','OtherField');
  * @example Constraint_comparison::create('lte','OtherField');
- * */
+ **/
 class Constraint_comparison extends ZenValidatorConstraint
 {
 
@@ -924,18 +929,18 @@ class Constraint_comparison extends ZenValidatorConstraint
 
     /**
      * @var string
-     * */
+     **/
     protected $targetField;
 
     /**
      * @var type
-     * */
+     **/
     protected $type;
 
     /**
      * @param string $type Type of validation
      * @param string $field the Name of the field to match
-     * */
+     **/
     public function __construct($type, $field)
     {
         $this->type = $type;
@@ -945,7 +950,7 @@ class Constraint_comparison extends ZenValidatorConstraint
 
     /**
      * @return FormField
-     * */
+     **/
     public function getTargetField()
     {
         return $this->field->getForm()->Fields()->dataFieldByName($this->targetField);
@@ -967,16 +972,16 @@ class Constraint_comparison extends ZenValidatorConstraint
     public function validate($value)
     {
         switch ($this->type) {
-            //Validates that the value is greater than another field's one
+                //Validates that the value is greater than another field's one
             case self::GREATER:
                 return $value > $this->getTargetField()->dataValue();
-            //Validates that the value is greater than or equal to another field's one
+                //Validates that the value is greater than or equal to another field's one
             case self::GREATER_OR_EQUAL:
                 return $value >= $this->getTargetField()->dataValue();
-            //Validates that the value is less than another field's one
+                //Validates that the value is less than another field's one
             case self::LESS:
                 return $value < $this->getTargetField()->dataValue();
-            //Validates that the value is less than or equal to another field's one
+                //Validates that the value is less than or equal to another field's one
             case self::LESS_OR_EQUAL:
                 return $value <= $this->getTargetField()->dataValue();
             default:
@@ -1007,7 +1012,7 @@ class Constraint_comparison extends ZenValidatorConstraint
  * @example Constraint_words::create('minwords','200');
  * @example Constraint_words::create('maxwords','200');
  * @example Constraint_words::create('words','200',600);
- * */
+ **/
 class Constraint_words extends ZenValidatorConstraint
 {
 
@@ -1017,23 +1022,23 @@ class Constraint_words extends ZenValidatorConstraint
 
     /**
      * @var int
-     * */
+     **/
     protected $val1;
     /**
      * @var int
-     * */
+     **/
     protected $val2;
 
     /**
      * @var type
-     * */
+     **/
     protected $type;
 
     /**
      * @param string $type type of validation
      * @param int $val1 number of words
      * @param int $val2 maximum number of words
-     * */
+     **/
     public function __construct($type, $val1, $val2 = null)
     {
         $this->type = $type;
@@ -1066,13 +1071,13 @@ class Constraint_words extends ZenValidatorConstraint
     {
         $count = str_word_count($value);
         switch ($this->type) {
-            //Validates that the value have at least a certain amount of words
+                //Validates that the value have at least a certain amount of words
             case self::MINWORDS:
                 return $count >= $this->val1;
-            //Validates that the value have a maximum of a certain amount of words
+                //Validates that the value have a maximum of a certain amount of words
             case self::MAXWORDS:
                 return $count <= $this->val1;
-            //Validates that the value is within a certain range of words
+                //Validates that the value is within a certain range of words
             case self::WORDS:
                 return $count >= $this->val1 && $count <= $this->val2;
             default:
@@ -1098,12 +1103,12 @@ class Constraint_words extends ZenValidatorConstraint
  * Validates the the field is a date
  *
  * @example Constraint_date::create();
- * */
+ **/
 class Constraint_date extends ZenValidatorConstraint
 {
 
     /**
-     * */
+     **/
     public function __construct()
     {
         parent::__construct();
@@ -1138,7 +1143,7 @@ class Constraint_date extends ZenValidatorConstraint
  * Constrain an image field to have the specified dimension(s)
  *
  * @example Constraint_dimension::create('width', 100);
- * */
+ **/
 class Constraint_dimension extends ZenValidatorConstraint
 {
     /**
@@ -1176,7 +1181,7 @@ class Constraint_dimension extends ZenValidatorConstraint
      * @param int $val1 First value
      * @param int $val2 Second value
      */
-    public function __construct($type,$val1,$val2=null)
+    public function __construct($type, $val1, $val2 = null)
     {
         $this->type = $type;
         $this->val1 = $val1;
@@ -1195,7 +1200,7 @@ class Constraint_dimension extends ZenValidatorConstraint
         // The value which comes in is a files array so we can look through this
         // to and then get the files to test aspects of them.
         if (isset($value['Files'])) {
-            foreach($value['Files'] as $fileID) {
+            foreach ($value['Files'] as $fileID) {
                 $file = File::get()->byId($fileID);
 
                 // Now have the file double-check it is an image and if so then
