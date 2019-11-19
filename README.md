@@ -1,7 +1,6 @@
 # SilverStripe ZenValidator
 
-[![Build Status](https://travis-ci.org/sheadawson/silverstripe-zenvalidator.png?branch=master)](https://travis-ci.org/sheadawson/silverstripe-zenvalidator)
-
+[![Build Status](https://travis-ci.org/sheadawson/silverstripe-zenvalidator.svg?branch=master)](https://travis-ci.org/sheadawson/silverstripe-zenvalidator)
 
 ## Description
 
