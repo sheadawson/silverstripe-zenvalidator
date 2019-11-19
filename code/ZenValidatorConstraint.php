@@ -90,10 +90,10 @@ abstract class ZenValidatorConstraint
         if ($useCurrent) {
             $parsleyFolder = 'parsley_current';
         }
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/' . $parsleyFolder . '/extra/validator/' . $name . '.js', ['defer' => true]);
+        Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/$parsleyFolder/extra/validator/$name.js", ['defer' => true]);
 
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
-        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/' . $parsleyFolder . '/i18n/' . $lang . '.extra.js', ['defer' => true]);
+        Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/$parsleyFolder/i18n/$lang.extra.js", ['defer' => true]);
     }
 
     /**
