@@ -8,6 +8,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Control\Controller;
 
 /**
  *
@@ -102,7 +103,10 @@ class ZenValidator extends Validator
     public static function globalRequirements()
     {
         Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js", ['defer' => true]);
-        Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/entwine/jquery.entwine-dist.js", ['defer' => true]);
+        $avoidEntwine = self::config()->avoid_entwine;
+        if (!$avoidEntwine) {
+            Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/entwine/jquery.entwine-dist.js", ['defer' => true]);
+        }
     }
 
     /**
@@ -115,6 +119,7 @@ class ZenValidator extends Validator
         $this->parsleyEnabled = true;
 
         $useCurrent = self::config()->use_current;
+        $avoidEntwine = self::config()->avoid_entwine;
 
         // Include your own version of jQuery (>= 1.8) and entwine
         // You can also simply call globalRequirements()
@@ -128,7 +133,11 @@ class ZenValidator extends Validator
         if ($this->form) {
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
-                Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/zenvalidator.js", ['defer' => true]);
+                if ($avoidEntwine) {
+                    Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/zenvalidator_pure.js", ['defer' => true]);
+                } else {
+                    Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/zenvalidator.js", ['defer' => true]);
+                }
             } else {
                 $this->form->addExtraClass('custom-parsley');
             }
@@ -146,7 +155,6 @@ class ZenValidator extends Validator
 
         return $this;
     }
-
 
     /**
      * disableParsley

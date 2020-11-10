@@ -26,6 +26,22 @@ Future versions of this module will break BC to promote namespaced classes and o
 
 For SilverStripe 3 support, please use branch 1.
 
+## Using with modern jQuery
+
+Due to entwine, modern jquery is not supported because of an issue in entwine.js. This module
+provides an updated version of entwine that drop support for old version of IE (<9).
+
+This module expects that you include your own version of jQuery. However, as a convenience
+we have included a ZenValidator::globalRequirements helper. This helper also includes
+the updated version of entwine.
+
+Also, we try to avoid using entwine entirely if possible. You can use the legacy behaviour with
+
+```yml
+ZenValidator:
+  avoid_entwine: false
+```
+
 ## Validation Constraints
 
 Out of the box constraints include:

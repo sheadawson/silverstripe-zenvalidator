@@ -3,6 +3,7 @@ Name: zenvalidator
 ---
 ZenValidator:
   default_js: true
+  avoid_entwine: true
 ValidationLogicCriteria:
   comparisons:
     isEqualTo: "=="
