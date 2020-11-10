@@ -101,7 +101,7 @@ class ZenValidator extends Validator
      */
     public static function globalRequirements()
     {
-        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js", ['defer' => true]);
+        Requirements::javascript("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js", ['defer' => true]);
         Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/entwine/jquery.entwine-dist.js", ['defer' => true]);
     }
 
@@ -118,11 +118,11 @@ class ZenValidator extends Validator
 
         // Include your own version of jQuery (>= 1.8) and entwine
         // You can also simply call globalRequirements()
-        Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/parsley-2.8.1/parsley.min.js", ['defer' => true]);
+        Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/parsley-2.9.1/parsley.min.js", ['defer' => true]);
 
         $lang = strtolower(substr(i18n::get_locale(), 0, 2));
         if ($lang != 'en') {
-            Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/parsley-2.8.1/i18n/$lang.js", ['defer' => true]);
+            Requirements::javascript("sheadawson/silverstripe-zenvalidator:javascript/parsley-2.9.1/i18n/$lang.js", ['defer' => true]);
         }
 
         if ($this->form) {
