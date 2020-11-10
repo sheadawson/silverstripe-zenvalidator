@@ -14,7 +14,7 @@ ZenValidator aims to make silverstripe form validation as painless as possible, 
 
 ## Using an up to date version of Parsley
 
-This module ships with the version 2.5.0 of Parsley. This version is compatible with
+This module ships with the version 2.9.1 of Parsley. This version is compatible with
 jQuery 1.8 and above. Unfortunately, SilverStripe is shipped with version 1.7.2.
 Therefore, it is expected that you include an up to date version of jQuery to
 use this module to ensure perfect compatibility.
@@ -30,6 +30,26 @@ ZenValidator:
 We recommend using the up to date version of Parsley, since it provides
 faster validation, better translations, new features (debouncing, ...) and fixes issues and edge cases
 that had to be handled separately before (multiple actions, remote issues...).
+
+## Using with modern jQuery
+
+Due to entwine, modern jquery is not supported because of an issue in entwine.js. This module
+provides an updated version of entwine that drop support for old version of IE (<9)
+
+It is enabled by default, but you can revert back to legacy behaviour with
+
+```yml
+ZenValidator:
+  use_own_entwine: false
+```
+
+Also, we try to avoid using entwine entirely if possible if not in the CMS. You can
+use legacy behaviour with
+
+```yml
+ZenValidator:
+  avoid_entwine: false
+```
 
 ## Validation Constraints
 
@@ -336,7 +356,7 @@ public function getCMSValidator(){
 
     // currently parsley validation doesn't work so well in the cms, so disable.
     $validator->disableParsley();
-    
+
     return $validator;
 }
 ```

@@ -94,6 +94,7 @@ class ZenValidator extends Validator
 
         $useCurrent = self::config()->use_current;
         $useOwnEntwine = self::config()->use_own_entwine;
+        $avoidEntwine = self::config()->avoid_entwine;
 
         if ($useCurrent) {
             // Include your own version of jQuery (>= 1.8)
@@ -117,16 +118,23 @@ class ZenValidator extends Validator
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
 
-                // Requires modern IE and prevent Cannot read property 'msie' of undefined
-                if ($useOwnEntwine) {
-                    Requirements::block(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-                    Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/entwine/jquery.entwine-dist.min.js');
-                } else {
-                    Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+                // By using zenvalidator_current_pure we can avoid using entwine entirely
+                if (!$avoidEntwine || self::isAdminBackend()) {
+                    // Requires modern IE and prevent Cannot read property 'msie' of undefined
+                    if ($useOwnEntwine) {
+                        Requirements::block(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+                        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/entwine/jquery.entwine-dist.min.js');
+                    } else {
+                        Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+                    }
                 }
 
                 if ($useCurrent) {
-                    Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator_current.js');
+                    if ($avoidEntwine && !self::isAdminBackend()) {
+                        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator_current_pure.js');
+                    } else {
+                        Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator_current.js');
+                    }
                 } else {
                     Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator.js');
                 }
@@ -148,6 +156,26 @@ class ZenValidator extends Validator
         return $this;
     }
 
+    /**
+     * Helper to detect if we are in admin or development admin
+     *
+     * @return boolean
+     */
+    public static function isAdminBackend()
+    {
+        /* @var $controller Controller */
+        $controller = Controller::curr();
+        if (
+            $controller instanceof LeftAndMain ||
+            $controller instanceof DevelopmentAdmin ||
+            $controller instanceof DatabaseAdmin ||
+            (class_exists('DevBuildController') && $controller instanceof DevBuildController)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * disableParsley
