@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package ZenValidator
@@ -92,22 +93,22 @@ class ZenValidator extends Validator
         $this->parsleyEnabled = true;
 
         $useCurrent = self::config()->use_current;
+        $useOwnEntwine = self::config()->use_own_entwine;
 
-        if($useCurrent) {
+        if ($useCurrent) {
             // Include your own version of jQuery (>= 1.8)
             Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/parsley.min.js');
-        }
-        else {
+            // Requirements::block(ZENVALIDATOR_PATH . '/javascript/parsley_current/parsley.min.js');
+        } else {
             Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
             Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/parsley.remote.min.js');
         }
 
         $lang = i18n::get_lang_from_locale(i18n::get_locale());
         if ($lang != 'en') {
-            if($useCurrent) {
+            if ($useCurrent) {
                 Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley_current/i18n/' . $lang . '.js');
-            }
-            else {
+            } else {
                 Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/parsley/i18n/' . $lang . '.js');
             }
         }
@@ -115,12 +116,19 @@ class ZenValidator extends Validator
         if ($this->form) {
             if ($this->defaultJS) {
                 $this->form->addExtraClass('parsley');
-                Requirements::javascript(THIRDPARTY_DIR.'/jquery-entwine/dist/jquery.entwine-dist.js');
-                if($useCurrent) {
-                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator_current.js');
+
+                // Requires modern IE and prevent Cannot read property 'msie' of undefined
+                if ($useOwnEntwine) {
+                    Requirements::block(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+                    Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/entwine/jquery.entwine-dist.min.js');
+                } else {
+                    Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
                 }
-                else {
-                    Requirements::javascript(ZENVALIDATOR_PATH.'/javascript/zenvalidator.js');
+
+                if ($useCurrent) {
+                    Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator_current.js');
+                } else {
+                    Requirements::javascript(ZENVALIDATOR_PATH . '/javascript/zenvalidator.js');
                 }
             } else {
                 $this->form->addExtraClass('custom-parsley');
@@ -187,7 +195,7 @@ class ZenValidator extends Validator
             $constraint->setField($dataField);
             if ($this->parsleyEnabled) {
                 // If there is no field, output a clear error message before trying to apply parsley
-                if(!$dataField) {
+                if (!$dataField) {
                     throw new Exception("You have set a constraint on '$fieldName' but it does not exist in the FieldList.");
                 }
                 $constraint->applyParsley();
@@ -373,14 +381,14 @@ class ZenValidator extends Validator
         $this->constraints = array();
     }
 
-	/**
-	 * Returns whether the field in question is required. This will usually display '*' next to the
-	 * field.
-	 *
-	 * @param string $fieldName
-	 *
-	 * @return bool
-	 */
+    /**
+     * Returns whether the field in question is required. This will usually display '*' next to the
+     * field.
+     *
+     * @param string $fieldName
+     *
+     * @return bool
+     */
     public function fieldIsRequired($fieldName)
     {
         $required = false;
@@ -397,5 +405,4 @@ class ZenValidator extends Validator
 
         return $required || parent::fieldIsRequired($fieldName);
     }
-    
 }
