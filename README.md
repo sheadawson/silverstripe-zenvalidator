@@ -262,6 +262,18 @@ below the invalid field (instead of a generic message "this value seems invalid"
 
 For serverside validation: if a relative url is given the response will be obtained internally using Director::test, otherwise curl will be used to get the response from the remote url.
 
+You can specify secondary field to be passed along this way
+
+```php
+$validator->setConstraint('MyField', Constraint_remote::create(
+        'some/link,
+        [
+            'MyOtherField' => $controller->getRequest()->requestVar('MyOtherField')
+        ]
+    ));
+$MyField->setAttribute('parsley-remote-extra-field', 'MyOtherField');
+```
+
 ### Setting Custom Messages
 
 Any of the above examples can be configured to display a custom error message. For example:

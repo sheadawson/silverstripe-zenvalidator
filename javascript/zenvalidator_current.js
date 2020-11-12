@@ -10,6 +10,25 @@
         this.options['remoteMessage'] = null;
         return true;
     });
+    // Allow setting remote name with data attribute
+    window.Parsley.on("field:ajaxoptions", function (
+        fieldInstance,
+        ajaxOptions
+    ) {
+        var $field = fieldInstance.$element;
+        if ($field.data("name")) {
+            ajaxOptions.data[$field.data("name")] = $field.val();
+        }
+        // allow fetching another input value if specified
+        if ($field.attr("parsley-remote-extra-field")) {
+            var selector =
+                "[name=" + $field.attr("parsley-remote-extra-field") + "]";
+            var $extraField = $($field.parents("form").find(selector));
+            ajaxOptions.data[
+                $extraField.data("name") || $extraField.attr("name")
+            ] = $extraField.val();
+        }
+    });
     // Attach parsley to forms
     $.entwine('ss.zenvalidator', function($) {
         $('form.parsley').entwine({
