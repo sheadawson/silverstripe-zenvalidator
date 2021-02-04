@@ -88,7 +88,9 @@ class ValidationLogicCriteria
             $this->addCriterion(ValidationLogicCriterion::create($this->master, $operator, $val, $this));
             return $this;
         }
-        return parent::__call($method, $args);
+        if (get_parent_class($this)) {
+            return parent::__call($method, $args);
+        }
     }
 
     /**
