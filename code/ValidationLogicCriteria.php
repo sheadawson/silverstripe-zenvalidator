@@ -70,6 +70,7 @@ class ValidationLogicCriteria
     /**
      * Wildcard method for applying all the possible conditions
      *
+     * @link https://github.com/unclecheese/silverstripe-display-logic/blob/c5f807dc24765438b427814350cc884ca70498b0/src/Criteria.php#L100
      * @param string $method The method name
      * @param array $args The arguments
      * @return ValidationLogicCriteria
@@ -88,8 +89,11 @@ class ValidationLogicCriteria
             $this->addCriterion(ValidationLogicCriterion::create($this->master, $operator, $val, $this));
             return $this;
         }
-        if (get_parent_class($this)) {
-            return parent::__call($method, $args);
+        if (method_exists($this, $method)) {
+            return $this->$method(...$args);
+        }
+        if ($this->parent && method_exists($this->parent, $method)) {
+            return $this->parent->$method(...$args);
         }
     }
 
