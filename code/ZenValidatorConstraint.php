@@ -6,6 +6,7 @@ use SilverStripe\Assets\File;
 use SilverStripe\View\Requirements;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 
 /**
