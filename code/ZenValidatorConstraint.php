@@ -379,7 +379,12 @@ class Constraint_check extends ZenValidatorConstraint
 
     public function validate($value)
     {
-        $array = array_filter(explode(',', $value));
+        if (is_string($value)) {
+            $array = array_filter(explode(',', $value));
+        } else {
+            $array = $value;
+        }
+        
         if (empty($array)) {
             return; //you should use required instead
         }
