@@ -10,19 +10,19 @@
     ],
     "license": "BSD License",
     "authors": [{
-            "name": "Shea Dawson",
-            "email": "shea@silverstripe.com.au"
-        },
+        "name": "Shea Dawson",
+        "email": "shea@silverstripe.com.au"
+    },
         {
             "name": "LeKoala",
             "email": "thomas@lekoala.be"
         }
     ],
     "require": {
-        "silverstripe/framework": "^4"
+        "silverstripe/framework": "^4 || ^5"
     },
     "require-dev": {
-        "silverstripe/vendor-plugin": "^1.0",
+        "silverstripe/vendor-plugin": "^1 || ^2.0",
         "phpunit/phpunit": "^5.7"
     },
     "support": {
