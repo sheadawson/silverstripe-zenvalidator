@@ -2,13 +2,14 @@
 
 use SilverStripe\i18n\i18n;
 use Psr\Log\LoggerInterface;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Forms\Validator;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\View\Requirements;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Control\Controller;
 
 /**
  *
@@ -29,7 +30,7 @@ class ZenValidator extends Validator
     /**
      * constraints assigned to this validator
      *
-     * @var array
+     * @var array<string,mixed>
      **/
     protected $constraints = array();
 
@@ -44,7 +45,7 @@ class ZenValidator extends Validator
     protected $defaultJS;
 
     /**
-     * @param array $constraints
+     * @param array<string,mixed> $constraints
      * @param boolean $parsleyEnabled (default: true)
      * @param boolean $defaultJS (default: null)
      **/
@@ -62,6 +63,7 @@ class ZenValidator extends Validator
 
     /**
      * @param Form $form
+     * @return $this
      */
     public function setForm($form)
     {
@@ -159,7 +161,7 @@ class ZenValidator extends Validator
     /**
      * disableParsley
      *
-     * @return this
+     * @return $this
      **/
     public function disableParsley()
     {
@@ -184,8 +186,8 @@ class ZenValidator extends Validator
     /**
      * setConstraint - sets a ZenValidatorContraint on this validator
      *
-     * @param string $field - name of the field to be validated
-     * @param ZenFieldValidator $constraint
+     * @param string $fieldName - name of the field to be validated
+     * @param ZenValidatorConstraint $constraint
      * @return $this
      **/
     public function setConstraint($fieldName, $constraint)
@@ -216,7 +218,7 @@ class ZenValidator extends Validator
     /**
      * setConstraints - sets multiple constraints on this validator
      *
-     * @param array $constraints - $fieldName => ZenValidatorConstraint
+     * @param array<string,ZenValidatorConstraint|array<ZenValidatorConstraint>> $constraints - $fieldName => ZenValidatorConstraint
      * @return $this
      **/
     public function setConstraints($constraints)
@@ -238,32 +240,34 @@ class ZenValidator extends Validator
      * get a constraint by fieldName, constraintName
      * @param string $fieldName
      * @param string $constraintName
-     * @return ZenValidatorConstraint
+     * @return ?ZenValidatorConstraint
      **/
     public function getConstraint($fieldName, $constraintName)
     {
         if (isset($this->constraints[$fieldName][$constraintName])) {
             return $this->constraints[$fieldName][$constraintName];
         }
+        return null;
     }
 
     /**
      * get constraints by fieldName
      *
      * @param string $fieldName
-     * @return array
+     * @return array<string,ZenValidatorConstraint>|null
      **/
     public function getConstraints($fieldName)
     {
         if (isset($this->constraints[$fieldName])) {
             return $this->constraints[$fieldName];
         }
+        return null;
     }
 
     /**
      * remove a constraint from a field
      *
-     * @param string $field - name of the field to have a constraint removed from
+     * @param string $fieldName - name of the field to have a constraint removed from
      * @param string $constraintName - class name of constraint
      * @return $this
      **/
@@ -284,7 +288,7 @@ class ZenValidator extends Validator
     /**
      * remove all constraints from a field
      *
-     * @param string $field - name of the field to have constraints removed from
+     * @param string $fieldName - name of the field to have constraints removed from
      * @return $this
      **/
     public function removeConstraints($fieldName)
@@ -302,9 +306,9 @@ class ZenValidator extends Validator
     /**
      * A quick way of adding required constraints to a number of fields
      *
-     * @param array $fieldNames - can be either indexed array of fieldnames, or associative array of fieldname => message
-     * @param array $otherFields
-     * @return this
+     * @param array<string|int,string|null> $fields - can be either indexed array of fieldnames, or associative array of fieldname => message
+     * @param array<string|int,string|null> $otherFields
+     * @return $this
      */
     public function addRequiredFields($fields, ...$otherFields)
     {
@@ -350,7 +354,8 @@ class ZenValidator extends Validator
         $valid = true;
 
         // If we want to ignore validation
-        if (get_class($this->form->getRequestHandler()->buttonClicked()) === 'FormActionNoValidation') {
+        $clicked = $this->form->getRequestHandler()->buttonClicked();
+        if ($clicked && $clicked instanceof FormActionNoValidation) {
             return $valid;
         }
 
