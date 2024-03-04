@@ -44,7 +44,7 @@ abstract class ZenValidatorConstraint
     /**
      * Set the field this constraint is applied to
      * @param FormField $field
-     * @return this
+     * @return $this
      **/
     public function setField(FormField $field)
     {
@@ -63,7 +63,7 @@ abstract class ZenValidatorConstraint
     /**
      * Set a custom message for this constraint
      * @param string $message
-     * @return this
+     * @return $this
      **/
     public function setMessage($message)
     {
