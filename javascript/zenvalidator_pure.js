@@ -10,6 +10,15 @@
         this.options["remoteMessage"] = null;
         return true;
     });
+    // Append any extra value in container .field
+    window.Parsley.on("field:ajaxoptions", function (fieldInstance, options) {
+        var $el = fieldInstance.$element;
+        var inputs = $el.closest(".field").find("input,textarea");
+        $.each(inputs, function (k, v) {
+            var input = $(v);
+            options["data"][input.attr("name")] = input.val();
+        });
+    });
     // Attach parsley to forms
     $("form.parsley").each(function () {
         // Initialize Parsley for this form
